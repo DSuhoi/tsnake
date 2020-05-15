@@ -4,6 +4,12 @@
 #include "map.h"
 #include "../display/display.h"
 
+
+
+Map::Map(){ map = NULL; border = NULL; fructs = NULL;}	//конструктор
+
+Map::~Map(){ endMap(); deleteWindow(map); }	//деструктор
+
 //настройка карты
 void Map::initMap(){
 	int x, y;

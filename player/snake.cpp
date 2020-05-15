@@ -2,6 +2,10 @@
 #include "snake.h"
 
 
+Snake::Snake(){ Body = NULL; }	//конструктор
+
+Snake::~Snake(){ endSnake(); }	//деструктор
+
 void Snake::initSnake(Map &map, bool tp){
 	Body = new Coords[map.getHeight()*map.getWidth()];
 	snakeLen = START_SEG;
@@ -13,11 +17,12 @@ void Snake::initSnake(Map &map, bool tp){
 }
 
 void Snake::endSnake(){
+	
+	if(Body!=NULL){ delete [] Body; Body = NULL;}	//освобождение памяти
+	
+	snakeLen = START_SEG;
 	headVect = 0;
 	teleport = false;
-	snakeLen = START_SEG;
-	if(Body!=NULL) delete [] Body;	//освобождение памяти
-	Body = NULL;
 }
 
 int Snake::move(Map &map, const int bt){

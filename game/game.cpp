@@ -10,6 +10,8 @@
 //метод инициализации компонентов
 void Game::Start(){
 	initPeriph();
+	map = Map();
+	snake = Snake();
 	Display::init_color();	//настройка цветов
 	menu.initMainMenu();		//настройка главного меню
 	map.initMap();			//настройка размера карты

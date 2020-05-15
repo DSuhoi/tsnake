@@ -44,7 +44,8 @@ private:
 protected:
 	void borderMap();	//вывод границ
 public:
-	~Map(){ endMap(); deleteWindow(map); }
+	Map(); 
+	~Map();
 	void initMap();	//настройка карты
 	void selectMap(int select);	//выбор карты
 	void endMap();				//удаление параметров карты

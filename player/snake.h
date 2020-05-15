@@ -27,7 +27,8 @@ private:
 	int headVect;	//направление движения змеи
 	bool teleport;
 public:
-	~Snake(){ endSnake(); }
+	Snake();
+	~Snake();
 	void initSnake(Map &map, bool tp); //установка начальных координат
 	void endSnake();	//удаление параметров змеи
 	int move(Map &map, const int bt);	//метод движения змеи
