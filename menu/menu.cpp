@@ -11,7 +11,6 @@ void Menu::initMainMenu(){
 	getmaxyx(stdscr, y, x);
 	//создаем окно
 	menu = newwin(MenuHeight, MenuWidth,(y - MenuHeight)/2, (x - MenuWidth)/2);
-	//info = NULL;	//указатель временно не используется
 	//настройки 
 	buttons = {KEY_RIGHT, KEY_LEFT, KEY_UP, KEY_DOWN};
 	conf = {8, 1, 1, 0, 0};
@@ -19,17 +18,17 @@ void Menu::initMainMenu(){
 
 //цикл главного меню
 bool Menu::MainMenuLoop(){
-
+	
 	int hiLight = 0;	//выбор элемента меню
 
 	//массив из названий элементов меню
 	std::string menuPart[5] ={"Start Game", "Lvl Settings", "Controls", "Help", "Exit"};
 	
-	while(1){
-		
-	cls(menu);		//очищаем и обновляем окно
-	update(menu);
+	update(menu);	//очищаем и обновляем окно
 	//название окна
+	
+	while(1){
+	
 	Display::printScr(menu, MenuWidth/2 - 5, 0, (char*)"TSNAKE 1.0", BLUE);
 	
 	wattron(menu, COLOR_PAIR(GREEN));	//зелёные элементы
@@ -52,11 +51,11 @@ bool Menu::MainMenuLoop(){
 	case KEY_ENTER:
 		switch (hiLight){
 		case 0: return false; break;	//если это игра, то выходим из меню
-		case 1: LvlSettingsLoop(); break;	//настройки уровня
+		case 1: LvlSettingsLoop();  break;		//настройки уровня
 		case 2: ControlSettingsLoop(); break;	//настройки управления
 		case 3: HelpLoop(); break;				//информация
 		case 4: return true; break;				//выход из программы
-		}; break;
+		}; update(menu); break;
 	};
 	}
 }
@@ -79,10 +78,9 @@ void Menu::LvlSettingsLoop(){
 	
 	char buffStr[9];	//символьный массив под ответ
 	
-	while(1){
-		
-	cls(menu);
 	update(menu);
+	
+	while(1){
 	
 	Display::printScr(menu, MenuWidth/2 - 6, 0, (char*)"Lvl Settings", BLUE);
 		
@@ -133,7 +131,7 @@ void Menu::LvlSettingsLoop(){
 			case 3:	if(conf.mapSize>0) conf.mapSize--; break;
 			case 4: conf.border = false; break;
 			case 5: conf.teleport = false; break;
-			};
+			}; update(menu);
 				break;
 	case KEY_RIGHT:
 			switch(hiLight){
@@ -142,14 +140,13 @@ void Menu::LvlSettingsLoop(){
 			case 3: if(conf.mapSize<2) conf.mapSize++; break;
 			case 4: conf.border = true; break;
 			case 5: conf.teleport = true; break;
-			};
+			}; update(menu);
 				break;
 	case KEY_EXIT: return; break;
 	case KEY_ENTER: 
 			if(hiLight==0) return;
 			else if(hiLight==6) conf = {8, 1, 1, 0, 0};
 			break;
-	default: break;
 	};
 	}
 }
@@ -161,12 +158,11 @@ void Menu::ControlSettingsLoop(){
 	
 	//элементы меню и названия клавиш курсора (можно было сделать через map контейнер)
 	std::string menuPart[7] = {"Back", "Key Down:", "Key Up:", "Key Left:", "Key Right:", "Erase Settings"};
-	std::string cursKey[4] = {"down", "up", "left", "right"};
+	std::string cursKey[4] = {"down ", "up  ", "left ", "right"};
+	
+	update(menu);
 	
 	while(1){
-	
-	cls(menu);
-	update(menu);
 	
 	Display::printScr(menu, MenuWidth/2 - 4, 0, (char*)"Controls", BLUE);
 	
@@ -176,7 +172,7 @@ void Menu::ControlSettingsLoop(){
 		
 		switch(i){
 		case 1:	//определяем клавиши курсора и выводим их названия
-				if(buttons.down<CURS_KEY_MIN || buttons.down>CURS_KEY_MAX)	
+				if(buttons.down<CURS_KEY_MIN || buttons.down>CURS_KEY_MAX)
 					Display::printScr(menu, MenuWidth-7, i+2, buttons.down);
 				else Display::printScr(menu, MenuWidth-7, i+2, (char*)cursKey[buttons.down-CURS_KEY_MIN].c_str());
 				break;
@@ -219,10 +215,9 @@ void Menu::ControlSettingsLoop(){
 		else if(hiLight==5) buttons = {KEY_RIGHT, KEY_LEFT, KEY_UP, KEY_DOWN};
 		else {	//создаем информационное окно для обработки нажатой клавиши
 		PrintInfo(false, InfoWidth, InfoHeight-1, (char*)"Press the button!");
-		
-		cbreak();	//отключаем задержку приема клавиш
+		cbreak();
 		int ch = getButton();	//принимаем символ
-		halfdelay(1);	//включаем задержку обратно
+		halfdelay(1);
 		deleteWindow(info);	//удаляем окно
 		
 		switch(hiLight){	//присваиваем символ
@@ -232,7 +227,7 @@ void Menu::ControlSettingsLoop(){
 		case 4: buttons.right = ch; break;
 		};
 		
-		} break;
+		} update(menu); break;
 	};
 	
 	}
@@ -250,11 +245,10 @@ void Menu::HelpLoop(){
 	//названия клавиш курсора
 	std::string cursKey[4] = {"down", "up", "left", "right"};
 	
-	while(1){
-	//вывод информации об управлении и игре
-	cls(info);
 	update(info);
 	
+	while(1){
+	//вывод информации об управлении и игре
 	Display::printScr(info, HelpWidth - 6, 0, (char*)"HELP", BLUE);
 	
 	if(!select){
@@ -311,8 +305,8 @@ void Menu::HelpLoop(){
 	case KEY_ENTER:
 	case KEY_EXIT:
 	case 'h': deleteWindow(info); return; break;
-	case KEY_LEFT: select = false; break;
-	case KEY_RIGHT: select = true; break;
+	case KEY_LEFT: select = false; update(info); break;
+	case KEY_RIGHT: select = true; update(info); break;
 	};
 	}
 	
@@ -328,13 +322,12 @@ int Menu::PauseLoop(){
 	info = newwin(PauseHeight, PauseWidth, (y-PauseHeight)/2, (x-PauseWidth)/2);
 	//элементы окна
 	std::string pauseMenuStr[4] = {"Resume", "Restart", "Quit to Menu", "Quit Game"};
-	
-	while(1){
-	
-	cls(info);
+
 	update(info);
 	
 	Display::printScr(info, PauseWidth - 7, 0, (char*)"PAUSE", BLUE);
+	
+	while(1){
 	
 	wattron(info, COLOR_PAIR(GREEN));
 	
@@ -372,7 +365,6 @@ bool Menu::PrintInfo(bool isSelect, int w, int h, char *buff){
 	//создаем информационное меню в центре экрана
 	info = newwin(h, w, (_y-h)/2, (_x-w)/2);
 	
-	cls(info);
 	update(info);
 	//и выводим текст
 	Display::printScr(info, InfoWidth - 6, 0, (char*)"INFO", BLUE);
@@ -387,6 +379,7 @@ bool Menu::PrintInfo(bool isSelect, int w, int h, char *buff){
 	while(1){
 		
 		Display::printScr(info, (w/2 - 2), h-2,(char*)selectStr[hiLight].c_str());
+		
 	switch (periph()){	//возвращаем ответ
 	case KEY_LEFT: hiLight = false; break;
 	case KEY_RIGHT: hiLight = true; break;

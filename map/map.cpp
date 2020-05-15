@@ -56,8 +56,7 @@ void Map::endMap(){
 	lenFructs = 0; //сброс параметров кол-ва фруктов и препятствий
 	lenBorder = 0;
 	
-	cls(map);
-	update();
+	update(map);
 }
 
 //настройка фруктов

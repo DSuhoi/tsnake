@@ -29,10 +29,9 @@ public:
 	friend bool operator !=(Coords &cd1, Coords &cd2);
 };
 
-inline void update(WINDOW *win) {box(win, 0, 0); refresh(); }	//обновление окна
+inline void update(WINDOW *win){ wclear(win); wrefresh(win); box(win, 0, 0); refresh(); }	//обновление окна
 inline void update(){ refresh(); }	//обновление экрана в целом
-inline void cls(WINDOW *win) { wclear(win); wrefresh(win); } //очистка окна
-inline void deleteWindow(WINDOW *win){ if(win!=NULL){ cls(win); delwin(win); } win = NULL; }	//удаление окна
+inline void deleteWindow(WINDOW *win){ if(win!=NULL){ wclear(win); wrefresh(win); delwin(win); } win = NULL; }	//удаление окна
 
 
 class Display {
