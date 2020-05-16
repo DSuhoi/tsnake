@@ -2,8 +2,16 @@
 #include <ncurses.h>
 #include <ctime>
 #include "map.h"
-#include "../display/display.h"
 
+
+//перегрузка операторов сравнения для координат
+bool operator ==(Coords &cd1, Coords &cd2){
+	return (cd1.x == cd2.x && cd1.y == cd2.y) ? true : false;
+}
+
+bool operator !=(Coords &cd1, Coords &cd2){
+	return (cd1 == cd2) ? false : true;
+}
 
 
 Map::Map(){ map = NULL; border = NULL; fruit = NULL;}	//конструктор
@@ -30,7 +38,7 @@ void Map::selectMap(int select){
 	};
 	
 	//создание границ
-	Display::printScr(map,WIDTH - 9, 0,(char*)"TSNAKE", BLUE);
+	printScr(map,WIDTH - 9, 0,(char*)"TSNAKE", BLUE);
 	
 	for(int i=1; i<width-1;i++){
 		setMap(i, 1, BORDERCHR);
@@ -140,26 +148,33 @@ bool Map::isBord(Coords cd){
 	return false;
 }
 
-//печатаем подменю карты
-void Map::printSubMenu(const long score,const int level, time_t &t){
-	int allTime = time(0) - t;	//все время с начала игры
-	int sec = allTime % 60;		//секунды
-	int min = allTime / 60;		//минуты
-	char buffScore[16];	//массив для счёта
+//вывод статичной части подменю
+void Map::printSubMenuStatic(const long lastScore, const int level){
+	char buffLastScore[15];	//массив для рекорда
 	char buffLevel[10];	//массив для уровня
-	char buffTime[20];	//массив для времени
-	sprintf(buffScore,"Score: %0*ld",8, score);
+	sprintf(buffLastScore,"Record: %0*ld", 6, lastScore);
 	sprintf(buffLevel,"Level: %d", level);
-	sprintf(buffTime,"Time: %0*d:%0*d",2, min, 2, sec);
-	Display::printScr(map, 2, HEIGHT, buffScore,YELLOW);
-	Display::printScr(map, WIDTH/2 - 4, HEIGHT, buffLevel,GREEN);
-	Display::printScr(map, WIDTH - 15, HEIGHT, buffTime,BLUE);
+	printScr(map, WIDTH/2 - 18, HEIGHT, buffLastScore, RED);
+	printScr(map, WIDTH/2 + 5, HEIGHT, buffLevel,GREEN);
+}
+
+//вывод обновляющейся части подменю
+void Map::printSubMenuActive(const long score, time_t &t){
+	int allTime = time(0) - t;	//все время с начала игры
+	unsigned int sec = allTime % 60;		//секунды
+	unsigned int min = allTime / 60;		//минуты
+	char buffScore[14];	//массив для счёта
+	char buffTime[15];	//массив для времени
+	sprintf(buffScore,"Score: %0*ld", 6, score);
+	sprintf(buffTime,"Time: %0*d:%0*d", 2, min, 2, sec);
+	printScr(map, 2, HEIGHT, buffScore,YELLOW);
+	printScr(map, WIDTH - 15, HEIGHT, buffTime,BLUE);
 }
 
 
 //устанавливаем объект на карту
 void Map::setMap(int x, int y, chtype ch){
-	Display::printScr(map,((WIDTH-width)/2) + x, ((HEIGHT - height)/2) + y,ch);
+	printScr(map,((WIDTH-width)/2) + x, ((HEIGHT - height)/2) + y,ch);
 }
 
 ////////////////////////////////////////////////////////////////////////

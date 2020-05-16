@@ -7,26 +7,26 @@ OBJ = main.o game.o map.o menu.o snake.o display.o periph.o
 tsnake: $(OBJ)
 	$(CC) $(LINK) tsnake $(OBJ) $(ncurs)
 
-main.o: main.cpp game/game.h display/display.h
+main.o: main.cpp game/game.h
 	$(CC) $(COMP) main.cpp $(ncurs)
 
-game.o: game/game.cpp game/game.h map/map.h menu/menu.h player/snake.h
+game.o: game/game.cpp game/game.h
 	$(CC) $(COMP) game/game.cpp
 
-map.o: map/map.cpp map/map.h display/display.h
+map.o: map/map.cpp map/map.h
 	$(CC) $(COMP) map/map.cpp $(ncurs)
 
-menu.o: menu/menu.cpp menu/menu.h display/display.h
+menu.o: menu/menu.cpp menu/menu.h
 	$(CC) $(COMP) menu/menu.cpp $(ncurs)
 
-snake.o: player/snake.cpp player/snake.h map/map.h
+snake.o: player/snake.cpp player/snake.h
 	$(CC) $(COMP) player/snake.cpp
 
-display.o: display/display.cpp display/display.h
-	$(CC) $(COMP) display/display.cpp $(ncurs)
+display.o: term/display.c term/display.h
+	$(CC) $(COMP) term/display.c $(ncurs)
 
-periph.o: periph/periph.cpp	periph/periph.h display/display.h
-	$(CC) $(COMP) periph/periph.cpp $(ncurs)
+periph.o: term/periph.c term/periph.h
+	$(CC) $(COMP) term/periph.c $(ncurs)
 	
 clean:
 	rm -rf tsnake *.o

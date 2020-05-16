@@ -21,23 +21,25 @@
 
 //флаги состояния игры
 enum STATUS_GAME{GAME_WIN = 0,	//игра окончена
-				GAME_NOT_WIN,	//игра еще идёт
-				GAME_RESTART,	//игра перезапущена
-				RETURN_MENU,	//произошло возвращение в меню без проигрыша игры
-				GAME_END };		//игра завершена
+			GAME_NOT_WIN,	//игра еще идёт
+			GAME_RESTART,	//игра перезапущена
+			RETURN_MENU,	//произошло возвращение в меню без проигрыша игры
+			GAME_END };		//игра завершена
+
 
 class Game {	//класс игры
 private: 
 	bool isGame; //игра начадась
 	Menu menu;		//меню
 	Map map;		//карта игры
-	Snake snake;	//объект змеи
+	Snake *snake;	//объект змеи
 	time_t GameTime;	//время начала игры
-	
+	long gameScore[30];		//игровые рекорды
 protected:
 	void StartGame();	//метод настройки поля
 	bool checkWin();	//проверка на проигрыш
-	
+	long InputRecords(long *score, int MapSize, int level);
+	void OutputRecords(long *score);
 public:
 	~Game(){ endGame(); }	//деструктор класса
 	void Start();	//метод инициализации компонентов

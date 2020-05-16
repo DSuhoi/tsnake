@@ -13,7 +13,7 @@
 #define __MENU_H__
 
 #include <ncurses.h>
-#include "../periph/periph.h"
+#include "../term/periph.h"
 
 //Размеры:
 //главного меню
@@ -36,11 +36,12 @@ const int InfoWidth = 20;
 
 
 struct CONFIG {		//битовое поле с настройками карты
-unsigned speed: 5;		//скорость игрока [1..10]
+unsigned speed: 4;		//скорость игрока [1..10]
 unsigned mapSize: 2;	//размер карты [0..2]
 unsigned fruitSize: 7;	//кол-во фруктов [1..99]
 unsigned border: 1;		//препятствия 1/0
 unsigned teleport: 1;	//телепортация змеи 1/0
+unsigned clearScore: 1;	//очистка рекордов 1/0
 };
 
 
@@ -48,7 +49,7 @@ class Menu {
 private:
 	WINDOW *menu;		//указатель на главное меню
 	WINDOW *info;		//указатель на дополнительное меню
-	CONTROL buttons;	//настройки управления
+	int buttons[4];		//настройки управления
 	CONFIG conf;		//настройки карты
 public:
 	void initMainMenu();	//инициализация главного меню
@@ -59,7 +60,7 @@ public:
 	int PauseLoop();			//окно паузы
 	bool PrintInfo(bool isSelect, int w, int h, char *buff);	//вывод информации в отдельном окне
 	CONFIG& getConfig();		//возвращение настроек карты
-	CONTROL& setControl();		//возвращение настроек управления
+	int* setControl();		//возвращение настроек управления
 };
 
 

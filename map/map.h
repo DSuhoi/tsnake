@@ -13,7 +13,7 @@
 
 #include <ncurses.h>
 #include <ctime>
-#include "../display/display.h"
+#include "../term/display.h"
 
 const char BORDERCHR = '#';
 const chtype FRUITCHR = '$' | COLOR_PAIR(YELLOW);
@@ -31,6 +31,16 @@ const int BigH = 22;
 //ширина и высота окна
 const int WIDTH = 80;		
 const int HEIGHT = 22;		
+
+
+class Coords {	//класс координат
+public:
+	int x;
+	int y;
+		//перегрузка операторов сравнения для координат
+	friend bool operator ==(Coords &cd1, Coords &cd2);
+	friend bool operator !=(Coords &cd1, Coords &cd2);
+};
 
 
 class Map {
@@ -54,7 +64,8 @@ public:
 	void setFruitOnMap(Coords &fr, Coords *snake, int len);	//создание фруктов
 	//////////////////////////////////////////////////
 	void setMap(int x, int y, chtype ch);	//установка символа на карте
-	void printSubMenu(const long score,const int level, time_t &t);	//вывод подменю
+	void printSubMenuStatic(const long lastScore, const int level);	//вывод статичной части подменю
+	void printSubMenuActive(const long score, time_t &t);	//вывод обновляющейся части подменю
 	WINDOW* getMap();	//указатель на карту
 	int getHeight();	//вывод высоты карты
 	int getWidth();		//вывод ширины карты

@@ -3,7 +3,7 @@
  * Библиотека с функциями инициализации, отключения и работы *
  * обработчика клавиатуры.                                   *
  *                                                           *
- * Created by DSuhoi (2020) (C++11)                          *
+ * Created by DSuhoi (2020) (C file)                         *
  *** * * * * * * * * * * * * * * * * * * * * * * * * * * * ***/
 
 
@@ -19,19 +19,14 @@ const int CURS_KEY_MAX = 261;	//номер (скан-код) клавиши ку
 
 //inline void sleep(int tmp){ usleep(tmp*SLEEP_TIME); }	//функция ручной задержки
 
-struct CONTROL {	//структура с кнопками управления змеёй
-	int right;
-	int left;
-	int up;
-	int down;
-};
+enum CONTROL {DOWN = 0, UP, LEFT, RIGHT};
 
 inline int getButton(){ return getch(); }	//получение символа
 
 void initPeriph();	//иницилизация экрана и обработки клавиш
 void endPeriph();	//завершение функций обработки клавиш
 int periph();		//обработка кнопок
-int periph(CONTROL ctr);	//обработка игровых кнопок
+int periph(int *ctr);	//обработка игровых кнопок
 
 
 #endif

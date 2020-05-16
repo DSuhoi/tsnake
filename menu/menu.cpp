@@ -1,8 +1,7 @@
 #include <iostream>
 #include <ncurses.h>
 #include <string>
-#include "../display/display.h"
-#include "../periph/periph.h"
+#include "../term/display.h"
 #include "menu.h"
 
 //инициализация главного меню
@@ -12,8 +11,12 @@ void Menu::initMainMenu(){
 	//создаем окно
 	menu = newwin(MenuHeight, MenuWidth,(y - MenuHeight)/2, (x - MenuWidth)/2);
 	//настройки 
-	buttons = {KEY_RIGHT, KEY_LEFT, KEY_UP, KEY_DOWN};
-	conf = {8, 1, 1, 0, 0};
+	buttons[DOWN] = KEY_DOWN;
+	buttons[UP] = KEY_UP;
+	buttons[LEFT] = KEY_LEFT;
+	buttons[RIGHT] = KEY_RIGHT;
+	
+	conf = {8, 1, 1, false, false, false};
 }
 
 //цикл главного меню
@@ -29,7 +32,7 @@ bool Menu::MainMenuLoop(){
 	
 	while(1){
 	
-	Display::printScr(menu, MenuWidth/2 - 5, 0, (char*)"TSNAKE 1.0", BLUE);
+	printScr(menu, MenuWidth/2 - 5, 0, (char*)"TSNAKE 1.0", BLUE);
 	
 	wattron(menu, COLOR_PAIR(GREEN));	//зелёные элементы
 	
@@ -37,7 +40,7 @@ bool Menu::MainMenuLoop(){
 		if(i==hiLight)	//выбранную строку подсвечиваем
 			wattron(menu, A_BOLD);
 		//выводим элементы массива	
-		Display::printScr(menu, 2, i+1, (char*)menuPart[i].c_str());
+		printScr(menu, 2, i+1, (char*)menuPart[i].c_str());
 		
 		wattroff(menu, A_BOLD);
 	}
@@ -68,7 +71,8 @@ void Menu::LvlSettingsLoop(){
 	bool selectCh = 0;	//вид скобок
 	
 	//элементы меню, параметры карты и ответы
-	std::string menuPart[7] = {"Back", "Speed:", "Fruit:","Map Size:", "Border:", "Teleport:", "Erase Settings"};
+	std::string menuPart[8] = {"Back", "Speed:", "Fruit:","Map Size:", 
+		"Border:", "Teleport:", "Erase Settings", "Erase Records"};
 	std::string mapSize[3] = {"Small", "Medium", "Large"};
 	std::string selectStr[2] = {"No", "Yes"};
 	
@@ -82,9 +86,9 @@ void Menu::LvlSettingsLoop(){
 	
 	while(1){
 	
-	Display::printScr(menu, MenuWidth/2 - 6, 0, (char*)"Lvl Settings", BLUE);
+	printScr(menu, MenuWidth/2 - 6, 0, (char*)"Lvl Settings", BLUE);
 		
-	for(int i=0; i<7;i++){
+	for(int i=0; i<8;i++){
 		if(i==hiLight){
 			wattron(menu, A_BOLD);
 			selectCh = 1;
@@ -93,26 +97,26 @@ void Menu::LvlSettingsLoop(){
 		switch(i){
 		case 1: case 2:	//если это численный параметр
 			sprintf(buffStr,"%c%d%c", ChL[selectCh],(i==1) ? conf.speed : conf.fruitSize , ChR[selectCh]);
-			Display::printScr(menu, MenuWidth-7, i+2, buffStr); break;
-		case 3:			//если это 
+			printScr(menu, MenuWidth-7, i+2, buffStr); break;
+		case 3:			//если это строка
 			sprintf(buffStr,"%c%s%c", ChL[selectCh], (char*)mapSize[conf.mapSize].c_str(), ChR[selectCh]);
-			Display::printScr(menu, MenuWidth-9, i+2, buffStr); break;
+			printScr(menu, MenuWidth-9, i+2, buffStr); break;
 		case 4:
 			sprintf(buffStr,"%c%s%c", ChL[selectCh], (char*)selectStr[conf.border].c_str(), ChR[selectCh]);
-			Display::printScr(menu, MenuWidth-7, i+2, buffStr); break;
+			printScr(menu, MenuWidth-7, i+2, buffStr); break;
 		case 5:
 			sprintf(buffStr,"%c%s%c", ChL[selectCh], (char*)selectStr[conf.teleport].c_str(), ChR[selectCh]);
-			Display::printScr(menu, MenuWidth-7, i+2, buffStr); break;
+			printScr(menu, MenuWidth-7, i+2, buffStr); break;
 		};
 		
 		wattron(menu, COLOR_PAIR(GREEN));
 		
 		//элемент выхода из меню
-		if(i==0) Display::printScr(menu, 2, 1, (char*)menuPart[0].c_str());
+		if(i==0) printScr(menu, 2, 1, (char*)menuPart[0].c_str());
 		//элемент очистки настроек
-		else if(i==6) Display::printScr(menu, 2, MenuHeight-3, (char*)menuPart[6].c_str());
+		else if(i>5) printScr(menu, 2, MenuHeight-9+i, (char*)menuPart[i].c_str());
 		
-		else Display::printScr(menu, 2, i+2, (char*)menuPart[i].c_str());
+		else printScr(menu, 2, i+2, (char*)menuPart[i].c_str());
 		
 		
 		//очистка массива
@@ -123,7 +127,7 @@ void Menu::LvlSettingsLoop(){
 	
 	switch(periph()){
 	case KEY_UP: if(hiLight>0) hiLight--; break;
-	case KEY_DOWN: if(hiLight<6) hiLight++; break;
+	case KEY_DOWN: if(hiLight<7) hiLight++; break;
 	case KEY_LEFT: //в зависимости от элемента настраиваем параметры
 			switch(hiLight){
 			case 1: if(conf.speed>1) conf.speed--; break;
@@ -145,7 +149,12 @@ void Menu::LvlSettingsLoop(){
 	case KEY_EXIT: return; break;
 	case KEY_ENTER: 
 			if(hiLight==0) return;
-			else if(hiLight==6) conf = {8, 1, 1, 0, 0};
+			else if(hiLight==6) conf = {8, 1, 1, false, false, false};
+			else if(hiLight==7){
+				if(PrintInfo(true, InfoWidth-6, InfoHeight,(char*)"CLEAR DATA ?"))
+					conf.clearScore = true;
+			}
+			update();
 			break;
 	};
 	}
@@ -164,43 +173,28 @@ void Menu::ControlSettingsLoop(){
 	
 	while(1){
 	
-	Display::printScr(menu, MenuWidth/2 - 4, 0, (char*)"Controls", BLUE);
+	printScr(menu, MenuWidth/2 - 4, 0, (char*)"Controls", BLUE);
 	
 	for(int i=0; i<6;i++){
 		
 		if(i==hiLight) wattron(menu, A_BOLD);
 		
-		switch(i){
-		case 1:	//определяем клавиши курсора и выводим их названия
-				if(buttons.down<CURS_KEY_MIN || buttons.down>CURS_KEY_MAX)
-					Display::printScr(menu, MenuWidth-7, i+2, buttons.down);
-				else Display::printScr(menu, MenuWidth-7, i+2, (char*)cursKey[buttons.down-CURS_KEY_MIN].c_str());
-				break;
-		case 2:
-				if(buttons.up<CURS_KEY_MIN || buttons.up>CURS_KEY_MAX)
-					Display::printScr(menu, MenuWidth-7, i+2, buttons.up);
-				else Display::printScr(menu, MenuWidth-7, i+2, (char*)cursKey[buttons.up-CURS_KEY_MIN].c_str());
-				break;
-		case 3:
-				if(buttons.left<CURS_KEY_MIN || buttons.left>CURS_KEY_MAX)
-					Display::printScr(menu, MenuWidth-7, i+2, buttons.left);
-				else Display::printScr(menu, MenuWidth-7, i+2, (char*)cursKey[buttons.left-CURS_KEY_MIN].c_str());
-				break;
-		case 4:
-				if(buttons.right<CURS_KEY_MIN || buttons.right>CURS_KEY_MAX)
-					Display::printScr(menu, MenuWidth-7, i+2, buttons.right);
-				else Display::printScr(menu, MenuWidth-7, i+2, (char*)cursKey[buttons.right-CURS_KEY_MIN].c_str());
-				break;
-		};
+		
+		if(i<5 && i!=0){
+		if(buttons[i-1]<CURS_KEY_MIN || buttons[i-1]>CURS_KEY_MAX)
+			printScr(menu, MenuWidth-7, i+2, buttons[i-1]);
+		else printScr(menu, MenuWidth-7, i+2, (char*)cursKey[buttons[i-1]-CURS_KEY_MIN].c_str());
+			
+		}
 		
 		wattron(menu, COLOR_PAIR(GREEN));
 		
 		//элемент выхода из меню
-		if(i==0) Display::printScr(menu, 2, 1, (char*)menuPart[0].c_str());
+		if(i==0) printScr(menu, 2, 1, (char*)menuPart[0].c_str());
 		//элемент очистки настроек
-		else if(i==5) Display::printScr(menu, 2, MenuHeight-3, (char*)menuPart[5].c_str());
+		else if(i==5) printScr(menu, 2, MenuHeight-3, (char*)menuPart[5].c_str());
 		
-		else Display::printScr(menu, 2, i+2, (char*)menuPart[i].c_str());
+		else printScr(menu, 2, i+2, (char*)menuPart[i].c_str());
 		
 		
 		wattroff(menu, A_BOLD | COLOR_PAIR(GREEN));
@@ -212,7 +206,12 @@ void Menu::ControlSettingsLoop(){
 	case KEY_EXIT: return; break;
 	case KEY_ENTER: 
 		if(hiLight==0) return;
-		else if(hiLight==5) buttons = {KEY_RIGHT, KEY_LEFT, KEY_UP, KEY_DOWN};
+		else if(hiLight==5){
+			buttons[DOWN] = KEY_DOWN;
+			buttons[UP] = KEY_UP;
+			buttons[LEFT] = KEY_LEFT;
+			buttons[RIGHT] = KEY_RIGHT;
+		}
 		else {	//создаем информационное окно для обработки нажатой клавиши
 		PrintInfo(false, InfoWidth, InfoHeight-1, (char*)"Press the button!");
 		cbreak();
@@ -221,10 +220,10 @@ void Menu::ControlSettingsLoop(){
 		deleteWindow(info);	//удаляем окно
 		
 		switch(hiLight){	//присваиваем символ
-		case 1: buttons.down = ch; break;
-		case 2: buttons.up = ch; break;
-		case 3: buttons.left = ch; break;
-		case 4: buttons.right = ch; break;
+		case 1: buttons[DOWN] = ch; break;
+		case 2: buttons[UP] = ch; break;
+		case 3: buttons[LEFT] = ch; break;
+		case 4: buttons[RIGHT] = ch; break;
 		};
 		
 		} update(menu); break;
@@ -249,56 +248,49 @@ void Menu::HelpLoop(){
 	
 	while(1){
 	//вывод информации об управлении и игре
-	Display::printScr(info, HelpWidth - 6, 0, (char*)"HELP", BLUE);
+	printScr(info, HelpWidth - 6, 0, (char*)"HELP", BLUE);
 	
 	if(!select){
-	Display::printScr(info, 1, 0, (char*)"(1)", BLUE);
-	Display::printScr(info, 2, 1, (char*)"Controls:", YELLOW);
+	printScr(info, 1, 0, (char*)"(1)", BLUE);
+	printScr(info, 2, 1, (char*)"Controls:", YELLOW);
 	wattron(info, COLOR_PAIR(GREEN));
-	Display::printScr(info, 2, 2, (char*)"Key Down:");
-	Display::printScr(info, 2, 3, (char*)"Key Up:");
-	Display::printScr(info, 2, 4, (char*)"Key Left:");
-	Display::printScr(info, 2, 5, (char*)"Key Right:");
-	Display::printScr(info, 2, 6, (char*)"Key Pause Game:");
-	Display::printScr(info, 2, 7, (char*)"Key Help Game:");
-	Display::printScr(info, 2, 8, (char*)"Key Quit Game:");
+	printScr(info, 2, 2, (char*)"Key Down:");
+	printScr(info, 2, 3, (char*)"Key Up:");
+	printScr(info, 2, 4, (char*)"Key Left:");
+	printScr(info, 2, 5, (char*)"Key Right:");
+	printScr(info, 2, 6, (char*)"Key Pause Game:");
+	printScr(info, 2, 7, (char*)"Key Help Game:");
+	printScr(info, 2, 8, (char*)"Key Quit Game:");
 	wattroff(info, COLOR_PAIR(GREEN));
-	Display::printScr(info, HelpWidthRight, 6, 'p');
-	Display::printScr(info, HelpWidthRight, 7, 'h');
-	Display::printScr(info, HelpWidthRight, 8, 'q');
+	printScr(info, HelpWidthRight, 6, 'p');
+	printScr(info, HelpWidthRight, 7, 'h');
+	printScr(info, HelpWidthRight, 8, 'q');
 	
 	//обработка клавиш управления
-	if(buttons.down<CURS_KEY_MIN || buttons.down>CURS_KEY_MAX)
-		Display::printScr(info, HelpWidthRight, 2, buttons.down);
-	else Display::printScr(info, HelpWidthRight, 2, (char*)cursKey[buttons.down-CURS_KEY_MIN].c_str());
-	if(buttons.up<CURS_KEY_MIN || buttons.up>CURS_KEY_MAX)
-		Display::printScr(info, HelpWidthRight, 3, buttons.up);
-	else Display::printScr(info, HelpWidthRight, 3, (char*)cursKey[buttons.up-CURS_KEY_MIN].c_str());
-	if(buttons.left<CURS_KEY_MIN || buttons.left>CURS_KEY_MAX)
-		Display::printScr(info, HelpWidthRight, 4, buttons.left);
-	else Display::printScr(info, HelpWidthRight, 4, (char*)cursKey[buttons.left-CURS_KEY_MIN].c_str());
-	if(buttons.right<CURS_KEY_MIN || buttons.right>CURS_KEY_MAX)
-		Display::printScr(info, HelpWidthRight, 5, buttons.right);
-	else Display::printScr(info, HelpWidthRight, 5, (char*)cursKey[buttons.right-CURS_KEY_MIN].c_str());
+	
+	for(int i = 0; i<4; i++)
+		if(buttons[i]<CURS_KEY_MIN || buttons[i]>CURS_KEY_MAX)
+			printScr(info, HelpWidthRight, i+2, buttons[i]);
+		else printScr(info, HelpWidthRight, i+2, (char*)cursKey[buttons[i]-CURS_KEY_MIN].c_str());
 	}
 	
 	else {
-		Display::printScr(info, 1, 0, (char*)"(2)", BLUE);
-		Display::printScr(info, 2, 1, (char*)"About:", YELLOW);
-		Display::printScr(info, 2, 2, (char*)"Game", GREEN);
-		Display::printScr(info, 7, 2,'T' | COLOR_PAIR(GREEN));
-		Display::printScr(info, 8, 2,'S' | COLOR_PAIR(GREEN));
-		Display::printScr(info, 9, 2,'N' | COLOR_PAIR(YELLOW));
-		Display::printScr(info, 10, 2,'A' | COLOR_PAIR(RED));
-		Display::printScr(info, 11, 2,'K' | COLOR_PAIR(GREEN));
-		Display::printScr(info, 12, 2,'E'| COLOR_PAIR(BLUE));
-		Display::printScr(info, 14, 2, (char*)"v_1.0", BLUE);
+		printScr(info, 1, 0, (char*)"(2)", BLUE);
+		printScr(info, 2, 1, (char*)"About:", YELLOW);
+		printScr(info, 2, 2, (char*)"Game", GREEN);
+		printScr(info, 7, 2,'T' | COLOR_PAIR(GREEN));
+		printScr(info, 8, 2,'S' | COLOR_PAIR(GREEN));
+		printScr(info, 9, 2,'N' | COLOR_PAIR(YELLOW));
+		printScr(info, 10, 2,'A' | COLOR_PAIR(RED));
+		printScr(info, 11, 2,'K' | COLOR_PAIR(GREEN));
+		printScr(info, 12, 2,'E'| COLOR_PAIR(BLUE));
+		printScr(info, 14, 2, (char*)"v_1.0", BLUE);
 		wattron(info, COLOR_PAIR(GREEN));
-		Display::printScr(info, 2, 4, (char*)"Game created by DSuhoi (2020)");
-		Display::printScr(info, 2, 5, (char*)"Email: <dsuh0i.h8@gmail.com>");
-		Display::printScr(info, 2, 6, (char*)"Sourse Code:");
-		Display::printScr(info, 2, 7, (char*)"https://github.com/DSuhoi/tsnake");
-		Display::printScr(info, 5, 8, (char*)"Thanks for playing!");
+		printScr(info, 2, 4, (char*)"Game created by DSuhoi (2020)");
+		printScr(info, 2, 5, (char*)"Email: <dsuh0i.h8@gmail.com>");
+		printScr(info, 2, 6, (char*)"Sourse Code:");
+		printScr(info, 2, 7, (char*)"https://github.com/DSuhoi/tsnake");
+		printScr(info, 5, 8, (char*)"Thanks for playing!");
 		wattroff(info, COLOR_PAIR(GREEN));
 	}
 	switch(periph()){	//выход из информационного меню
@@ -325,7 +317,7 @@ int Menu::PauseLoop(){
 
 	update(info);
 	
-	Display::printScr(info, PauseWidth - 7, 0, (char*)"PAUSE", BLUE);
+	printScr(info, PauseWidth - 7, 0, (char*)"PAUSE", BLUE);
 	
 	while(1){
 	
@@ -334,7 +326,7 @@ int Menu::PauseLoop(){
 	for(int i=0; i<4; i++){
 	if(i==hiLight) wattron(info, A_BOLD);
 	
-	Display::printScr(info, 2, i+1, (char*)pauseMenuStr[i].c_str());
+	printScr(info, 2, i+1, (char*)pauseMenuStr[i].c_str());
 	
 	wattroff(info, A_BOLD);	
 	}
@@ -367,8 +359,8 @@ bool Menu::PrintInfo(bool isSelect, int w, int h, char *buff){
 	
 	update(info);
 	//и выводим текст
-	Display::printScr(info, InfoWidth - 6, 0, (char*)"INFO", BLUE);
-	Display::printScr(info, 1, 1, buff, BLUE);
+	printScr(info, w - 6, 0, (char*)"INFO", BLUE);
+	printScr(info, 1, 1, buff, BLUE);
 	
 	if(isSelect){	//если это вопрос
 		
@@ -378,7 +370,7 @@ bool Menu::PrintInfo(bool isSelect, int w, int h, char *buff){
 
 	while(1){
 		
-		Display::printScr(info, (w/2 - 2), h-2,(char*)selectStr[hiLight].c_str());
+	printScr(info, (w/2 - 2), h-2,(char*)selectStr[hiLight].c_str());
 		
 	switch (periph()){	//возвращаем ответ
 	case KEY_LEFT: hiLight = false; break;
@@ -393,4 +385,4 @@ bool Menu::PrintInfo(bool isSelect, int w, int h, char *buff){
 
 CONFIG& Menu::getConfig(){ return conf; }	//возвращаем настройки карты
 
-CONTROL& Menu::setControl(){ return buttons; } //возвращаем настройки управления
+int* Menu::setControl(){ return buttons; } //возвращаем настройки управления
