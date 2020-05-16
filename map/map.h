@@ -16,7 +16,7 @@
 #include "../display/display.h"
 
 const char BORDERCHR = '#';
-const chtype FRUCTCHR = '$' | COLOR_PAIR(YELLOW);
+const chtype FRUITCHR = '$' | COLOR_PAIR(YELLOW);
 
 //ширина и высота разных карт
 const int SmallW = 40;
@@ -38,8 +38,8 @@ private:
 	int height, width;	//длинна и ширина карты
 	WINDOW *map;	//окно карты
 	Coords *border;	//указатель на координаты препятствий
-	Coords *fructs;	//указатель на координаты фруктов
-	int lenFructs;	//кол-во фруктов
+	Coords *fruit;	//указатель на координаты фруктов
+	int lenFruit;	//кол-во фруктов
 	int lenBorder;	//кол-во препятствий
 protected:
 	void borderMap();	//вывод границ
@@ -49,9 +49,9 @@ public:
 	void initMap();	//настройка карты
 	void selectMap(int select);	//выбор карты
 	void endMap();				//удаление параметров карты
-	void initFruct(int l);	//настройка количества фруктов
+	void initFruit(int l);	//настройка количества фруктов
 	void initBord(Coords snake);//настройка препятствий
-	void setFructOnMap(Coords &fr, Coords *snake, int len);	//создание фруктов
+	void setFruitOnMap(Coords &fr, Coords *snake, int len);	//создание фруктов
 	//////////////////////////////////////////////////
 	void setMap(int x, int y, chtype ch);	//установка символа на карте
 	void printSubMenu(const long score,const int level, time_t &t);	//вывод подменю
@@ -60,7 +60,7 @@ public:
 	int getWidth();		//вывод ширины карты
 	//////////////////////////////////////////////
 	bool isSnake(Coords cd, Coords *snake, int len);	//проверка координат
-	bool isFruct(Coords &cd);
+	bool isFruit(Coords &cd);
 	bool isBord(Coords cd);
 	//////////////////////////////////////////////
 };

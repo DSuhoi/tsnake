@@ -38,7 +38,7 @@ const int InfoWidth = 20;
 struct CONFIG {		//битовое поле с настройками карты
 unsigned speed: 5;		//скорость игрока [1..10]
 unsigned mapSize: 2;	//размер карты [0..2]
-unsigned fructSize: 7;	//кол-во фруктов [1..99]
+unsigned fruitSize: 7;	//кол-во фруктов [1..99]
 unsigned border: 1;		//препятствия 1/0
 unsigned teleport: 1;	//телепортация змеи 1/0
 };

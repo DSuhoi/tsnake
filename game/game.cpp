@@ -22,7 +22,7 @@ void Game::Start(){
 void Game::StartGame(){	//настройка:
 	map.selectMap(menu.getConfig().mapSize);	//размер поля
 	snake.initSnake(map, menu.getConfig().teleport);	//размер змеи и способность к телепортации
-	map.initFruct(menu.getConfig().fructSize);	//кол-во фруктов и их расположение
+	map.initFruit(menu.getConfig().fruitSize);	//кол-во фруктов и их расположение
 	if(menu.getConfig().border)		//если на поле нужны препятствия
 	map.initBord(snake.info());		//то создаем их
 	halfdelay(10/menu.getConfig().speed);	//создание задержки (нужно ещё доработать этот алгоритм)

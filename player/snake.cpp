@@ -29,11 +29,11 @@ int Snake::move(Map &map, const int bt){
 	
 	map.setMap(Body[snakeLen].x,Body[snakeLen].y, EMPTYCHR);
 	
-	if(map.isFruct(Body[0])){ 
+	if(map.isFruit(Body[0])){ 
 		snakeLen+=SEG_PLUS; //увеличиваем ее длину, если съела фрукт
 		for(int seg = snakeLen; seg>snakeLen-SEG_PLUS; seg--)
 			Body[seg] = Body[snakeLen-SEG_PLUS];
-		map.setFructOnMap(Body[0], Body, snakeLen);	}
+		map.setFruitOnMap(Body[0], Body, snakeLen);	}
 	for(int i=snakeLen; i>0; i--){	//присваиваем новые символы дальше (для сохранения направления движения)
 		Body[i] = Body[i-1];
 		map.setMap(Body[i-1].x,Body[i-1].y, BODYCHR); }

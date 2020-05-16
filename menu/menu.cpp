@@ -68,7 +68,7 @@ void Menu::LvlSettingsLoop(){
 	bool selectCh = 0;	//вид скобок
 	
 	//элементы меню, параметры карты и ответы
-	std::string menuPart[7] = {"Back", "Speed:", "Fructs:","Map Size:", "Border:", "Teleport:", "Erase Settings"};
+	std::string menuPart[7] = {"Back", "Speed:", "Fruit:","Map Size:", "Border:", "Teleport:", "Erase Settings"};
 	std::string mapSize[3] = {"Small", "Medium", "Large"};
 	std::string selectStr[2] = {"No", "Yes"};
 	
@@ -92,7 +92,7 @@ void Menu::LvlSettingsLoop(){
 		
 		switch(i){
 		case 1: case 2:	//если это численный параметр
-			sprintf(buffStr,"%c%d%c", ChL[selectCh],(i==1) ? conf.speed : conf.fructSize , ChR[selectCh]);
+			sprintf(buffStr,"%c%d%c", ChL[selectCh],(i==1) ? conf.speed : conf.fruitSize , ChR[selectCh]);
 			Display::printScr(menu, MenuWidth-7, i+2, buffStr); break;
 		case 3:			//если это 
 			sprintf(buffStr,"%c%s%c", ChL[selectCh], (char*)mapSize[conf.mapSize].c_str(), ChR[selectCh]);
@@ -127,7 +127,7 @@ void Menu::LvlSettingsLoop(){
 	case KEY_LEFT: //в зависимости от элемента настраиваем параметры
 			switch(hiLight){
 			case 1: if(conf.speed>1) conf.speed--; break;
-			case 2: if(conf.fructSize>1) conf.fructSize--; break;
+			case 2: if(conf.fruitSize>1) conf.fruitSize--; break;
 			case 3:	if(conf.mapSize>0) conf.mapSize--; break;
 			case 4: conf.border = false; break;
 			case 5: conf.teleport = false; break;
@@ -136,7 +136,7 @@ void Menu::LvlSettingsLoop(){
 	case KEY_RIGHT:
 			switch(hiLight){
 			case 1: if(conf.speed<10) conf.speed++; break;
-			case 2: if(conf.fructSize<99) conf.fructSize++; break;
+			case 2: if(conf.fruitSize<99) conf.fruitSize++; break;
 			case 3: if(conf.mapSize<2) conf.mapSize++; break;
 			case 4: conf.border = true; break;
 			case 5: conf.teleport = true; break;
