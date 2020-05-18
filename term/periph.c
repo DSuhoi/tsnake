@@ -15,8 +15,8 @@ void initPeriph(){
 
 
 void endPeriph() {
-	keypad(stdscr,false);	
-	getch();
+	keypad(stdscr,false);
+	cbreak();
 	endwin();
 }
 
@@ -31,7 +31,7 @@ int periph(){
 	case KEY_LEFT: tmp = KEY_LEFT; break;
 	case KEY_RIGHT: tmp = KEY_RIGHT; break;
 	case 10: tmp = KEY_ENTER; break;
-	case 'q': case 'Q': tmp = KEY_EXIT; break;
+	case 27: case 'q': case 'Q': tmp = KEY_EXIT; break;
 	case 'h': case 'H': tmp = 'h'; break;
 	case 'p': case 'P': tmp = 'p'; break;
 	default: tmp = ERR; break;
@@ -49,11 +49,12 @@ int periph(int *ctr){
 	else if(c == ctr[UP]) tmp = KEY_UP;
 	else if(c == ctr[LEFT]) tmp = KEY_LEFT;
 	else if(c == ctr[RIGHT]) tmp = KEY_RIGHT;
-	else if(c == 10) tmp = KEY_ENTER;
-	else if(c == 'q' || c == 'Q') tmp = KEY_EXIT;
-	else if(c == 'h' || c == 'H') tmp = 'h';
-	else if(c == 'p' || c == 'P') tmp = 'p';
-	else tmp = ERR;
-		
+	else switch(c){
+	case 10: tmp = KEY_ENTER; break;
+	case 27: case 'q': case 'Q': tmp = KEY_EXIT; break;
+	case 'h': case 'H': tmp = 'h'; break;
+	case 'p': case 'P': tmp = 'p'; break;
+	default: tmp = ERR; break;
+	};	
 	return tmp;
 }

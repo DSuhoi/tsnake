@@ -1,8 +1,8 @@
 #include <iostream>
-#include <ncurses.h>
-#include <string>
+#include <fstream>
 #include "../term/display.h"
 #include "menu.h"
+
 
 //инициализация главного меню
 void Menu::initMainMenu(){
@@ -16,16 +16,16 @@ void Menu::initMainMenu(){
 	buttons[LEFT] = KEY_LEFT;
 	buttons[RIGHT] = KEY_RIGHT;
 	
-	conf = {8, 1, 1, false, false, false};
+	conf = LoadSettings(buttons);
 }
 
 //цикл главного меню
-bool Menu::MainMenuLoop(){
+int Menu::MainMenuLoop(){
 	
 	int hiLight = 0;	//выбор элемента меню
 
 	//массив из названий элементов меню
-	std::string menuPart[5] ={"Start Game", "Lvl Settings", "Controls", "Help", "Exit"};
+	std::string menuPart[6] ={"Start Game", "Load Map", "Lvl Settings", "Controls", "Help", "Exit"};
 	
 	update(menu);	//очищаем и обновляем окно
 	//название окна
@@ -36,7 +36,7 @@ bool Menu::MainMenuLoop(){
 	
 	wattron(menu, COLOR_PAIR(GREEN));	//зелёные элементы
 	
-	for(int i=0; i<5;i++){
+	for(int i=0; i<6;i++){
 		if(i==hiLight)	//выбранную строку подсвечиваем
 			wattron(menu, A_BOLD);
 		//выводим элементы массива	
@@ -49,19 +49,56 @@ bool Menu::MainMenuLoop(){
 	
 	switch(periph()){	//читаем клавиши
 	case KEY_UP: if(hiLight>0) hiLight--; break;	//выбор элемента меню
-	case KEY_DOWN: if(hiLight<4) hiLight++; break;
-	case KEY_EXIT: return true; break;		//выход из программы
+	case KEY_DOWN: if(hiLight<5) hiLight++; break;
+	case KEY_EXIT: return 0; break;		//выход из программы
 	case KEY_ENTER:
 		switch (hiLight){
-		case 0: return false; break;	//если это игра, то выходим из меню
-		case 1: LvlSettingsLoop();  break;		//настройки уровня
-		case 2: ControlSettingsLoop(); break;	//настройки управления
-		case 3: HelpLoop(); break;				//информация
-		case 4: return true; break;				//выход из программы
+		case 0: return 1; break;	//если это игра, то выходим из меню
+		case 1: if(SearchMap()) return 2; break;
+		case 2: LvlSettingsLoop();  break;		//настройки уровня
+		case 3: ControlSettingsLoop(); break;	//настройки управления
+		case 4: HelpLoop(); break;				//информация
+		case 5: return 0; break;				//выход из программы
 		}; update(menu); break;
 	};
 	}
 }
+bool Menu::SearchMap(){
+	int x, y;
+	
+	for(int i=0; i<STRLEN; i++) NameFile[i] = 0;	//стираем символьный массив
+	
+	getmaxyx(stdscr, y, x);
+	//создаем информационное окно в центре экрана
+	info = newwin(InfoHeight-1, InfoWidth+15, (y-InfoHeight+1)/2, (x-InfoWidth-15)/2);
+	update(info);
+	printScr(info, (InfoWidth+15)/2 - 4, 0, (char*)"Load Map", BLUE);
+	
+	printScr(info, 2, 1, (char*)"File name: ", GREEN);
+	
+	echo();	//режим отображения ввода включён
+	wscanw(info,"%s", NameFile);	//считываем файл
+	noecho();
+	deleteWindow(info);
+	if(NameFile[0]==0) return false;	//если ничего не ввели
+	std::ifstream fin(FOLDER_FILE + NameFile);
+	if(!fin){	//если файл закрыт
+		PrintInfo(false, InfoWidth+5, InfoHeight-1, (char*)"ERROR: File not found!");
+		getchar();
+		deleteWindow(info);
+		return false;
+	}
+	fin.close();
+	return true;
+	
+}
+
+void Menu::SelectCustomMap(Map &map){
+	int Size;
+	LoadMap(NameFile, Size, map);	//если такого файла нет
+	conf.mapSize = Size;	//присваиваем переменную
+}
+
 
 //меню настроек игры
 void Menu::LvlSettingsLoop(){
@@ -74,7 +111,7 @@ void Menu::LvlSettingsLoop(){
 	std::string menuPart[8] = {"Back", "Speed:", "Fruit:","Map Size:", 
 		"Border:", "Teleport:", "Erase Settings", "Erase Records"};
 	std::string mapSize[3] = {"Small", "Medium", "Large"};
-	std::string selectStr[2] = {"No", "Yes"};
+	std::string selectStr[2] = {"Off", "On"};
 	
 	//левые и правые скобки
 	char ChL[] = {'[', '<'};
@@ -146,9 +183,9 @@ void Menu::LvlSettingsLoop(){
 			case 5: conf.teleport = true; break;
 			}; update(menu);
 				break;
-	case KEY_EXIT: return; break;
+	case KEY_EXIT: return; SaveSettings(conf,buttons); break;
 	case KEY_ENTER: 
-			if(hiLight==0) return;
+			if(hiLight==0){ SaveSettings(conf,buttons); return; }
 			else if(hiLight==6) conf = {8, 1, 1, false, false, false};
 			else if(hiLight==7){
 				if(PrintInfo(true, InfoWidth-6, InfoHeight,(char*)"CLEAR DATA ?"))
@@ -203,9 +240,9 @@ void Menu::ControlSettingsLoop(){
 	switch (periph()){
 	case KEY_UP: if(hiLight>0) hiLight--; break;
 	case KEY_DOWN: if(hiLight<5) hiLight++; break;
-	case KEY_EXIT: return; break;
+	case KEY_EXIT: SaveSettings(conf,buttons); return; break;
 	case KEY_ENTER: 
-		if(hiLight==0) return;
+		if(hiLight==0){ SaveSettings(conf,buttons); return; }
 		else if(hiLight==5){
 			buttons[DOWN] = KEY_DOWN;
 			buttons[UP] = KEY_UP;

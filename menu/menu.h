@@ -14,8 +14,11 @@
 
 #include <ncurses.h>
 #include "../term/periph.h"
+#include "../term/files.h"
+#include "map.h"
 
 //Размеры:
+
 //главного меню
 const int MenuHeight = 12;
 const int MenuWidth = 20;
@@ -34,15 +37,7 @@ const int PauseHeight = 6;
 const int InfoHeight = 4;
 const int InfoWidth = 20;
 
-
-struct CONFIG {		//битовое поле с настройками карты
-unsigned speed: 4;		//скорость игрока [1..10]
-unsigned mapSize: 2;	//размер карты [0..2]
-unsigned fruitSize: 7;	//кол-во фруктов [1..99]
-unsigned border: 1;		//препятствия 1/0
-unsigned teleport: 1;	//телепортация змеи 1/0
-unsigned clearScore: 1;	//очистка рекордов 1/0
-};
+const int STRLEN = 18;	//длина строкр
 
 
 class Menu {
@@ -51,9 +46,12 @@ private:
 	WINDOW *info;		//указатель на дополнительное меню
 	int buttons[4];		//настройки управления
 	CONFIG conf;		//настройки карты
+	char NameFile[STRLEN];	//файл карты
 public:
 	void initMainMenu();	//инициализация главного меню
-	bool MainMenuLoop(); 	//цикл главного меню
+	int MainMenuLoop(); 	//цикл главного меню
+	void SelectCustomMap(Map &map);	//выбор карты из файла
+	bool SearchMap();		//поиск карты
 	void LvlSettingsLoop();		//меню настроек игры
 	void ControlSettingsLoop();	//меню настроек управления
 	void HelpLoop();			//информация

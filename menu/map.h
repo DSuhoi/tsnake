@@ -19,14 +19,14 @@ const char BORDERCHR = '#';
 const chtype FRUITCHR = '$' | COLOR_PAIR(YELLOW);
 
 //ширина и высота разных карт
-const int SmallW = 40;
-const int SmallH = 11;
+const int SmallW = 37;
+const int SmallH = 9;
 
-const int MediumW = 58;
-const int MediumH = 16;
+const int MediumW = 55;
+const int MediumH = 14;
 
-const int BigW = 80;
-const int BigH = 22;
+const int BigW = 77;
+const int BigH = 20;
 
 //ширина и высота окна
 const int WIDTH = 80;		
@@ -62,11 +62,12 @@ public:
 	void initFruit(int l);	//настройка количества фруктов
 	void initBord(Coords snake);//настройка препятствий
 	void setFruitOnMap(Coords &fr, Coords *snake, int len);	//создание фруктов
+	void updateMap();	//обновление изображения всех объектов карты
 	//////////////////////////////////////////////////
 	void setMap(int x, int y, chtype ch);	//установка символа на карте
 	void printSubMenuStatic(const long lastScore, const int level);	//вывод статичной части подменю
 	void printSubMenuActive(const long score, time_t &t);	//вывод обновляющейся части подменю
-	WINDOW* getMap();	//указатель на карту
+	void BorderCpy(int len, Coords *bd);	//копирование координат
 	int getHeight();	//вывод высоты карты
 	int getWidth();		//вывод ширины карты
 	//////////////////////////////////////////////

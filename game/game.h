@@ -15,7 +15,7 @@
 #define __GAME_H__
 
 #include "../player/snake.h"
-#include "../map/map.h"
+#include "../menu/map.h"
 #include "../menu/menu.h"
 #include <time.h>	//библиотека для работы со временем
 
@@ -36,10 +36,8 @@ private:
 	time_t GameTime;	//время начала игры
 	long gameScore[30];		//игровые рекорды
 protected:
-	void StartGame();	//метод настройки поля
+	void StartGame(int mode);	//метод настройки поля
 	bool checkWin();	//проверка на проигрыш
-	long InputRecords(long *score, int MapSize, int level);
-	void OutputRecords(long *score);
 public:
 	~Game(){ endGame(); }	//деструктор класса
 	void Start();	//метод инициализации компонентов

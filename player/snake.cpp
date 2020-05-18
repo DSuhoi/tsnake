@@ -54,10 +54,10 @@ int Snake::move(Map &map, const int bt){
 	}
 	
 	if(teleport){
-	if(Body[0].x == 1) Body[0].x = (map.getWidth()-3);
-	else if(Body[0].x == (map.getWidth()-2)) Body[0].x = 2;
-	else if(Body[0].y == 1) Body[0].y = (map.getHeight()-2);
-	else if(Body[0].y == (map.getHeight()-1)) Body[0].y = 2;
+	if(Body[0].x == 0) Body[0].x = (map.getWidth()-1);
+	else if(Body[0].x == map.getWidth()) Body[0].x = 1;
+	else if(Body[0].y == 0) Body[0].y = (map.getHeight()-1);
+	else if(Body[0].y == map.getHeight()) Body[0].y = 1;
 	}
 	
 	map.setMap(Body[0].x,Body[0].y, HEAD);	//ставим символ головы

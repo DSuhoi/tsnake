@@ -33,21 +33,22 @@ void Map::selectMap(int select){
 	update(map);		//обновление экрана
 	switch(select){	//выбор размера поля
 	case 0: width = SmallW; height = SmallH; break;
-	case 1: width = MediumW; height = MediumH; break;
 	case 2: width = BigW; height = BigH; break;
+	case 1: 
+	default: width = MediumW; height = MediumH; break;
 	};
 	
 	//создание границ
 	printScr(map,WIDTH - 9, 0,(char*)"TSNAKE", BLUE);
 	
-	for(int i=1; i<width-1;i++){
-		setMap(i, 1, BORDERCHR);
-		setMap(i, height-1, BORDERCHR);
+	for(int i=0; i<=width;i++){
+		setMap(i, 0, BORDERCHR);
+		setMap(i, height, BORDERCHR);
 	}
 	
-	for(int i=1; i<height-1;i++){
-		setMap(1, i, BORDERCHR);
-		setMap(width-2, i, BORDERCHR);
+	for(int i=0; i<=height;i++){
+		setMap(0, i, BORDERCHR);
+		setMap(width, i, BORDERCHR);
 	}
 }
 
@@ -83,7 +84,7 @@ void Map::initFruit(int l){
      do{	 
 		r.x = std::rand()% (width-2);	//случайные координаты
 		r.y = std::rand()% (height-1);
-		}while(r.x < 2 || r.y < 2 || isFruit(r));
+		}while(r.x < 2 || r.y < 2 || isFruit(r) || isBord(r));
 	fruit[i] = r;	//проверка и присвоение координат
 	setMap(fruit[i].x,fruit[i].y,FRUITCHR);}
 }
@@ -103,9 +104,9 @@ void Map::initBord(Coords snake){
 	do{
 		r.x = std::rand()% (width-2);	//генерируем и проверяем координаты
 		r.y = std::rand()% (height-1);	//не ближе 5 блоков до начального положения змеи
-	   }while(isBord(r) || (r.x < (snake.x+5) && r.x > (snake.x-3) && r.y == snake.y ) || r.x < 2 || r.y < 2 || isFruit(r));
+	   }while(isBord(r) || (r.x < (snake.x+5) && r.x > (snake.x-3) && r.y == snake.y ) || r.x < 2 || r.y < 2);
 	border[i] = r;	//присвоение и вывод препятствий по координатам
-	setMap(border[i].x,border[i].y,BORDERCHR); }
+	}
 }
 
 //создание фруктов
@@ -127,6 +128,32 @@ void Map::setFruitOnMap(Coords &fr, Coords *snake, int len){
 	setMap(fruit[set].x,fruit[set].y,FRUITCHR);	//и вывод фрукта
 	}
 }
+
+//копирование координат
+void Map::BorderCpy(int len, Coords *bd){
+	lenBorder = len;	//если кол-во координат больше длины массива
+	if(border==NULL) border = new Coords[lenBorder];	
+	for(int i=0; i<lenBorder; i++)
+		border[i] = bd[i];
+}
+
+//обновление изображения всех объектов карты
+void Map::updateMap(){
+	for(int i=0; i<=width;i++){
+		setMap(i, 0, BORDERCHR);
+		setMap(i, height, BORDERCHR); }
+	
+	for(int i=0; i<=height;i++){
+		setMap(0, i, BORDERCHR);
+		setMap(width, i, BORDERCHR); }
+	
+	for(int i=0; i<lenBorder; i++)
+		setMap(border[i].x, border[i].y, BORDERCHR);
+	
+	for(int i=0; i<lenFruit; i++)
+		setMap(fruit[i].x, fruit[i].y, FRUITCHR);
+}
+
 ////////////////////////////////////////////////////////////////////////
 
 //проверки координат поля
@@ -143,6 +170,7 @@ bool Map::isFruit(Coords &cd){
 }
 
 bool Map::isBord(Coords cd){
+	if(border==NULL) return false;
 	for(int i=0; i<lenBorder; i++)
 		if(cd == border[i]) return true;
 	return false;
@@ -180,7 +208,6 @@ void Map::setMap(int x, int y, chtype ch){
 ////////////////////////////////////////////////////////////////////////
 int Map::getHeight(){ return height; }	//вернуть высоту карты
 int Map::getWidth(){ return width; }	//вернуть длину карты
-WINDOW* Map::getMap(){ return map; }	//возвращаем указатель на окно карты
 ////////////////////////////////////////////////////////////////////////
 
 

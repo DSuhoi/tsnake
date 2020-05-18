@@ -11,7 +11,7 @@
 #ifndef __SNAKE_H__
 #define __SNAKE_H__
 
-#include "../map/map.h"
+#include "../menu/map.h"
 
 const chtype EMPTYCHR = ' ';		//пустой символ
 const chtype BODYCHR = 'o' | COLOR_PAIR(GREEN);	//символ тела змеи
