@@ -8,8 +8,7 @@ Snake::~Snake(){ endSnake(); }	//деструктор
 void Snake::initSnake(Map &map, bool tp){
 	Body = new Coords[map.getHeight()*map.getWidth()];
 	snakeLen = START_SEG;
-	Body[0].x = map.getWidth()/2 - 2;
-	Body[0].y = map.getHeight()/2;
+	Body[0] = {3, 3};
 	headVect = KEY_RIGHT;	//по умолчанию движется вправо
 	for(int i=snakeLen; i>=0; i--) Body[i] = Body[0];
 	teleport = tp;

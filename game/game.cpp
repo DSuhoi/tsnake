@@ -23,9 +23,7 @@ void Game::StartGame(int mode){	//настройка:
 	snake->initSnake(map, menu.getConfig().teleport);	//размер змеи и способность к телепортации
 	if(menu.getConfig().border && mode)		//если на поле нужны препятствия
 	map.initBord(snake->info());		//то создаем их
-	map.initFruit(menu.getConfig().fruitSize);	//кол-во фруктов и их расположение
-	if(menu.getConfig().speed>0)
-	halfdelay(10/menu.getConfig().speed);	//создание задержки (нужно ещё доработать этот алгоритм)
+	map.initFruit(menu.getConfig().fruitSize);	//кол-во фруктов и их расположение	
 	update();				//обновление экрана
 	GameTime = time(0);		//запоминаем время начала игры
 	isGame = true;			//игра началась!
@@ -70,8 +68,8 @@ void Game::process(){
 	do{	//цикл игры
 		
 		resultThisGame = (snake->getSnakeLen()-START_SEG)*12;
-		
-		cnt = periph(menu.setControl());	//обрабатываем кнопки по пользовательскому шаблону
+		//создание задержки (нужно ещё доработать этот алгоритм)
+		cnt = periph(menu.setControl(), (float)10/menu.getConfig().speed);	//обрабатываем кнопки по пользовательскому шаблону
 		
 		switch (cnt){
 		case 'h': menu.HelpLoop(); break;	//запускаем меню
@@ -88,6 +86,8 @@ void Game::process(){
 	
 	//убиваем змею
 	snake->killSnake(map);
+	
+	sleep(50);	//задержка в 500мс
 	
 	if(resultLastGame<resultThisGame){	//сохраняем результаты игры
 		gameScore[menu.getConfig().mapSize*10 + (menu.getConfig().speed-1)] = resultThisGame;

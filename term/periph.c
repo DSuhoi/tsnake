@@ -1,15 +1,15 @@
 #include <ncurses.h>
 #include "../menu/menu.h"
 #include "periph.h"
-//#include <unistd.h> 
+#include <unistd.h> 
 
 
 void initPeriph(){
 	initscr();
 	start_color();
 	noecho();
-	halfdelay(1);
-	//nodelay(stdscr,true);
+	//halfdelay(1);
+	nodelay(stdscr,true);
 	keypad(stdscr,true);
 }
 
@@ -23,8 +23,9 @@ void endPeriph() {
 
 int periph(){
 	int tmp;
+	usleep(100000);	//задержка для приёма
 	int c = getch();
-	//usleep(150000);
+	flushinp();	//очищаем буфер клавиатуры
 	switch(c){
 	case KEY_DOWN: tmp = KEY_DOWN; break;
 	case KEY_UP: tmp = KEY_UP; break;
@@ -41,10 +42,11 @@ int periph(){
 
 
 
-int periph(int *ctr){
+int periph(int *ctr, float pause){
 	int tmp;
+	usleep(pause*30000);
 	int c = getch();
-	//usleep(150000);
+	flushinp();
 	if(c == ctr[DOWN]) tmp = KEY_DOWN;
 	else if(c == ctr[UP]) tmp = KEY_UP;
 	else if(c == ctr[LEFT]) tmp = KEY_LEFT;
