@@ -72,12 +72,12 @@ void Game::process(){
 		cnt = periph(menu.setControl(), (float)10/menu.getConfig().speed);	//обрабатываем кнопки по пользовательскому шаблону
 		
 		switch (cnt){
-		case 'h': menu.HelpLoop(); break;	//запускаем меню
-		case 'p': cnt = menu.PauseLoop(); if(cnt==GAME_END) return; break;	//берём паузу
+		case 'h': menu.HelpLoop(); map.updateMap(); break;	//запускаем меню
+		case 'p': cnt = menu.PauseLoop(); if(cnt==GAME_END) return; map.updateMap(); break;	//берём паузу
 		case KEY_EXIT: return; break;	//выходим из игры
 		case KEY_ENTER:	//если другие клавиши не для управления, то
-		case ERR: map.updateMap(); snake->move(map,snake->getVector()); break;	//перемещаемся без поворотов
-		default: map.updateMap(); snake->move(map, cnt); break;	//иначе задаем новый вектор движению игрока
+		case ERR: snake->move(map,snake->getVector()); break;	//перемещаемся без поворотов
+		default: snake->move(map, cnt); break;	//иначе задаем новый вектор движению игрока
 		};
 		//выводим текущие значения счета игры, уровня скорости и времени
 		map.printSubMenuActive(resultThisGame, GameTime);

@@ -83,9 +83,9 @@ void Map::initFruit(int l){
 	
 	for(int i=0; i<lenFruit; i++){
      do{	 
-		r.x = std::rand()% (width-2);	//случайные координаты
-		r.y = std::rand()% (height-1);
-		}while(r.x < 2 || r.y < 2 || isFruit(r) || isBord(r));
+		r.x = std::rand()% width;	//случайные координаты
+		r.y = std::rand()% height;
+		}while(r.x < 1 || r.y < 1 || isFruit(r) || isBord(r));
 	fruit[i] = r;	//проверка и присвоение координат
 	setMap(fruit[i].x,fruit[i].y,FRUITCHR);}
 }
@@ -103,9 +103,9 @@ void Map::initBord(Coords snake){
 	
 	for(int i = 0; i<lenBorder; i++){	
 	do{
-		r.x = std::rand()% (width-2);	//генерируем и проверяем координаты
-		r.y = std::rand()% (height-1);	//не ближе 5 блоков до начального положения змеи
-	   }while(isBord(r) || (r.x < (snake.x+5) && r.x > (snake.x-3) && r.y == snake.y ) || r.x < 2 || r.y < 2);
+		r.x = std::rand()% width;	//генерируем и проверяем координаты
+		r.y = std::rand()% height;	//не ближе 5 блоков до начального положения змеи
+	   }while(isBord(r) || (r.x < (snake.x+5) && r.x > (snake.x-3) && r.y == snake.y ) || r.x < 1 || r.y < 1);
 	border[i] = r;	//присвоение и вывод препятствий по координатам
 	}
 }
@@ -121,10 +121,10 @@ void Map::setFruitOnMap(Coords &fr, Coords *snake, int len){
 		if(fr == fruit[set]){
      do{	
 		if(errCnt++>1000) return; //если прошло больше 1000 повторений, то выходим из цикла
-		r.x = std::rand()% (width-2);	//случайные координаты
-		r.y = std::rand()% (height-1);
+		r.x = std::rand()% width;	//случайные координаты
+		r.y = std::rand()% height;
 		//проверка координат
-		}while(isSnake(r,snake,len) || r.x < 2 || r.y < 2 || isFruit(r) || isBord(r));
+		}while(isSnake(r,snake,len) || r.x < 1 || r.y < 1 || isFruit(r) || isBord(r));
 	fruit[set] = r;	//присвоение корректных координат
 	setMap(fruit[set].x,fruit[set].y,FRUITCHR);	//и вывод фрукта
 	}
