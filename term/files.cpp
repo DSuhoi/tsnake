@@ -43,14 +43,16 @@ CONFIG LoadSettings(int *control){
 //чтение карты
 bool LoadMap(std::string file, int &Size, Map &map){
 	int len;
+	Coords spawn;
 	std::ifstream fin(FOLDER_FILE + file, std::ios::binary);
 	if(!fin) return false;
 	fin.read((char*)&Size, sizeof(Size));
+	fin.read((char*)&spawn, sizeof(spawn));
 	fin.read((char*)&len, sizeof(len));
 	Coords *arr = new Coords[len];
 	for(int i=0; i<len; i++)
 		fin.read((char*)&arr[i], sizeof(arr[i]));
-	map.BorderCpy(len, arr);
+	map.BorderCpy(len, arr, spawn);
 	delete [] arr;
 	fin.close();
 	return true;

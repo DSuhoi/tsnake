@@ -26,6 +26,7 @@ void Map::initMap(){
 	map = newwin(HEIGHT+2, WIDTH, (y - (HEIGHT+2))/2, (x - WIDTH)/2);
 	lenFruit = 0;	//установка значений
 	lenBorder = 0;
+	spawnSnake = {3,3}; //координаты змеи
 }
 
 //выбор карты
@@ -61,7 +62,7 @@ void Map::endMap(){
 	
 	width = 0;	//сброс ширины и высоты поля
 	height = 0;
-	
+	spawnSnake = {3,3};
 	lenFruit = 0; //сброс параметров кол-ва фруктов и препятствий
 	lenBorder = 0;
 	
@@ -130,11 +131,12 @@ void Map::setFruitOnMap(Coords &fr, Coords *snake, int len){
 }
 
 //копирование координат
-void Map::BorderCpy(int len, Coords *bd){
+void Map::BorderCpy(int len, Coords *bd, Coords spawn){
 	lenBorder = len;	//если кол-во координат больше длины массива
 	if(border==NULL) border = new Coords[lenBorder];	
 	for(int i=0; i<lenBorder; i++)
 		border[i] = bd[i];
+	spawnSnake = spawn;
 }
 
 //обновление изображения всех объектов карты
@@ -206,6 +208,7 @@ void Map::setMap(int x, int y, chtype ch){
 }
 
 ////////////////////////////////////////////////////////////////////////
+Coords& Map::setSpawnSnake(){ return spawnSnake; }	//установка координат появления змеи
 int Map::getHeight(){ return height; }	//вернуть высоту карты
 int Map::getWidth(){ return width; }	//вернуть длину карты
 ////////////////////////////////////////////////////////////////////////

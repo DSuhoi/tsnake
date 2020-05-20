@@ -359,16 +359,14 @@ int Menu::PauseLoop(){
 	
 	while(1){
 	
-	wattron(info, COLOR_PAIR(GREEN));
-	
 	for(int i=0; i<4; i++){
-	if(i==hiLight) wattron(info, A_BOLD);
+	if(i==hiLight) wattron(info, COLOR_PAIR(GREEN));
 	
 	printScr(info, 2, i+1, (char*)pauseMenuStr[i].c_str());
 	
-	wattroff(info, A_BOLD);	
+	wattroff(info, COLOR_PAIR(GREEN));
 	}
-	wattroff(info, COLOR_PAIR(BLUE));
+	
 	switch(periph()){
 	case KEY_UP: if(hiLight>0) hiLight--; break;
 	case KEY_DOWN: if(hiLight<3) hiLight++; break;

@@ -49,6 +49,7 @@ private:
 	WINDOW *map;	//окно карты
 	Coords *border;	//указатель на координаты препятствий
 	Coords *fruit;	//указатель на координаты фруктов
+	Coords spawnSnake;	//координаты появления змеи
 	int lenFruit;	//кол-во фруктов
 	int lenBorder;	//кол-во препятствий
 protected:
@@ -67,10 +68,11 @@ public:
 	void setMap(int x, int y, chtype ch);	//установка символа на карте
 	void printSubMenuStatic(const long lastScore, const int level);	//вывод статичной части подменю
 	void printSubMenuActive(const long score, time_t &t);	//вывод обновляющейся части подменю
-	void BorderCpy(int len, Coords *bd);	//копирование координат
+	void BorderCpy(int len, Coords *bd, Coords spawn);	//копирование координат
 	int getHeight();	//вывод высоты карты
 	int getWidth();		//вывод ширины карты
 	//////////////////////////////////////////////
+	Coords& setSpawnSnake();	//установка координат появления змеи
 	bool isSnake(Coords cd, Coords *snake, int len);	//проверка координат
 	bool isFruit(Coords &cd);
 	bool isBord(Coords cd);
