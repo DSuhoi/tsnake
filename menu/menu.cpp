@@ -183,10 +183,10 @@ void Menu::LvlSettingsLoop(){
 			case 5: conf.teleport = true; break;
 			}; update(menu);
 				break;
-	case KEY_EXIT: return; SaveSettings(conf,buttons); break;
+	case KEY_EXIT: SaveSettings(conf,buttons); return; break;
 	case KEY_ENTER: 
 			if(hiLight==0){ SaveSettings(conf,buttons); return; }
-			else if(hiLight==6) conf = {8, 1, 1, false, false, false};
+			else if(hiLight==6){ conf = {8, 1, 1, false, false, false}; update(menu); }
 			else if(hiLight==7){
 				if(PrintInfo(true, InfoWidth-6, InfoHeight,(char*)"CLEAR DATA ?"))
 					conf.clearScore = true;

@@ -65,6 +65,8 @@ void Game::process(){
 	
 	map.printSubMenuStatic(resultLastGame, menu.getConfig().speed);
 	
+	map.updateMap();	//обновляем карту
+	
 	do{	//цикл игры
 		
 		resultThisGame = (snake->getSnakeLen()-START_SEG)*12;
