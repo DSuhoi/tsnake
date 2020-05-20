@@ -34,18 +34,18 @@ int Menu::MainMenuLoop(){
 	
 	printScr(menu, MenuWidth/2 - 5, 0, (char*)"TSNAKE 1.0", BLUE);
 	
-	wattron(menu, COLOR_PAIR(GREEN));	//зелёные элементы
+		//зелёные элементы
 	
 	for(int i=0; i<6;i++){
 		if(i==hiLight)	//выбранную строку подсвечиваем
-			wattron(menu, A_BOLD);
+			wattron(menu, COLOR_PAIR(GREEN));
 		//выводим элементы массива	
 		printScr(menu, 2, i+1, (char*)menuPart[i].c_str());
 		
-		wattroff(menu, A_BOLD);
+			wattroff(menu, COLOR_PAIR(GREEN));
 	}
 	
-	wattroff(menu, COLOR_PAIR(GREEN));
+
 	
 	switch(periph()){	//читаем клавиши
 	case KEY_UP: if(hiLight>0) hiLight--; break;	//выбор элемента меню
@@ -127,7 +127,7 @@ void Menu::LvlSettingsLoop(){
 		
 	for(int i=0; i<8;i++){
 		if(i==hiLight){
-			wattron(menu, A_BOLD);
+			wattron(menu, COLOR_PAIR(GREEN));
 			selectCh = 1;
 		} else selectCh = 0;
 		
@@ -146,7 +146,7 @@ void Menu::LvlSettingsLoop(){
 			printScr(menu, MenuWidth-7, i+2, buffStr); break;
 		};
 		
-		wattron(menu, COLOR_PAIR(GREEN));
+		
 		
 		//элемент выхода из меню
 		if(i==0) printScr(menu, 2, 1, (char*)menuPart[0].c_str());
@@ -159,7 +159,7 @@ void Menu::LvlSettingsLoop(){
 		//очистка массива
 		for(int i=0; i<9; i++) buffStr[i] = 0;
 		
-		wattroff(menu, A_BOLD | COLOR_PAIR(GREEN));
+		wattroff(menu, COLOR_PAIR(GREEN));
 	}
 	
 	switch(periph()){
@@ -214,17 +214,17 @@ void Menu::ControlSettingsLoop(){
 	
 	for(int i=0; i<6;i++){
 		
-		if(i==hiLight) wattron(menu, A_BOLD);
+		if(i==hiLight) wattron(menu, COLOR_PAIR(GREEN));
 		
 		
-		if(i<5 && i!=0){
+		if(i<5 && i>0){
 		if(buttons[i-1]<CURS_KEY_MIN || buttons[i-1]>CURS_KEY_MAX)
 			printScr(menu, MenuWidth-7, i+2, buttons[i-1]);
 		else printScr(menu, MenuWidth-7, i+2, (char*)cursKey[buttons[i-1]-CURS_KEY_MIN].c_str());
 			
 		}
 		
-		wattron(menu, COLOR_PAIR(GREEN));
+		
 		
 		//элемент выхода из меню
 		if(i==0) printScr(menu, 2, 1, (char*)menuPart[0].c_str());
@@ -234,7 +234,7 @@ void Menu::ControlSettingsLoop(){
 		else printScr(menu, 2, i+2, (char*)menuPart[i].c_str());
 		
 		
-		wattroff(menu, A_BOLD | COLOR_PAIR(GREEN));
+		wattroff(menu, COLOR_PAIR(GREEN));
 	}
 	
 	switch (periph()){
@@ -252,8 +252,9 @@ void Menu::ControlSettingsLoop(){
 		else {	//создаем информационное окно для обработки нажатой клавиши
 		PrintInfo(false, InfoWidth, InfoHeight-1, (char*)"Press the button!");
 		cbreak();
-		int ch = getButton();	//принимаем символ
-		halfdelay(1);
+		nodelay(stdscr, false);	//отменяем задержку
+		int ch = getch();	//принимаем символ
+		nodelay(stdscr, true);
 		deleteWindow(info);	//удаляем окно
 		
 		switch(hiLight){	//присваиваем символ

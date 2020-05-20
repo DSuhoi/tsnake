@@ -21,8 +21,6 @@ inline void sleep(int tmp){ usleep(tmp*SLEEP_TIME); }	//функция ручн�
 
 enum CONTROL {DOWN = 0, UP, LEFT, RIGHT};
 
-inline int getButton(){ return getch(); }	//получение символа
-
 void initPeriph();	//иницилизация экрана и обработки клавиш
 void endPeriph();	//завершение функций обработки клавиш
 int periph();		//обработка кнопок
