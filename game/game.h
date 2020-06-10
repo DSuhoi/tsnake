@@ -38,6 +38,7 @@ private:
 protected:
 	void StartGame(int mode);	//метод настройки поля
 	bool checkWin();	//проверка на проигрыш
+	int genScore(int level);	//генерация счёта
 public:
 	~Game(){ endGame(); }	//деструктор класса
 	void Start();	//метод инициализации компонентов

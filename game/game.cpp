@@ -21,7 +21,7 @@ void Game::StartGame(int mode){	//настройка:
 	map.selectMap(menu.getConfig().mapSize);	//размер поля
 	snake = new Snake();
 	snake->initSnake(map, menu.getConfig().teleport);	//размер змеи и способность к телепортации
-	if(menu.getConfig().border && mode)		//если на поле нужны препятствия
+	if(menu.getConfig().border && !mode)		//если на поле нужны препятствия
 	map.initBord(snake->info());		//то создаем их
 	map.initFruit(menu.getConfig().fruitSize);	//кол-во фруктов и их расположение	
 	update();				//обновление экрана
@@ -39,12 +39,20 @@ bool Game::checkWin(){
 	else return GAME_NOT_WIN;	//иначе игра ещё идёт
 }
 
+//генерация счёта
+int Game::genScore(int level){
+	srand(time(0));
+	return level + rand()%(level + 5);
+	
+}
+
 //игровой процесс (основная логика)
 void Game::process(){
 	
 	int cnt = 0;	//переменная для сохранения промежуточных значений результата игры
 	int modeMap = 0;	//режим игры
-	Repeat:		//метка goto
+	
+	while(1){
 	
 	if(cnt != GAME_RESTART){ //если не было дано команды перезагрузить игру, то заходим в меню
 		switch(menu.MainMenuLoop()){
@@ -58,7 +66,9 @@ void Game::process(){
 	
 	if(menu.getConfig().clearScore){	//если нужно стереть данные
 	for(int i=0; i<30; i++) gameScore[i] = 0;	//обнуляем и записываем в файл
-	SaveRecords(gameScore); menu.getConfig().clearScore = false; } 
+	SaveRecords(gameScore); menu.getConfig().clearScore = false; 
+	menu.getConfig().clearScore = 0;
+	} 
 	
 	long resultLastGame = LoadRecords(gameScore, menu.getConfig().mapSize, menu.getConfig().speed);
 	long resultThisGame = 0;
@@ -67,9 +77,9 @@ void Game::process(){
 	
 	map.updateMap();	//обновляем карту
 	
+	int oldSnakeLen = snake->getSnakeLen();	//предыдущая длина змеи
+	
 	do{	//цикл игры
-		
-		resultThisGame = (snake->getSnakeLen()-START_SEG)*12;
 		//создание задержки (нужно ещё доработать этот алгоритм)
 		cnt = periph(menu.setControl(), (float)10/menu.getConfig().speed);	//обрабатываем кнопки по пользовательскому шаблону
 		
@@ -81,6 +91,11 @@ void Game::process(){
 		case ERR: snake->move(map,snake->getVector()); break;	//перемещаемся без поворотов
 		default: snake->move(map, cnt); break;	//иначе задаем новый вектор движению игрока
 		};
+		
+		if(snake->getSnakeLen()>oldSnakeLen){
+			oldSnakeLen = snake->getSnakeLen();
+			resultThisGame += genScore(menu.getConfig().speed);//(snake->getSnakeLen()-START_SEG)*12;
+		}
 		//выводим текущие значения счета игры, уровня скорости и времени
 		map.printSubMenuActive(resultThisGame, GameTime);
 		//проверяем игру с учётом выбора в меню паузы
@@ -95,7 +110,7 @@ void Game::process(){
 		gameScore[menu.getConfig().mapSize*10 + (menu.getConfig().speed-1)] = resultThisGame;
 		SaveRecords(gameScore);
 	}
-	
+
 	//если не был запланирован выход из игры (проигрыш)
 	if(cnt<GAME_RESTART)	//даем пользователю выбор
 	if(menu.PrintInfo(true, InfoWidth, InfoHeight,(char*)"  Restart Game ?"))
@@ -109,8 +124,7 @@ void Game::process(){
 	
 	isGame = false;			//игра окончена		
 	
-	goto Repeat;	//единственная метка goto для упрощения работы цикла
-
+	}
 }
 
 //завершение игры
