@@ -29,15 +29,15 @@ private:
 public:
 	Snake();
 	~Snake();
-	void initSnake(Map &map, bool tp); //установка начальных координат
-	void endSnake();	//удаление параметров змеи
-	int move(Map &map, const int bt);	//метод движения змеи
-	Coords* getBody();					//указатель на координаты змеи
-	Coords getBody(int B);				//координаты сегмента тела
-	int getVector();					//получение направления движения
-	int getSnakeLen();	//получение длины змеи
-	Coords info();		//информация о координатах головы
-	void killSnake(Map &map);
+	void InitSnake(Map &map, bool tp); //установка начальных координат
+	void EndSnake();	//удаление параметров змеи
+	int Move(Map &map, const int bt);	//метод движения змеи
+	Coords* GetBody();					//указатель на координаты змеи
+	Coords GetBody(int B);				//координаты сегмента тела
+	int GetVector();					//получение направления движения
+	int GetSnakeLen();	//получение длины змеи
+	Coords Info();		//информация о координатах головы
+	void KillSnake(Map &map);
 };
 
 #endif

@@ -57,25 +57,25 @@ protected:
 public:
 	Map(); 
 	~Map();
-	void initMap();	//настройка карты
-	void selectMap(int select);	//выбор карты
-	void endMap();				//удаление параметров карты
-	void initFruit(int l);	//настройка количества фруктов
-	void initBord(Coords snake);//настройка препятствий
-	void setFruitOnMap(Coords &fr, Coords *snake, int len);	//создание фруктов
-	void updateMap();	//обновление изображения всех объектов карты
+	void InitMap();	//настройка карты
+	void SelectMap(int select);	//выбор карты
+	void EndMap();				//удаление параметров карты
+	void InitFruit(int l);	//настройка количества фруктов
+	void InitBord(Coords snake);//настройка препятствий
+	void SetFruitOnMap(Coords &fr, Coords *snake, int len);	//создание фруктов
+	void UpdateMap();	//обновление изображения всех объектов карты
 	//////////////////////////////////////////////////
-	void setMap(int x, int y, chtype ch);	//установка символа на карте
-	void printSubMenuStatic(const long lastScore, const int level);	//вывод статичной части подменю
-	void printSubMenuActive(const long score, time_t &t);	//вывод обновляющейся части подменю
+	void SetMap(int x, int y, chtype ch);	//установка символа на карте
+	void PrintSubMenuStatic(const long lastScore, const int level);	//вывод статичной части подменю
+	void PrintSubMenuActive(const long score, time_t &t);	//вывод обновляющейся части подменю
 	void BorderCpy(int len, Coords *bd, Coords spawn);	//копирование координат
-	int getHeight();	//вывод высоты карты
-	int getWidth();		//вывод ширины карты
+	int GetHeight();	//вывод высоты карты
+	int GetWidth();		//вывод ширины карты
 	//////////////////////////////////////////////
-	Coords& setSpawnSnake();	//установка координат появления змеи
-	bool isSnake(Coords cd, Coords *snake, int len);	//проверка координат
-	bool isFruit(Coords &cd);
-	bool isBord(Coords cd);
+	Coords& SetSpawnSnake();	//установка координат появления змеи
+	bool IsSnake(Coords cd, Coords *snake, int len);	//проверка координат
+	bool IsFruit(Coords &cd);
+	bool IsBord(Coords cd);
 	//////////////////////////////////////////////
 };
 

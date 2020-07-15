@@ -10,44 +10,44 @@ void Game::Start(){
 	map = Map();
 	snake = NULL;
 	init_color();	//настройка цветов
-	menu.initMainMenu();		//настройка главного меню
-	map.initMap();			//настройка размера карты
+	menu.InitMainMenu();		//настройка главного меню
+	map.InitMap();			//настройка размера карты
 	update();				//обновление экрана
 }
 
 //метод настройки поля
 void Game::StartGame(int mode){	//настройка:
 	if(mode==1) menu.SelectCustomMap(map);	//если выбрана карта из файла
-	map.selectMap(menu.getConfig().mapSize);	//размер поля
+	map.SelectMap(menu.GetConfig().mapSize);	//размер поля
 	snake = new Snake();
-	snake->initSnake(map, menu.getConfig().teleport);	//размер змеи и способность к телепортации
-	if(menu.getConfig().border && !mode)		//если на поле нужны препятствия
-	map.initBord(snake->info());		//то создаем их
-	map.initFruit(menu.getConfig().fruitSize);	//кол-во фруктов и их расположение	
+	snake->InitSnake(map, menu.GetConfig().teleport);	//размер змеи и способность к телепортации
+	if(menu.GetConfig().border && !mode)		//если на поле нужны препятствия
+	map.InitBord(snake->Info());		//то создаем их
+	map.InitFruit(menu.GetConfig().fruitSize);	//кол-во фруктов и их расположение	
 	update();				//обновление экрана
 	GameTime = time(0);		//запоминаем время начала игры
 	isGame = true;			//игра началась!
 }
 
 //проверка на проигрыш
-bool Game::checkWin(){
-	Coords tmp = snake->info();	//положение головы
+bool Game::CheckWin(){
+	Coords tmp = snake->Info();	//положение головы
 	//если голова не пересекла границы поля, своё тело или препятствие (если оно есть)
-	if(tmp.x == 0 || tmp.x == (map.getWidth()) || tmp.y == 0 || 
-	tmp.y == (map.getHeight()) || map.isSnake(snake->info(),snake->getBody(),snake->getSnakeLen())
-	|| map.isBord(snake->info())) return GAME_WIN;	//то возвращаем флаг окончания игры
+	if(tmp.x == 0 || tmp.x == (map.GetWidth()) || tmp.y == 0 || 
+	tmp.y == (map.GetHeight()) || map.IsSnake(snake->Info(),snake->GetBody(),snake->GetSnakeLen())
+	|| map.IsBord(snake->Info())) return GAME_WIN;	//то возвращаем флаг окончания игры
 	else return GAME_NOT_WIN;	//иначе игра ещё идёт
 }
 
 //генерация счёта
-int Game::genScore(int level){
+int Game::GenScore(int level){
 	srand(time(0));
 	return level + rand()%(level + 5);
 	
 }
 
 //игровой процесс (основная логика)
-void Game::process(){
+void Game::Process(){
 	
 	int cnt = 0;	//переменная для сохранения промежуточных значений результата игры
 	int modeMap = 0;	//режим игры
@@ -64,50 +64,50 @@ void Game::process(){
 	
 	StartGame(modeMap);	//настройка игры
 	
-	if(menu.getConfig().clearScore){	//если нужно стереть данные
+	if(menu.GetConfig().clearScore){	//если нужно стереть данные
 	for(int i=0; i<30; i++) gameScore[i] = 0;	//обнуляем и записываем в файл
-	SaveRecords(gameScore); menu.getConfig().clearScore = false; 
-	menu.getConfig().clearScore = 0;
+	SaveRecords(gameScore); menu.GetConfig().clearScore = false; 
+	menu.GetConfig().clearScore = 0;
 	} 
 	
-	long resultLastGame = LoadRecords(gameScore, menu.getConfig().mapSize, menu.getConfig().speed);
+	long resultLastGame = LoadRecords(gameScore, menu.GetConfig().mapSize, menu.GetConfig().speed);
 	long resultThisGame = 0;
 	
-	map.printSubMenuStatic(resultLastGame, menu.getConfig().speed);
+	map.PrintSubMenuStatic(resultLastGame, menu.GetConfig().speed);
 	
-	map.updateMap();	//обновляем карту
+	map.UpdateMap();	//обновляем карту
 	
-	int oldSnakeLen = snake->getSnakeLen();	//предыдущая длина змеи
+	int oldSnakeLen = snake->GetSnakeLen();	//предыдущая длина змеи
 	
 	do{	//цикл игры
 		//создание задержки (нужно ещё доработать этот алгоритм)
-		cnt = periph(menu.setControl(), (float)10/menu.getConfig().speed);	//обрабатываем кнопки по пользовательскому шаблону
+		cnt = periph(menu.SetControl(), (float)10/menu.GetConfig().speed);	//обрабатываем кнопки по пользовательскому шаблону
 		
 		switch (cnt){
-		case 'h': menu.HelpLoop(); map.updateMap(); break;	//запускаем меню
-		case 'p': cnt = menu.PauseLoop(); if(cnt==GAME_END) return; map.updateMap(); break;	//берём паузу
+		case 'h': menu.HelpLoop(); map.UpdateMap(); break;	//запускаем меню
+		case 'p': cnt = menu.PauseLoop(); if(cnt==GAME_END) return; map.UpdateMap(); break;	//берём паузу
 		case KEY_EXIT: return; break;	//выходим из игры
 		case KEY_ENTER:	//если другие клавиши не для управления, то
-		case ERR: snake->move(map,snake->getVector()); break;	//перемещаемся без поворотов
-		default: snake->move(map, cnt); break;	//иначе задаем новый вектор движению игрока
+		case ERR: snake->Move(map,snake->GetVector()); break;	//перемещаемся без поворотов
+		default: snake->Move(map, cnt); break;	//иначе задаем новый вектор движению игрока
 		};
 		
-		if(snake->getSnakeLen()>oldSnakeLen){
-			oldSnakeLen = snake->getSnakeLen();
-			resultThisGame += genScore(menu.getConfig().speed);//(snake->getSnakeLen()-START_SEG)*12;
+		if(snake->GetSnakeLen()>oldSnakeLen){
+			oldSnakeLen = snake->GetSnakeLen();
+			resultThisGame += GenScore(menu.GetConfig().speed);//(snake->getSnakeLen()-START_SEG)*12;
 		}
 		//выводим текущие значения счета игры, уровня скорости и времени
-		map.printSubMenuActive(resultThisGame, GameTime);
+		map.PrintSubMenuActive(resultThisGame, GameTime);
 		//проверяем игру с учётом выбора в меню паузы
-	}while(checkWin()==GAME_NOT_WIN && cnt!=RETURN_MENU && cnt!=GAME_RESTART);
+	}while(CheckWin()==GAME_NOT_WIN && cnt!=RETURN_MENU && cnt!=GAME_RESTART);
 	
 	//убиваем змею
-	snake->killSnake(map);
+	snake->KillSnake(map);
 	
 	sleep(50);	//задержка в 500мс
 	
 	if(resultLastGame<resultThisGame){	//сохраняем результаты игры
-		gameScore[menu.getConfig().mapSize*10 + (menu.getConfig().speed-1)] = resultThisGame;
+		gameScore[menu.GetConfig().mapSize*10 + (menu.GetConfig().speed-1)] = resultThisGame;
 		SaveRecords(gameScore);
 	}
 
@@ -119,7 +119,7 @@ void Game::process(){
 	delete snake;			//удаляем змею
 	snake = NULL;
 	
-	map.endMap();			//удаляем карту
+	map.EndMap();			//удаляем карту
 	update();				//обновляем экран
 	
 	isGame = false;			//игра окончена		
@@ -128,7 +128,7 @@ void Game::process(){
 }
 
 //завершение игры
-void Game::endGame(){
+void Game::EndGame(){
 	if(snake!=NULL) delete snake;	//удаление объекта игрока
 	map.~Map();		//удаление объекта карты
 	endPeriph();

@@ -5,7 +5,7 @@
 
 
 //инициализация главного меню
-void Menu::initMainMenu(){
+void Menu::InitMainMenu(){
 	int x, y;	//размеры экран X*Y
 	getmaxyx(stdscr, y, x);
 	//создаем окно
@@ -419,6 +419,6 @@ bool Menu::PrintInfo(bool isSelect, int w, int h, char *buff){
 }
 
 
-CONFIG& Menu::getConfig(){ return conf; }	//возвращаем настройки карты
+CONFIG& Menu::GetConfig(){ return conf; }	//возвращаем настройки карты
 
-int* Menu::setControl(){ return buttons; } //возвращаем настройки управления
+int* Menu::SetControl(){ return buttons; } //возвращаем настройки управления

@@ -8,9 +8,9 @@ int main(void)
 	
 	game.Start();	//инициализация компонентов игры
 	
-	game.process();	//процесс игры
+	game.Process();	//процесс игры
 	
-	game.endGame();	//завершение игры
+	game.EndGame();	//завершение игры
 	
 	exit(0);
 	

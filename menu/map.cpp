@@ -16,10 +16,10 @@ bool operator !=(Coords &cd1, Coords &cd2){
 
 Map::Map(){ map = NULL; border = NULL; fruit = NULL;}	//конструктор
 
-Map::~Map(){ endMap(); deleteWindow(map); }	//деструктор
+Map::~Map(){ EndMap(); deleteWindow(map); }	//деструктор
 
 //настройка карты
-void Map::initMap(){
+void Map::InitMap(){
 	int x, y;
 	getmaxyx(stdscr, y, x);		
 	//создание окна карты
@@ -30,7 +30,7 @@ void Map::initMap(){
 }
 
 //выбор карты
-void Map::selectMap(int select){
+void Map::SelectMap(int select){
 	update(map);		//обновление экрана
 	switch(select){	//выбор размера поля
 	case 0: width = SmallW; height = SmallH; break;
@@ -43,18 +43,18 @@ void Map::selectMap(int select){
 	printScr(map,WIDTH - 9, 0,(char*)"TSNAKE", BLUE);
 	
 	for(int i=0; i<=width;i++){
-		setMap(i, 0, BORDERCHR);
-		setMap(i, height, BORDERCHR);
+		SetMap(i, 0, BORDERCHR);
+		SetMap(i, height, BORDERCHR);
 	}
 	
 	for(int i=0; i<=height;i++){
-		setMap(0, i, BORDERCHR);
-		setMap(width, i, BORDERCHR);
+		SetMap(0, i, BORDERCHR);
+		SetMap(width, i, BORDERCHR);
 	}
 }
 
 //удаление параметров карты
-void Map::endMap(){
+void Map::EndMap(){
 	
 	//проверка указателей и освобождение памяти
 	if(fruit!=NULL){ delete [] fruit; fruit = NULL; }
@@ -70,7 +70,7 @@ void Map::endMap(){
 }
 
 //настройка фруктов
-void Map::initFruit(int l){
+void Map::InitFruit(int l){
 	
 	if(l<100 || l>0) lenFruit = l;	//если не больше 100
 	else lenFruit = 1;
@@ -85,13 +85,13 @@ void Map::initFruit(int l){
      do{	 
 		r.x = std::rand()% width;	//случайные координаты
 		r.y = std::rand()% height;
-		}while(r.x < 1 || r.y < 1 || isFruit(r) || isBord(r));
+		}while(r.x < 1 || r.y < 1 || IsFruit(r) || IsBord(r));
 	fruit[i] = r;	//проверка и присвоение координат
-	setMap(fruit[i].x,fruit[i].y,FRUITCHR);}
+	SetMap(fruit[i].x,fruit[i].y,FRUITCHR);}
 }
 
 //настройка препятствий
-void Map::initBord(Coords snake){
+void Map::InitBord(Coords snake){
 	
 	lenBorder = height*width/20;	//кол-во препятствий
 	
@@ -105,13 +105,13 @@ void Map::initBord(Coords snake){
 	do{
 		r.x = std::rand()% width;	//генерируем и проверяем координаты
 		r.y = std::rand()% height;	//не ближе 5 блоков до начального положения змеи
-	   }while(isBord(r) || (r.x < (snake.x+5) && r.x > (snake.x-3) && r.y == snake.y ) || r.x < 1 || r.y < 1);
+	   }while(IsBord(r) || (r.x < (snake.x+5) && r.x > (snake.x-3) && r.y == snake.y ) || r.x < 1 || r.y < 1);
 	border[i] = r;	//присвоение и вывод препятствий по координатам
 	}
 }
 
 //создание фруктов
-void Map::setFruitOnMap(Coords &fr, Coords *snake, int len){
+void Map::SetFruitOnMap(Coords &fr, Coords *snake, int len){
 	
 	Coords r;
 	
@@ -124,9 +124,9 @@ void Map::setFruitOnMap(Coords &fr, Coords *snake, int len){
 		r.x = std::rand()% width;	//случайные координаты
 		r.y = std::rand()% height;
 		//проверка координат
-		}while(isSnake(r,snake,len) || r.x < 1 || r.y < 1 || isFruit(r) || isBord(r));
+		}while(IsSnake(r,snake,len) || r.x < 1 || r.y < 1 || IsFruit(r) || IsBord(r));
 	fruit[set] = r;	//присвоение корректных координат
-	setMap(fruit[set].x,fruit[set].y,FRUITCHR);	//и вывод фрукта
+	SetMap(fruit[set].x,fruit[set].y,FRUITCHR);	//и вывод фрукта
 	}
 }
 
@@ -140,38 +140,38 @@ void Map::BorderCpy(int len, Coords *bd, Coords spawn){
 }
 
 //обновление изображения всех объектов карты
-void Map::updateMap(){
+void Map::UpdateMap(){
 	for(int i=0; i<=width;i++){
-		setMap(i, 0, BORDERCHR);
-		setMap(i, height, BORDERCHR); }
+		SetMap(i, 0, BORDERCHR);
+		SetMap(i, height, BORDERCHR); }
 	
 	for(int i=0; i<=height;i++){
-		setMap(0, i, BORDERCHR);
-		setMap(width, i, BORDERCHR); }
+		SetMap(0, i, BORDERCHR);
+		SetMap(width, i, BORDERCHR); }
 	
 	for(int i=0; i<lenBorder; i++)
-		setMap(border[i].x, border[i].y, BORDERCHR);
+		SetMap(border[i].x, border[i].y, BORDERCHR);
 	
 	for(int i=0; i<lenFruit; i++)
-		setMap(fruit[i].x, fruit[i].y, FRUITCHR);
+		SetMap(fruit[i].x, fruit[i].y, FRUITCHR);
 }
 
 ////////////////////////////////////////////////////////////////////////
 
 //проверки координат поля
-bool Map::isSnake(Coords cd, Coords *snake, int len){
+bool Map::IsSnake(Coords cd, Coords *snake, int len){
 	for(int i=len; i>0; i--)
 		if(cd == snake[i]) return true;
 	return false;
 }
 
-bool Map::isFruit(Coords &cd){
+bool Map::IsFruit(Coords &cd){
 	for(int i=0; i<lenFruit; i++)
 		if(cd == fruit[i]) return true;
 	return false;
 }
 
-bool Map::isBord(Coords cd){
+bool Map::IsBord(Coords cd){
 	if(border==NULL) return false;
 	for(int i=0; i<lenBorder; i++)
 		if(cd == border[i]) return true;
@@ -179,7 +179,7 @@ bool Map::isBord(Coords cd){
 }
 
 //вывод статичной части подменю
-void Map::printSubMenuStatic(const long lastScore, const int level){
+void Map::PrintSubMenuStatic(const long lastScore, const int level){
 	char buffLastScore[15];	//массив для рекорда
 	char buffLevel[10];	//массив для уровня
 	sprintf(buffLastScore,"Record: %0*ld", 6, lastScore);
@@ -189,7 +189,7 @@ void Map::printSubMenuStatic(const long lastScore, const int level){
 }
 
 //вывод обновляющейся части подменю
-void Map::printSubMenuActive(const long score, time_t &t){
+void Map::PrintSubMenuActive(const long score, time_t &t){
 	int allTime = time(0) - t;	//все время с начала игры
 	unsigned int sec = allTime % 60;		//секунды
 	unsigned int min = allTime / 60;		//минуты
@@ -203,14 +203,14 @@ void Map::printSubMenuActive(const long score, time_t &t){
 
 
 //устанавливаем объект на карту
-void Map::setMap(int x, int y, chtype ch){
+void Map::SetMap(int x, int y, chtype ch){
 	printScr(map,((WIDTH-width)/2) + x, ((HEIGHT - height)/2) + y,ch);
 }
 
 ////////////////////////////////////////////////////////////////////////
-Coords& Map::setSpawnSnake(){ return spawnSnake; }	//установка координат появления змеи
-int Map::getHeight(){ return height; }	//вернуть высоту карты
-int Map::getWidth(){ return width; }	//вернуть длину карты
+Coords& Map::SetSpawnSnake(){ return spawnSnake; }	//установка координат появления змеи
+int Map::GetHeight(){ return height; }	//вернуть высоту карты
+int Map::GetWidth(){ return width; }	//вернуть длину карты
 ////////////////////////////////////////////////////////////////////////
 
 

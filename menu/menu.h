@@ -48,7 +48,7 @@ private:
 	CONFIG conf;		//настройки карты
 	char NameFile[STRLEN];	//файл карты
 public:
-	void initMainMenu();	//инициализация главного меню
+	void InitMainMenu();	//инициализация главного меню
 	int MainMenuLoop(); 	//цикл главного меню
 	void SelectCustomMap(Map &map);	//выбор карты из файла
 	bool SearchMap();		//поиск карты
@@ -57,8 +57,8 @@ public:
 	void HelpLoop();			//информация
 	int PauseLoop();			//окно паузы
 	bool PrintInfo(bool isSelect, int w, int h, char *buff);	//вывод информации в отдельном окне
-	CONFIG& getConfig();		//возвращение настроек карты
-	int* setControl();		//возвращение настроек управления
+	CONFIG& GetConfig();		//возвращение настроек карты
+	int* SetControl();		//возвращение настроек управления
 };
 
 
