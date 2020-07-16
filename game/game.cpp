@@ -17,10 +17,10 @@ void Game::Start(){
 
 //метод настройки поля
 void Game::StartGame(int mode){	//настройка:
-	if(mode==1) menu.SelectCustomMap(map);	//если выбрана карта из файла
+	if(mode==1) SelectCustomMap();	//если выбрана карта из файла
 	map.SelectMap(menu.GetConfig().mapSize);	//размер поля
 	snake = new Snake();
-	snake->InitSnake(map, menu.GetConfig().teleport);	//размер змеи и способность к телепортации
+	snake->InitSnake(map.GetSpawnSnake(), map.GetHeight()*map.GetWidth(), menu.GetConfig().teleport);	//размер змеи и способность к телепортации
 	if(menu.GetConfig().border && !mode)		//если на поле нужны препятствия
 	map.InitBord(snake->Info());		//то создаем их
 	map.InitFruit(menu.GetConfig().fruitSize);	//кол-во фруктов и их расположение	
@@ -45,6 +45,13 @@ int Game::GenScore(int level){
 	return level + rand()%(level + 5);
 	
 }
+
+void Game::SelectCustomMap(){
+	int Size;
+	LoadMap(menu.GetNameFile(), Size, map);	//если такого файла нет
+	menu.GetConfig().mapSize = Size;	//присваиваем переменную
+}
+
 
 //игровой процесс (основная логика)
 void Game::Process(){
@@ -75,22 +82,37 @@ void Game::Process(){
 	
 	map.PrintSubMenuStatic(resultLastGame, menu.GetConfig().speed);
 	
-	map.UpdateMap();	//обновляем карту
-	
 	int oldSnakeLen = snake->GetSnakeLen();	//предыдущая длина змеи
 	
 	do{	//цикл игры
+		
 		//создание задержки (нужно ещё доработать этот алгоритм)
 		cnt = periph(menu.SetControl(), (float)10/menu.GetConfig().speed);	//обрабатываем кнопки по пользовательскому шаблону
 		
 		switch (cnt){
-		case 'h': menu.HelpLoop(); map.UpdateMap(); break;	//запускаем меню
-		case 'p': cnt = menu.PauseLoop(); if(cnt==GAME_END) return; map.UpdateMap(); break;	//берём паузу
+		case 'h': menu.HelpLoop();  break;	//запускаем меню
+		case 'p': cnt = menu.PauseLoop(); if(cnt==GAME_END) return; break;	//берём паузу
 		case KEY_EXIT: return; break;	//выходим из игры
 		case KEY_ENTER:	//если другие клавиши не для управления, то
-		case ERR: snake->Move(map,snake->GetVector()); break;	//перемещаемся без поворотов
-		default: snake->Move(map, cnt); break;	//иначе задаем новый вектор движению игрока
+		case ERR: snake->Move(snake->GetVector()); break;	//перемещаемся без поворотов
+		default: snake->Move(cnt); break;	//иначе задаем новый вектор движению игрока
 		};
+		
+		if(map.IsFruit(snake->Info())){	//если змея съела фрукт, то увеличиваем её длину
+			snake->IncSnakeLen();
+			map.SetFruitOnMap(snake->Info(), snake->GetBody(), snake->GetSnakeLen());
+		}
+		
+			//если активен режим телепорта
+		if(menu.GetConfig().teleport){
+			if(snake->Info().x == 0) snake->SetHead(map.GetWidth()-1, snake->Info().y);
+			else if(snake->Info().x == map.GetWidth()) snake->SetHead(1, snake->Info().y);
+			else if(snake->Info().y == 0) snake->SetHead(snake->Info().x, map.GetHeight()-1);
+			else if(snake->Info().y == map.GetHeight()) snake->SetHead(snake->Info().x, 1);
+		}
+			
+		map.UpdateMap(snake->GetBody(), snake->GetSnakeLen());	//обновляем карту	
+		
 		
 		if(snake->GetSnakeLen()>oldSnakeLen){
 			oldSnakeLen = snake->GetSnakeLen();
@@ -98,11 +120,15 @@ void Game::Process(){
 		}
 		//выводим текущие значения счета игры, уровня скорости и времени
 		map.PrintSubMenuActive(resultThisGame, GameTime);
+		
+		
+		
 		//проверяем игру с учётом выбора в меню паузы
 	}while(CheckWin()==GAME_NOT_WIN && cnt!=RETURN_MENU && cnt!=GAME_RESTART);
 	
 	//убиваем змею
-	snake->KillSnake(map);
+	//snake->KillSnake(map);
+	map.SetMap(snake->Info().x, snake->Info().y, KILL);
 	
 	sleep(50);	//задержка в 500мс
 	

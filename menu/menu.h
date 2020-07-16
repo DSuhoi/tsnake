@@ -47,15 +47,16 @@ private:
 	int buttons[4];		//настройки управления
 	CONFIG conf;		//настройки карты
 	char NameFile[STRLEN];	//файл карты
-public:
-	void InitMainMenu();	//инициализация главного меню
-	int MainMenuLoop(); 	//цикл главного меню
-	void SelectCustomMap(Map &map);	//выбор карты из файла
+protected:
 	bool SearchMap();		//поиск карты
 	void LvlSettingsLoop();		//меню настроек игры
 	void ControlSettingsLoop();	//меню настроек управления
-	void HelpLoop();			//информация
-	int PauseLoop();			//окно паузы
+public:
+	void InitMainMenu();	//инициализация главного меню
+	int MainMenuLoop(); 	//цикл главного меню
+	void HelpLoop();		//информация
+	int PauseLoop();		//окно паузы
+	char* GetNameFile();	//возвращение названия файла
 	bool PrintInfo(bool isSelect, int w, int h, char *buff);	//вывод информации в отдельном окне
 	CONFIG& GetConfig();		//возвращение настроек карты
 	int* SetControl();		//возвращение настроек управления

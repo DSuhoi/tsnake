@@ -13,10 +13,17 @@
 
 #include <ncurses.h>
 #include <ctime>
+#include "../term/coords.h"
 #include "../term/display.h"
+
 
 const char BORDERCHR = '#';
 const chtype FRUITCHR = '$' | COLOR_PAIR(YELLOW);
+
+const chtype EMPTYCHR = ' ';		//пустой символ
+const chtype BODYCHR = 'o' | COLOR_PAIR(GREEN);	//символ тела змеи
+const chtype HEAD = '@' | COLOR_PAIR(GREEN);	//символ головы змеи
+const chtype KILL = 'X' | COLOR_PAIR(RED);		//символ прохождения препятствия
 
 //ширина и высота разных карт
 const int SmallW = 37;
@@ -31,16 +38,6 @@ const int BigH = 20;
 //ширина и высота окна
 const int WIDTH = 80;		
 const int HEIGHT = 22;		
-
-
-class Coords {	//класс координат
-public:
-	int x;
-	int y;
-		//перегрузка операторов сравнения для координат
-	friend bool operator ==(Coords &cd1, Coords &cd2);
-	friend bool operator !=(Coords &cd1, Coords &cd2);
-};
 
 
 class Map {
@@ -58,12 +55,12 @@ public:
 	Map(); 
 	~Map();
 	void InitMap();	//настройка карты
-	void SelectMap(int select);	//выбор карты
 	void EndMap();				//удаление параметров карты
-	void InitFruit(int l);	//настройка количества фруктов
+	void SelectMap(int select);	//выбор карты
 	void InitBord(Coords snake);//настройка препятствий
-	void SetFruitOnMap(Coords &fr, Coords *snake, int len);	//создание фруктов
-	void UpdateMap();	//обновление изображения всех объектов карты
+	void InitFruit(int l);	//настройка количества фруктов
+	void SetFruitOnMap(Coords fr, Coords *snake, int len);	//создание фруктов
+	void UpdateMap(Coords *snake, int snakeLen);	//обновление изображения всех объектов карты
 	//////////////////////////////////////////////////
 	void SetMap(int x, int y, chtype ch);	//установка символа на карте
 	void PrintSubMenuStatic(const long lastScore, const int level);	//вывод статичной части подменю
@@ -72,9 +69,9 @@ public:
 	int GetHeight();	//вывод высоты карты
 	int GetWidth();		//вывод ширины карты
 	//////////////////////////////////////////////
-	Coords& SetSpawnSnake();	//установка координат появления змеи
+	Coords GetSpawnSnake();	//установка координат появления змеи
 	bool IsSnake(Coords cd, Coords *snake, int len);	//проверка координат
-	bool IsFruit(Coords &cd);
+	bool IsFruit(Coords cd);
 	bool IsBord(Coords cd);
 	//////////////////////////////////////////////
 };

@@ -11,6 +11,7 @@ void initPeriph(){
 	//halfdelay(1);
 	nodelay(stdscr,true);
 	keypad(stdscr,true);
+	curs_set(0);
 }
 
 

@@ -93,12 +93,7 @@ bool Menu::SearchMap(){
 	
 }
 
-void Menu::SelectCustomMap(Map &map){
-	int Size;
-	LoadMap(NameFile, Size, map);	//если такого файла нет
-	conf.mapSize = Size;	//присваиваем переменную
-}
-
+char* Menu::GetNameFile(){ return NameFile; }
 
 //меню настроек игры
 void Menu::LvlSettingsLoop(){
@@ -322,7 +317,7 @@ void Menu::HelpLoop(){
 		printScr(info, 10, 2,'A' | COLOR_PAIR(RED));
 		printScr(info, 11, 2,'K' | COLOR_PAIR(GREEN));
 		printScr(info, 12, 2,'E'| COLOR_PAIR(BLUE));
-		printScr(info, 14, 2, (char*)"v_1.0", BLUE);
+		printScr(info, 14, 2, (char*)"v_1.3", BLUE);
 		wattron(info, COLOR_PAIR(GREEN));
 		printScr(info, 2, 4, (char*)"Game created by DSuhoi (2020)");
 		printScr(info, 2, 5, (char*)"Email: <dsuh0i.h8@gmail.com>");

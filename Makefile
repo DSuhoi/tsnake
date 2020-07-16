@@ -3,7 +3,7 @@ CFLAGS = -std=c++11 -O2 -Wall -c
 OFLAGS = -Wall -o
 LIBS = -lncurses
 LIB_PACK = ar rc
-OBJ = main.o game.o map.o menu.o snake.o display.o periph.o files.o
+OBJ = main.o game.o map.o menu.o snake.o display.o periph.o files.o coords.o
 
 .PHONY: tsnake clean help lib
 
@@ -38,10 +38,12 @@ display.o: term/display.c term/display.h
 
 periph.o: term/periph.c term/periph.h
 	$(CC) $(CFLAGS) term/periph.c
-	
 
 files.o: term/files.cpp term/files.h
 	$(CC) $(CFLAGS) term/files.cpp
+	
+coords.o: term/coords.cpp term/coords.h
+	$(CC) $(CFLAGS) term/coords.cpp
 
 clean:
 	rm -rf tsnake *.o

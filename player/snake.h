@@ -11,12 +11,11 @@
 #ifndef __SNAKE_H__
 #define __SNAKE_H__
 
-#include "../menu/map.h"
+#include <ncurses.h>
+#include "../term/coords.h"
+#include "../term/display.h"
 
-const chtype EMPTYCHR = ' ';		//пустой символ
-const chtype BODYCHR = 'o' | COLOR_PAIR(GREEN);	//символ тела змеи
-const chtype HEAD = '@' | COLOR_PAIR(GREEN);	//символ головы змеи
-const chtype KILL = 'X' | COLOR_PAIR(RED);		//символ прохождения препятствия
+
 const int START_SEG = 3;	//начальное кол-во сегментов
 const int SEG_PLUS = 1;	//прибавление змеи
 
@@ -25,19 +24,18 @@ private:
 	Coords *Body;	//координаты тела змеи
 	int snakeLen;	//кол-во сегментов	
 	int headVect;	//направление движения змеи
-	bool teleport;
 public:
 	Snake();
 	~Snake();
-	void InitSnake(Map &map, bool tp); //установка начальных координат
+	void InitSnake(Coords SpawnCoords, long MaxSnakeLen, bool tp); //установка начальных координат
 	void EndSnake();	//удаление параметров змеи
-	int Move(Map &map, const int bt);	//метод движения змеи
+	void Move(const int vector);		//метод движения змеи
 	Coords* GetBody();					//указатель на координаты змеи
-	Coords GetBody(int B);				//координаты сегмента тела
 	int GetVector();					//получение направления движения
 	int GetSnakeLen();	//получение длины змеи
+	void IncSnakeLen();	//увеличение длины змеи на определённое кол-во элементов
 	Coords Info();		//информация о координатах головы
-	void KillSnake(Map &map);
+	void SetHead(int x, int y);	//установка координат головы змеи
 };
 
 #endif

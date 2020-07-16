@@ -1,17 +1,5 @@
 #include <iostream>
-#include <ncurses.h>
-#include <ctime>
 #include "map.h"
-
-
-//перегрузка операторов сравнения для координат
-bool operator ==(Coords &cd1, Coords &cd2){
-	return (cd1.x == cd2.x && cd1.y == cd2.y) ? true : false;
-}
-
-bool operator !=(Coords &cd1, Coords &cd2){
-	return (cd1 == cd2) ? false : true;
-}
 
 
 Map::Map(){ map = NULL; border = NULL; fruit = NULL;}	//конструктор
@@ -111,7 +99,7 @@ void Map::InitBord(Coords snake){
 }
 
 //создание фруктов
-void Map::SetFruitOnMap(Coords &fr, Coords *snake, int len){
+void Map::SetFruitOnMap(Coords fr, Coords *snake, int len){
 	
 	Coords r;
 	
@@ -140,7 +128,8 @@ void Map::BorderCpy(int len, Coords *bd, Coords spawn){
 }
 
 //обновление изображения всех объектов карты
-void Map::UpdateMap(){
+void Map::UpdateMap(Coords *snake, int snakeLen){
+	
 	for(int i=0; i<=width;i++){
 		SetMap(i, 0, BORDERCHR);
 		SetMap(i, height, BORDERCHR); }
@@ -154,6 +143,13 @@ void Map::UpdateMap(){
 	
 	for(int i=0; i<lenFruit; i++)
 		SetMap(fruit[i].x, fruit[i].y, FRUITCHR);
+	
+	SetMap(snake[snakeLen].x, snake[snakeLen].y, EMPTYCHR);	//очистка хвоста змеи
+	
+	for(int i=snakeLen; i>0; i--)
+		SetMap(snake[i-1].x, snake[i-1].y, BODYCHR);
+	
+	SetMap(snake[0].x, snake[0].y, HEAD);	//ставим символ головы
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -165,7 +161,7 @@ bool Map::IsSnake(Coords cd, Coords *snake, int len){
 	return false;
 }
 
-bool Map::IsFruit(Coords &cd){
+bool Map::IsFruit(Coords cd){
 	for(int i=0; i<lenFruit; i++)
 		if(cd == fruit[i]) return true;
 	return false;
@@ -208,7 +204,7 @@ void Map::SetMap(int x, int y, chtype ch){
 }
 
 ////////////////////////////////////////////////////////////////////////
-Coords& Map::SetSpawnSnake(){ return spawnSnake; }	//установка координат появления змеи
+Coords Map::GetSpawnSnake(){ return spawnSnake; }	//установка координат появления змеи
 int Map::GetHeight(){ return height; }	//вернуть высоту карты
 int Map::GetWidth(){ return width; }	//вернуть длину карты
 ////////////////////////////////////////////////////////////////////////

@@ -39,6 +39,7 @@ protected:
 	void StartGame(int mode);	//метод настройки поля
 	bool CheckWin();	//проверка на проигрыш
 	int GenScore(int level);	//генерация счёта
+	void SelectCustomMap();	//выбор карты из файла
 public:
 	~Game(){ EndGame(); }	//деструктор класса
 	void Start();	//метод инициализации компонентов
