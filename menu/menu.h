@@ -12,41 +12,40 @@
 #ifndef __MENU_H__
 #define __MENU_H__
 
-#include <ncurses.h>
+//#include <ncurses.h>
 #include "../term/periph.h"
 #include "../term/files.h"
-#include "map.h"
 
 //Размеры:
 
 //главного меню
-const int MenuHeight = 12;
-const int MenuWidth = 20;
+const int MENU_HEIGHT = 12;
+const int MENU_WIDTH = 20;
 
 //меню помощи
-const int HelpHeight = 10;
-const int HelpWidth = 35;
+const int HELP_HEIGHT = 10;
+const int HELP_WIDTH = 35;
 //сдвиг в этом меню для постановки элементов на правой стороне
-const int HelpWidthRight = 22;
+const int Help_WIDTH_RIGHT = 22;
 
 //меню паузы
-const int PauseWidth = 18;
-const int PauseHeight = 6;
+const int PAUSE_HEIGHT = 6;
+const int PAUSE_WIDTH = 18;
 
 //информационное меню
-const int InfoHeight = 4;
-const int InfoWidth = 20;
+const int INFO_HEIGHT = 4;
+const int INFO_WIDTH = 20;
 
-const int STRLEN = 18;	//длина строкр
+const int STR_LEN = 18;	//длина строкр
 
 
 class Menu {
 private:
-	WINDOW *menu;		//указатель на главное меню
-	WINDOW *info;		//указатель на дополнительное меню
+	WINDOW *menuWidow;		//указатель на главное меню
+	WINDOW *infoWidow;		//указатель на дополнительное меню
 	int buttons[4];		//настройки управления
-	CONFIG conf;		//настройки карты
-	char NameFile[STRLEN];	//файл карты
+	CONFIG configMap;		//настройки карты
+	char nameFile[STR_LEN];	//файл карты
 protected:
 	bool SearchMap();		//поиск карты
 	void LvlSettingsLoop();		//меню настроек игры
@@ -58,10 +57,8 @@ public:
 	int PauseLoop();		//окно паузы
 	char* GetNameFile();	//возвращение названия файла
 	bool PrintInfo(bool isSelect, int w, int h, char *buff);	//вывод информации в отдельном окне
-	CONFIG& GetConfig();		//возвращение настроек карты
+	CONFIG& GetConfigMap();		//возвращение настроек карты
 	int* SetControl();		//возвращение настроек управления
 };
-
-
 
 #endif

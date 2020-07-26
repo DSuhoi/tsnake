@@ -16,18 +16,20 @@
 
 #include <ncurses.h>
 
-//Константы для изменения цвета символа
+// Перечисления для изменения цвета символа
 enum COLORS {GREEN = 1, YELLOW, RED, BLUE };
 
-
-inline void update(WINDOW *win){ wclear(win); wrefresh(win); box(win, 0, 0); refresh(); }	//обновление окна
-inline void update(){ refresh(); }	//обновление экрана в целом
-inline void deleteWindow(WINDOW *win){ if(win!=NULL){ wclear(win); wrefresh(win); delwin(win); } win = NULL; }	//удаление окна
-
-void init_color();	//инициализация основных цветов
-void printScr(WINDOW *win, int x, int y, chtype ch);	//вывод символа
-void printScr(WINDOW *win, int x, int y, char *buff);	//вывод текста
-void printScr(WINDOW *win, int x, int y, char *buff, int color);	//вывод цветного текста	
-
+class Display {
+public:
+	static void Update(WINDOW *win);	// Обновление окна
+	static void Update();				// Обновление экрана в целом
+	static void DeleteWindow(WINDOW *win);	// Удаление окна
+	
+	static void InitColor();	// Инициализация основных цветов
+	static void PrintScr(WINDOW *win, int x, int y, chtype ch);	// Вывод символа
+	static void PrintScr(WINDOW *win, int x, int y, char *buff);	// Вывод текста
+	static void PrintScr(WINDOW *win, int x, int y, char *buff, int color);	// Вывод цветного текста	
+	
+};
 
 #endif

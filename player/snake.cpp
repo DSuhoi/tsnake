@@ -1,63 +1,72 @@
 #include "snake.h"
 
+// Конструктор
+Snake::Snake()
+{ 
+	BodyCoords = nullptr;
+}	
 
-Snake::Snake(){ Body = NULL; }	//конструктор
+// Деструктор
+Snake::~Snake()
+{ 
+	EraseSnake(); 
+}	
 
-Snake::~Snake(){ EndSnake(); }	//деструктор
-
-void Snake::InitSnake(Coords SpawnCoords, long MaxSnakeLen, bool tp){
-	Body = new Coords[MaxSnakeLen];
+void Snake::InitSnake(Coords SpawnCoords, long MaxSnakeLen, bool tp)
+{
+	BodyCoords = new Coords[MaxSnakeLen];
 	snakeLen = START_SEG;
-	Body[0] = SpawnCoords;
-	headVect = KEY_RIGHT;	//по умолчанию движется вправо
-	for(int i=snakeLen; i>=0; i--) Body[i] = Body[0];
+	BodyCoords[0] = SpawnCoords;
+	headVector = KEY_RIGHT;		// По умолчанию движется вправо
+	for(int i=snakeLen; i>=0; i--) BodyCoords[i] = BodyCoords[0];
 }
 
-void Snake::EndSnake(){
-	
-	if(Body!=NULL){ delete [] Body; Body = NULL;}	//освобождение памяти
+void Snake::EraseSnake()
+{
+	if(BodyCoords!=nullptr){ delete [] BodyCoords; BodyCoords = NULL;}	//освобождение памяти
 	
 	snakeLen = START_SEG;
-	headVect = 0;
+	headVector = 0;
 }
 
-void Snake::Move(const int vector){
-	
+void Snake::Move(const int vector)
+{
 	for(int i=snakeLen; i>0; i--){	//присваиваем новые символы дальше (для сохранения направления движения)
-		Body[i] = Body[i-1];
+		BodyCoords[i] = BodyCoords[i-1];
 	}
 	
-	switch(headVect){	//определяем направление и движимся туда 
+	switch(headVector){	//определяем направление и движимся туда 
 	case KEY_LEFT:
-		if(vector!=KEY_RIGHT) headVect = vector;
-			Body[0].x--; break;
+		if(vector!=KEY_RIGHT) headVector = vector;
+			BodyCoords[0].x--; break;
 	case KEY_RIGHT:
-		if(vector!=KEY_LEFT) headVect = vector; 
-			Body[0].x++; break;
+		if(vector!=KEY_LEFT) headVector = vector; 
+			BodyCoords[0].x++; break;
 	case KEY_UP:
-		if(vector!=KEY_DOWN) headVect = vector; 
-			Body[0].y--; break;
+		if(vector!=KEY_DOWN) headVector = vector; 
+			BodyCoords[0].y--; break;
 	case KEY_DOWN:
-		if(vector!=KEY_UP) headVect = vector; 
-			Body[0].y++; break;
+		if(vector!=KEY_UP) headVector = vector; 
+			BodyCoords[0].y++; break;
 	default: break;
 	}
 	
 }
 
-void Snake::IncSnakeLen(){
+void Snake::IncSnakeLen()
+{
 	snakeLen+=SEG_PLUS; //увеличиваем длину, если съели фрукт
 	for(int seg = snakeLen; seg>snakeLen-SEG_PLUS; seg--)
-		Body[seg] = Body[snakeLen-SEG_PLUS];
+		BodyCoords[seg] = BodyCoords[snakeLen-SEG_PLUS];
 	 
 }
 
-Coords Snake::Info(){ return Body[0]; }	//координата головы
+Coords Snake::InfoHead(){ return BodyCoords[0]; }	//координата головы
 
-void Snake::SetHead(int x, int y){ Body[0].x = x; Body[0].y = y; }
+void Snake::SetHeadCoords(int x, int y){ BodyCoords[0].x = x; BodyCoords[0].y = y; }
 
 int Snake::GetSnakeLen(){ return snakeLen; }
 
-Coords* Snake::GetBody(){ return Body; }
+Coords* Snake::GetBodyCoords(){ return BodyCoords; }
 
-int Snake::GetVector(){ return headVect; }
+int Snake::GetVector(){ return headVector; }

@@ -33,8 +33,8 @@ menu.o: menu/menu.cpp menu/menu.h
 snake.o: player/snake.cpp player/snake.h
 	$(CC) $(CFLAGS) player/snake.cpp
 
-display.o: term/display.c term/display.h
-	$(CC) $(CFLAGS) term/display.c
+display.o: term/display.cpp term/display.h
+	$(CC) $(CFLAGS) term/display.cpp
 
 periph.o: term/periph.c term/periph.h
 	$(CC) $(CFLAGS) term/periph.c

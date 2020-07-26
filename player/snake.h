@@ -21,21 +21,21 @@ const int SEG_PLUS = 1;	//прибавление змеи
 
 class Snake {	//класс игрока
 private:
-	Coords *Body;	//координаты тела змеи
+	Coords *BodyCoords;	//координаты тела змеи
 	int snakeLen;	//кол-во сегментов	
-	int headVect;	//направление движения змеи
+	int headVector;	//направление движения змеи
 public:
 	Snake();
 	~Snake();
 	void InitSnake(Coords SpawnCoords, long MaxSnakeLen, bool tp); //установка начальных координат
-	void EndSnake();	//удаление параметров змеи
+	void EraseSnake();	//удаление параметров змеи
 	void Move(const int vector);		//метод движения змеи
-	Coords* GetBody();					//указатель на координаты змеи
+	Coords* GetBodyCoords();					//указатель на координаты змеи
 	int GetVector();					//получение направления движения
 	int GetSnakeLen();	//получение длины змеи
 	void IncSnakeLen();	//увеличение длины змеи на определённое кол-во элементов
-	Coords Info();		//информация о координатах головы
-	void SetHead(int x, int y);	//установка координат головы змеи
+	Coords InfoHead();		//информация о координатах головы
+	void SetHeadCoords(int x, int y);	//установка координат головы змеи
 };
 
 #endif
