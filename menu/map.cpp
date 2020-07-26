@@ -1,216 +1,266 @@
 #include <iostream>
 #include "map.h"
 
-//конструктор
+// Конструктор
 Map::Map()
 { 
 	map = nullptr; 
-	border = nullptr; 
-	fruit = nullptr;
+	borders = nullptr; 
+	fruits = nullptr;
 }	
 
-//деструктор
+// Деструктор
 Map::~Map()
 { 
 	EraseMap(); 
 	Display::DeleteWindow(map); 
 }
 
-//настройка карты
+// Настройка карты
 void Map::InitMap()
 {
 	int x, y;
 	getmaxyx(stdscr, y, x);		
-	//создание окна карты
-	map = newwin(HEIGHT+2, WIDTH, (y - (HEIGHT+2))/2, (x - WIDTH)/2);
-	numFruit = 0;	//установка значений
+	// Создание окна карты
+	map = newwin(HEIGHT + 2, WIDTH, (y - (HEIGHT + 2))/2, (x - WIDTH)/2);
+	numFruits = 0;	// Установка значений
 	numBorder = 0;
-	spawnSnake = {3,3}; //координаты змеи
+	spawnSnake = {3, 3}; // Координаты змеи
 }
 
-//выбор карты
+// Выбор карты
 void Map::SelectSizeMap(int select)
 {
-	Display::Update(map);		//обновление экрана
-	switch(select){	//выбор размера поля
-	case 0: width = SMALL_WIDTH; height = SMALL_HEIGHT; break;
-	case 2: width = BIG_WIDTH; height = BIG_HEIGHT; break;
+	Display::Update(map);		// Обновление экрана
+	switch(select){	// Выбор размера поля
+	case 0: 
+		width = SMALL_WIDTH; 
+		height = SMALL_HEIGHT; 
+		break;
+	case 2: 
+		width = BIG_WIDTH; 
+		height = BIG_HEIGHT; 
+		break;
 	case 1: 
-	default: width = MEDIUM_WIDTH; height = MEDIUM_HEIGHT; break;
+	default: 
+		width = MEDIUM_WIDTH; 
+		height = MEDIUM_HEIGHT; 
+		break;
 	};
 	
-	//создание границ
+	// Создание границ
 	Display::PrintScr(map,WIDTH - 9, 0,(char*)"TSNAKE", BLUE);
 	
-	for(int i=0; i<=width;i++){
+	for(int i = 0; i <= width;i++){
 		SetMap(i, 0, BORDERCHR);
 		SetMap(i, height, BORDERCHR);
 	}
 	
-	for(int i=0; i<=height;i++){
+	for(int i = 0; i <= height;i++){
 		SetMap(0, i, BORDERCHR);
 		SetMap(width, i, BORDERCHR);
 	}
 }
 
-//удаление параметров карты
+// Удаление параметров карты
 void Map::EraseMap()
 {
-	//проверка указателей и освобождение памяти
-	if(fruit!=nullptr){ delete [] fruit; fruit = nullptr; }
-	if(border!=nullptr){ delete [] border; border = nullptr; }
+	// Проверка указателей и освобождение памяти
+	if(fruits != nullptr){ 
+		delete [] fruits; 
+		fruits = nullptr; 
+	}
 	
-	width = 0;	//сброс ширины и высоты поля
+	if(borders != nullptr){ 
+		delete [] borders; 
+		borders = nullptr; 
+	}
+	
+	width = 0;	// Сброс ширины и высоты поля
 	height = 0;
-	spawnSnake = {3,3};
-	numFruit = 0; //сброс параметров кол-ва фруктов и препятствий
+	spawnSnake = {3, 3};
+	numFruits = 0; // Сброс параметров кол-ва фруктов и препятствий
 	numBorder = 0;
-	
+	// Обновление карты
 	Display::Update(map);
 }
 
-//настройка фруктов
-void Map::InitFruitCoords(int l)
+// Настройка фруктов
+void Map::InitFruitCoords(int number)
 {
-	if(l<100 || l>0) numFruit = l;	//если не больше 100
-	else numFruit = 1;
+	// Проверка кол-ва фруктов
+	if(number < 100 || number > 0){ 
+		numFruits = number;	
+	}
+	else{ 
+		numFruits = 1;
+	}
 	
-	fruit = new Coords[numFruit];	//выделяем память под координаты фруктов
-	
-	
-	
-	std::srand(unsigned(std::time(0)));	//генерируем числа из даты
-	Coords randomCoords;	//координаты фрукта
-	for(int i=0; i<numFruit; i++){
-     do{	 
-		randomCoords.x = std::rand()% width;	//случайные координаты
-		randomCoords.y = std::rand()% height;
+	fruits = new Coords[numFruits];	// Выделяем память под координаты фруктов
+	std::srand(unsigned(std::time(0)));	// Генерируем числа из даты
+	Coords randomCoords;	// Координаты фрукта
+	for(int i = 0; i < numFruits; i++){
+		do{	 
+			randomCoords.x = std::rand()% width;	// Случайные координаты
+			randomCoords.y = std::rand()% height;
 		}while(randomCoords.x < 1 || randomCoords.y < 1 ||
-		 IsFruit(randomCoords) || IsBord(randomCoords));
-	fruit[i] = randomCoords;	//проверка и присвоение координат
-	SetMap(fruit[i].x,fruit[i].y,FRUITCHR);}
+			IsFruit(randomCoords) || IsBorder(randomCoords));
+		fruits[i] = randomCoords;	// Проверка и присвоение координат
+		SetMap(fruits[i].x,fruits[i].y,FRUITCHR);	// Постановка фрукта на карте
+	}
 }
 
-//настройка препятствий
+// Настройка препятствий
 void Map::InitBorderCoords(Coords snake)
 {
-	numBorder = height*width/20;	//кол-во препятствий
+	numBorder = height*width/20;	// Кол-во препятствий
 	
-	border = new Coords[numBorder];	//выделяем память под координаты препятствий
+	borders = new Coords[numBorder];	// Выделяем память под координаты препятствий
 	
-	std::srand(unsigned(std::time(0)));	//генерируем числа из даты
+	std::srand(unsigned(std::time(0)));	// Генерируем числа из даты
 	Coords randomCoords;
-	for(int i = 0; i<numBorder; i++){	
+	for(int i = 0; i < numBorder; i++){	
 		do{
-			randomCoords.x = std::rand()% width;	//генерируем и проверяем координаты
-			randomCoords.y = std::rand()% height;	//не ближе 5 блоков до начального положения змеи
-	   }while(IsBord(randomCoords) || 
+			randomCoords.x = std::rand()% width;	// Генерируем и проверяем координаты
+			randomCoords.y = std::rand()% height;	// Не ближе 5 блоков до начального положения змеи
+	   }while(IsBorder(randomCoords) || 
 		((snake.x-3) < randomCoords.x  && randomCoords.x < (snake.x+5) && randomCoords.y == snake.y ) ||
 		 randomCoords.x < 1 || randomCoords.y < 1);
-		border[i] = randomCoords;	//присвоение и вывод препятствий по координатам
+		borders[i] = randomCoords;	// Присвоение и вывод препятствий по координатам
 	}
 }
 
-//создание фруктов
-void Map::SetFruitOnMap(Coords fr, Coords *snake, int len)
+// Создание фруктов
+void Map::SetFruitOnMap(Coords fruitCoords, Coords *snake, int number)
 {	
-	std::srand(unsigned(std::time(0)));	//генерируем числа по времени
-	int errorCounter = 0;	//счётчик повторений
+	std::srand(unsigned(std::time(0)));	// Генерируем числа по времени
+	int errorCounter = 0;	// Счётчик повторений
 	Coords randomCoords;
-	for(int set=0; set<numFruit;set++)
-		if(fr == fruit[set]){
+	for(int set = 0; set < numFruits;set++){
+		if(fruitCoords == fruits[set]){
 			do{	
-				if(errorCounter++>1000) return; //если прошло больше 1000 повторений, то выходим из цикла
-				randomCoords.x = std::rand()% width;	//случайные координаты
+				if(errorCounter++ > 1000) return; // Если прошло больше 1000 повторений, то выходим из цикла
+				randomCoords.x = std::rand()% width;	// Случайные координаты
 				randomCoords.y = std::rand()% height;
-				//проверка координат
-			}while(IsSnake(randomCoords,snake,len) || 
+				// Проверка координат
+			}while(IsSnake(randomCoords,snake, number) || 
 					randomCoords.x < 1 || randomCoords.y < 1 || 
-						IsFruit(randomCoords) || IsBord(randomCoords));
-			fruit[set] = randomCoords;	//присвоение корректных координат
-			SetMap(fruit[set].x,fruit[set].y,FRUITCHR);	//и вывод фрукта
+						IsFruit(randomCoords) || IsBorder(randomCoords));
+			fruits[set] = randomCoords;	// Присвоение корректных координат
+			SetMap(fruits[set].x,fruits[set].y,FRUITCHR);	// и вывод фрукта
+		}
 	}
 }
 
-//копирование координат
-void Map::BorderCoordsCpy(int len, Coords *bd, Coords spawn)
+// Копирование координат
+void Map::BorderCoordsCpy(Coords *borderCoords, int numCoords, Coords spawnCoords)
 {
-	numBorder = len;	//если кол-во координат больше длины массива
-	if(border==nullptr) border = new Coords[numBorder];	
-	for(int i=0; i<numBorder; i++)
-		border[i] = bd[i];
-	spawnSnake = spawn;
+	numBorder = numCoords;	// Если кол-во координат больше длины массива
+	if(borders == nullptr){
+		borders = new Coords[numBorder];
+	}
+	
+	for(int i = 0; i < numBorder; i++){
+		borders[i] = borderCoords[i];
+	}
+	
+	spawnSnake = spawnCoords;
 }
 
-//обновление изображения всех объектов карты
+// Обновление изображения всех объектов карты
 void Map::UpdateMap(Coords *snake, int snakeLen)
 {
-	for(int i=0; i<=width;i++){
+	// Обновление границ карты
+	for(int i = 0; i <= width;i++){
 		SetMap(i, 0, BORDERCHR);
-		SetMap(i, height, BORDERCHR); }
+		SetMap(i, height, BORDERCHR); 
+	}
 	
-	for(int i=0; i<=height;i++){
+	for(int i = 0; i <= height;i++){
 		SetMap(0, i, BORDERCHR);
-		SetMap(width, i, BORDERCHR); }
+		SetMap(width, i, BORDERCHR); 
+	}
+	// Обновление препятствий
+	for(int i = 0; i < numBorder; i++){
+		SetMap(borders[i].x, borders[i].y, BORDERCHR);
+	}
+	// Обновление фруктов
+	for(int i = 0; i < numFruits; i++){
+		SetMap(fruits[i].x, fruits[i].y, FRUITCHR);
+	}
 	
-	for(int i=0; i<numBorder; i++)
-		SetMap(border[i].x, border[i].y, BORDERCHR);
-	
-	for(int i=0; i<numFruit; i++)
-		SetMap(fruit[i].x, fruit[i].y, FRUITCHR);
-	
-	SetMap(snake[snakeLen].x, snake[snakeLen].y, EMPTYCHR);	//очистка хвоста змеи
-	
-	for(int i=snakeLen; i>0; i--)
+	SetMap(snake[snakeLen].x, snake[snakeLen].y, EMPTYCHR);	// Очистка хвоста змеи
+	// Обновление тела змеи
+	for(int i = snakeLen; i > 0; i--){
 		SetMap(snake[i-1].x, snake[i-1].y, BODYCHR);
+	}
 	
-	SetMap(snake[0].x, snake[0].y, HEAD);	//ставим символ головы
+	SetMap(snake[0].x, snake[0].y, HEAD);	// Ставим символ головы
 }
 
 ////////////////////////////////////////////////////////////////////////
 
-//проверки координат поля
-bool Map::IsSnake(Coords cd, Coords *snake, int len)
+// Проверки координат поля
+bool Map::IsSnake(Coords coord, Coords *snake, int snakeLen)
 {
-	for(int i=len; i>0; i--)
-		if(cd == snake[i]) return true;
+	// 
+	for(int i = snakeLen; i > 0; i--){
+		if(coord == snake[i]){
+			return true;
+		}
+	}
+	
 	return false;
 }
 
-bool Map::IsFruit(Coords cd)
+// Проверка координат фруктов
+bool Map::IsFruit(Coords coord)
 {
-	for(int i=0; i<numFruit; i++)
-		if(cd == fruit[i]) return true;
+	for(int i = 0; i < numFruits; i++){
+		if(coord == fruits[i]){
+			return true;
+		}
+	}
+	
 	return false;
 }
 
-bool Map::IsBord(Coords cd)
+// Проверка координат препятствий
+bool Map::IsBorder(Coords coord)
 {
-	if(border==nullptr) return false;
-	for(int i=0; i<numBorder; i++)
-		if(cd == border[i]) return true;
+	// Проверка на наличие препятствий
+	if(borders == nullptr){
+		return false;
+	}
+	
+	for(int i = 0; i < numBorder; i++){
+		if(coord == borders[i]){ 
+			return true;
+		}
+	}
+	
 	return false;
 }
 
-//вывод статичной части подменю
+// Вывод статичной части подменю
 void Map::PrintSubMenuStatic(const long lastScore, const int level)
 {
-	char buffLastScore[15];	//массив для рекорда
-	char buffLevel[10];	//массив для уровня
+	char buffLastScore[15];	// Массив для рекорда
+	char buffLevel[10];		// Массив для уровня
 	sprintf(buffLastScore,"Record: %0*ld", 6, lastScore);
 	sprintf(buffLevel,"Level: %d", level);
 	Display::PrintScr(map, WIDTH/2 - 18, HEIGHT, buffLastScore, RED);
 	Display::PrintScr(map, WIDTH/2 + 5, HEIGHT, buffLevel,GREEN);
 }
 
-//вывод обновляющейся части подменю
-void Map::PrintSubMenuActive(const long score, time_t &t)
+// Вывод обновляющейся части подменю
+void Map::PrintSubMenuActive(const long score, time_t &firstTime)
 {
-	int allTime = time(0) - t;	//все время с начала игры
-	unsigned int sec = allTime % 60;		//секунды
-	unsigned int min = allTime / 60;		//минуты
-	char buffScore[14];	//массив для счёта
-	char buffTime[15];	//массив для времени
+	int allTime = time(0) - firstTime;	// Все время с начала игры
+	unsigned int sec = allTime % 60;		// Секунды
+	unsigned int min = allTime / 60;		// Минуты
+	char buffScore[14];	// Массив для счёта
+	char buffTime[15];	// Массив для времени
 	sprintf(buffScore,"Score: %0*ld", 6, score);
 	sprintf(buffTime,"Time: %0*d:%0*d", 2, min, 2, sec);
 	Display::PrintScr(map, 2, HEIGHT, buffScore,YELLOW);
@@ -218,28 +268,27 @@ void Map::PrintSubMenuActive(const long score, time_t &t)
 }
 
 
-//устанавливаем объект на карту
-void Map::SetMap(int x, int y, chtype ch)
+// Устанавливаем объект на карту
+void Map::SetMap(int x, int y, chtype color)
 {
-	Display::PrintScr(map,((WIDTH-width)/2) + x, ((HEIGHT - height)/2) + y,ch);
+	Display::PrintScr(map,((WIDTH-width)/2) + x, ((HEIGHT - height)/2) + y, color);
 }
 
 ////////////////////////////////////////////////////////////////////////
-//установка координат появления змеи
+// Установка координат появления змеи
 Coords Map::GetSpawnSnake()
 { 
 	return spawnSnake; 
 }
 
-//вернуть высоту карты
+// Вернуть высоту карты
 int Map::GetHeight()
 { 
 	return height; 
 }
 
-//вернуть длину карты
+// Вернуть длину карты
 int Map::GetWidth()
 { 
 	return width; 
-}	
-////////////////////////////////////////////////////////////////////////
+}

@@ -56,7 +56,7 @@ public:
 	void HelpLoop();		//информация
 	int PauseLoop();		//окно паузы
 	char* GetNameFile();	//возвращение названия файла
-	bool PrintInfo(bool isSelect, int w, int h, char *buff);	//вывод информации в отдельном окне
+	bool PrintInfo(bool Select, int width, int height, char *stringWithInfo);	//вывод информации в отдельном окне
 	CONFIG& GetConfigMap();		//возвращение настроек карты
 	int* SetControl();		//возвращение настроек управления
 };

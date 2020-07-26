@@ -20,12 +20,12 @@
 const char BORDERCHR = '#';
 const chtype FRUITCHR = '$' | COLOR_PAIR(YELLOW);
 
-const chtype EMPTYCHR = ' ';		//пустой символ
-const chtype BODYCHR = 'o' | COLOR_PAIR(GREEN);	//символ тела змеи
-const chtype HEAD = '@' | COLOR_PAIR(GREEN);	//символ головы змеи
-const chtype KILL = 'X' | COLOR_PAIR(RED);		//символ прохождения препятствия
+const chtype EMPTYCHR = ' ';		// Пустой символ
+const chtype BODYCHR = 'o' | COLOR_PAIR(GREEN);	// Символ тела змеи
+const chtype HEAD = '@' | COLOR_PAIR(GREEN);	// Символ головы змеи
+const chtype KILL = 'X' | COLOR_PAIR(RED);		// Символ прохождения препятствия
 
-//ширина и высота разных карт
+// Ширина и высота разных карт
 const int SMALL_WIDTH = 37;
 const int SMALL_HEIGHT = 9;
 
@@ -35,21 +35,21 @@ const int MEDIUM_HEIGHT = 14;
 const int BIG_WIDTH = 77;
 const int BIG_HEIGHT = 20;
 
-//ширина и высота окна
-const int WIDTH = 80;		
-const int HEIGHT = 22;		
+// Ширина и высота окна
+const int WIDTH = 80;
+const int HEIGHT = 22;
 
 
 class Map {
 private:
-	int height;		// Длинна карты
-	int width;		// Ширина карты
-	WINDOW *map;	// Окно карты
-	Coords *border;	// Указатель на координаты препятствий
-	Coords *fruit;	// Указатель на координаты фруктов
+	int height;			// Длинна карты
+	int width;			// Ширина карты
+	WINDOW *map;		// Окно карты
+	Coords *borders;		// Указатель на координаты препятствий
+	Coords *fruits;		// Указатель на координаты фруктов
 	Coords spawnSnake;	// Координаты появления змеи
-	int numFruit;	// Кол-во фруктов
-	int numBorder;	// Кол-во препятствий
+	int numFruits;		// Кол-во фруктов
+	int numBorder;		// Кол-во препятствий
 protected:
 	void borderMap();	// Вывод границ
 public:
@@ -59,21 +59,21 @@ public:
 	void EraseMap();			// Удаление параметров карты
 	void SelectSizeMap(int select);	// Выбор карты
 	void InitBorderCoords(Coords snake);// Настройка препятствий
-	void InitFruitCoords(int l);	// Настройка количества фруктов
-	void SetFruitOnMap(Coords fr, Coords *snake, int len);	// Создание фруктов
+	void InitFruitCoords(int number);	// Настройка количества фруктов
+	void SetFruitOnMap(Coords fruitCoords, Coords *snake, int number);	// Создание фруктов
 	void UpdateMap(Coords *snake, int snakeLen);	// Обновление изображения всех объектов карты
 	//////////////////////////////////////////////////
-	void SetMap(int x, int y, chtype ch);	// Установка символа на карте
+	void SetMap(int x, int y, chtype color);	// Установка символа на карте
 	void PrintSubMenuStatic(const long lastScore, const int level);	// Вывод статичной части подменю
-	void PrintSubMenuActive(const long score, time_t &t);	// Вывод обновляющейся части подменю
-	void BorderCoordsCpy(int len, Coords *bd, Coords spawn);	// Копирование координат
+	void PrintSubMenuActive(const long score, time_t &firstTime);	// Вывод обновляющейся части подменю
+	void BorderCoordsCpy(Coords *borderCoords, int numCoords, Coords spawnCoords);	// Копирование координат
 	int GetHeight();	// Вывод высоты карты
 	int GetWidth();		// Вывод ширины карты
 	//////////////////////////////////////////////
 	Coords GetSpawnSnake();	// Установка координат появления змеи
-	bool IsSnake(Coords cd, Coords *snake, int len);	// Проверка координат игрока
-	bool IsFruit(Coords cd);	// Проверка координат фруктов
-	bool IsBord(Coords cd);		// Проверка координат препятствий
+	bool IsSnake(Coords coord, Coords *snake, int snakeLen);	// Проверка координат игрока
+	bool IsFruit(Coords coord);	// Проверка координат фруктов
+	bool IsBorder(Coords coord);	// Проверка координат препятствий
 	//////////////////////////////////////////////
 };
 

@@ -3,70 +3,115 @@
 // Конструктор
 Snake::Snake()
 { 
-	BodyCoords = nullptr;
+	BodyCoords = nullptr;	// Установка нулевого указателя
 }	
 
 // Деструктор
 Snake::~Snake()
 { 
-	EraseSnake(); 
+	EraseSnake(); // Удаление параметров змеи
 }	
 
-void Snake::InitSnake(Coords SpawnCoords, long MaxSnakeLen, bool tp)
+// Установка начальных координат
+void Snake::InitSnake(Coords SpawnCoords, long MaxSnakeLen)
 {
+	// Создание змеи (координаты тела)
 	BodyCoords = new Coords[MaxSnakeLen];
 	snakeLen = START_SEG;
+	// Установка координат появления змеи
 	BodyCoords[0] = SpawnCoords;
 	headVector = KEY_RIGHT;		// По умолчанию движется вправо
-	for(int i=snakeLen; i>=0; i--) BodyCoords[i] = BodyCoords[0];
+	for(int i = snakeLen; i >= 0; i--) BodyCoords[i] = BodyCoords[0];
 }
 
+// Удаление параметров змеи
 void Snake::EraseSnake()
 {
-	if(BodyCoords!=nullptr){ delete [] BodyCoords; BodyCoords = NULL;}	//освобождение памяти
+	// Удаление координат тела змеи
+	if(BodyCoords!=nullptr){ 
+		delete [] BodyCoords; 
+		BodyCoords = nullptr;
+	}	
 	
 	snakeLen = START_SEG;
 	headVector = 0;
 }
 
+// Метод движения змеи
 void Snake::Move(const int vector)
 {
-	for(int i=snakeLen; i>0; i--){	//присваиваем новые символы дальше (для сохранения направления движения)
+	// Присваиваем новые символы дальше (для сохранения направления движения)
+	for(int i = snakeLen; i > 0; i--){
 		BodyCoords[i] = BodyCoords[i-1];
 	}
 	
-	switch(headVector){	//определяем направление и движимся туда 
+	// Определяем направление и движимся туда
+	switch(headVector){
 	case KEY_LEFT:
-		if(vector!=KEY_RIGHT) headVector = vector;
-			BodyCoords[0].x--; break;
+		if(vector != KEY_RIGHT){ 
+			headVector = vector;
+		}
+			BodyCoords[0].x--;
+			break;
 	case KEY_RIGHT:
-		if(vector!=KEY_LEFT) headVector = vector; 
-			BodyCoords[0].x++; break;
+		if(vector != KEY_LEFT){ 
+			headVector = vector;
+		} 
+			BodyCoords[0].x++; 
+			break;
 	case KEY_UP:
-		if(vector!=KEY_DOWN) headVector = vector; 
-			BodyCoords[0].y--; break;
+		if(vector != KEY_DOWN){ 
+			headVector = vector;
+		} 
+			BodyCoords[0].y--; 
+			break;
 	case KEY_DOWN:
-		if(vector!=KEY_UP) headVector = vector; 
-			BodyCoords[0].y++; break;
-	default: break;
+		if(vector != KEY_UP){ 
+			headVector = vector;
+		} 
+			BodyCoords[0].y++; 
+			break;
+	default: 
+			break;
 	}
-	
 }
 
+// Увеличение длины змеи на определённое кол-во элементов
 void Snake::IncSnakeLen()
 {
-	snakeLen+=SEG_PLUS; //увеличиваем длину, если съели фрукт
-	for(int seg = snakeLen; seg>snakeLen-SEG_PLUS; seg--)
-		BodyCoords[seg] = BodyCoords[snakeLen-SEG_PLUS];
+	snakeLen+=SEG_PLUS; // Увеличиваем длину, если съели фрукт
+	for(int seg = snakeLen; seg > snakeLen-SEG_PLUS; seg--)
+		BodyCoords[seg] = BodyCoords[snakeLen - SEG_PLUS];
 	 
 }
 
-Coords Snake::InfoHead(){ return BodyCoords[0]; }	//координата головы
+// Координата головы
+Coords Snake::InfoHead()
+{ 
+	return BodyCoords[0]; 
+}	
 
-void Snake::SetHeadCoords(int x, int y){ BodyCoords[0].x = x; BodyCoords[0].y = y; }
+// Установка координат головы змеи
+void Snake::SetHeadCoords(int x, int y)
+{ 
+	BodyCoords[0].x = x; 
+	BodyCoords[0].y = y; 
+}
 
-int Snake::GetSnakeLen(){ return snakeLen; }
+// Получение длины змеи
+int Snake::GetSnakeLen()
+{ 
+	return snakeLen; 
+}
 
-Coords* Snake::GetBodyCoords(){ return BodyCoords; }
+// Указатель на координаты змеи
+Coords* Snake::GetBodyCoords()
+{ 
+	return BodyCoords; 
+}
 
-int Snake::GetVector(){ return headVector; }
+// Получение направления движения
+int Snake::GetVector()
+{ 
+	return headVector; 
+}

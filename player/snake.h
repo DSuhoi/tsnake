@@ -16,26 +16,27 @@
 #include "../term/display.h"
 
 
-const int START_SEG = 3;	//начальное кол-во сегментов
-const int SEG_PLUS = 1;	//прибавление змеи
+const int START_SEG = 3;	// Начальное кол-во сегментов
+const int SEG_PLUS = 1;		// Прибавление змеи
 
-class Snake {	//класс игрока
+
+class Snake {	// Класс игрока
 private:
-	Coords *BodyCoords;	//координаты тела змеи
-	int snakeLen;	//кол-во сегментов	
-	int headVector;	//направление движения змеи
+	Coords *BodyCoords;	// Координаты тела змеи
+	int snakeLen;		// Кол-во сегментов	
+	int headVector;		// Направление движения змеи
 public:
 	Snake();
 	~Snake();
-	void InitSnake(Coords SpawnCoords, long MaxSnakeLen, bool tp); //установка начальных координат
-	void EraseSnake();	//удаление параметров змеи
-	void Move(const int vector);		//метод движения змеи
-	Coords* GetBodyCoords();					//указатель на координаты змеи
-	int GetVector();					//получение направления движения
-	int GetSnakeLen();	//получение длины змеи
-	void IncSnakeLen();	//увеличение длины змеи на определённое кол-во элементов
-	Coords InfoHead();		//информация о координатах головы
-	void SetHeadCoords(int x, int y);	//установка координат головы змеи
+	void InitSnake(Coords SpawnCoords, long MaxSnakeLen); // Установка начальных координат
+	void EraseSnake();					// Удаление параметров змеи
+	void Move(const int vector);		// Метод движения змеи
+	Coords* GetBodyCoords();			// Указатель на координаты змеи
+	int GetVector();		// Получение направления движения
+	int GetSnakeLen();		// Получение длины змеи
+	void IncSnakeLen();		// Увеличение длины змеи на определённое кол-во элементов
+	Coords InfoHead();		// Информация о координатах головы
+	void SetHeadCoords(int x, int y);	// Установка координат головы змеи
 };
 
 #endif
