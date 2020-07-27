@@ -36,8 +36,8 @@ snake.o: player/snake.cpp player/snake.h
 display.o: term/display.cpp term/display.h
 	$(CC) $(CFLAGS) term/display.cpp
 
-periph.o: term/periph.c term/periph.h
-	$(CC) $(CFLAGS) term/periph.c
+periph.o: term/periph.cpp term/periph.h
+	$(CC) $(CFLAGS) term/periph.cpp
 
 files.o: term/files.cpp term/files.h
 	$(CC) $(CFLAGS) term/files.cpp

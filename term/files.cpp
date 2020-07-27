@@ -1,57 +1,67 @@
 #include <fstream>
+#include <cstring>
 #include "files.h"
 
-//запись результата игры в файл
-void FileSystem::SaveRecords(long *score){
-	std::ofstream fout("data/score.tsn", std::ios::binary);
-	for(int i=0; i<30; i++)	// 3 типа карты * 10 уровней скорости = 30 
-		fout.write((char*)&score[i],sizeof(score[i]));	//пишем всё обратно
+// Запись результата игры в файл
+void FileSystem::SaveRecords(long *score)
+{
+	std::ofstream fout(FILE_NAME_SCORE_STR, std::ios::binary);
+	for(int i = 0; i < 30; i++)	// 3 типа карты * 10 уровней скорости = 30 
+		fout.write((char*)&score[i],sizeof(score[i]));	// Пишем всё обратно
 	fout.close();
 }
 
-//получение результатов игр из файла
-long FileSystem::LoadRecords(long *score, int MapSize, int level){
-	std::ifstream fin("data/score.tsn", std::ios::binary);
-	for(int i=0; i<30; i++)
-		fin.read((char*)&score[i],sizeof(score[i]));	//читаем всё
+// Получение результатов игр из файла
+long FileSystem::LoadRecords(long *score, int MapSize, int level)
+{
+	std::ifstream fin(FILE_NAME_SCORE_STR, std::ios::binary);
+	for(int i = 0; i < 30; i++){
+		fin.read((char*)&score[i],sizeof(score[i]));	// Читаем всё
+	}
 	fin.close();
-	return score[10*MapSize + (level - 1)];	//отправляем рекорд текущей игры
+	return score[10*MapSize + (level - 1)];	// Отправляем рекорд текущей игры
 }
 
-//запись настроек в файл
-void FileSystem::SaveSettings(CONFIG &conf, int *control){
-	std::ofstream fout("data/settings.tsn", std::ios::binary);
-	fout.write((char*)&conf, sizeof(conf));	//записываем битовое поле в файл настроек
-	for(int i=0; i<4; i++)
-		fout.write((char*)&control[i], sizeof(control[i]));	//записываем элементы управления
+// Запись настроек в файл
+void FileSystem::SaveSettings(CONFIG &conf, int *control)
+{
+	std::ofstream fout(FILE_NAME_SETTINGS_STR, std::ios::binary);
+	fout.write((char*)&conf, sizeof(conf));	// Записываем битовое поле в файл настроек
+	for(int i = 0; i < 4; i++){
+		fout.write((char*)&control[i], sizeof(control[i]));	// Записываем элементы управления
+	}
 	fout.close();
 }
 
-//получение настроек из файла
-CONFIG FileSystem::LoadSettings(int *control){
+// Получение настроек из файла
+CONFIG FileSystem::LoadSettings(int *control)
+{
 	CONFIG conf;
-	std::ifstream fin("data/settings.tsn", std::ios::binary);
+	std::ifstream fin(FILE_NAME_SETTINGS_STR, std::ios::binary);
 	fin.read((char*)&conf,sizeof(conf));
-	for(int i=0; i<4; i++)
+	for(int i = 0; i < 4; i++){
 		fin.read((char*)&control[i], sizeof(control[i]));
+	}
 	fin.close();
 	return conf;
 }
 
-//чтение карты
-bool FileSystem::LoadMap(std::string file, int &Size, Map &map){
-	int len;
-	Coords spawn;
-	std::ifstream fin(FOLDER_FILE + file, std::ios::binary);
+// Чтение карты
+bool FileSystem::LoadMap(char* fullFileName, int &Size, Map &map)
+{	
+	std::ifstream fin(fullFileName, std::ios::binary);
 	if(!fin){ 
 		return false;
 	}
 	fin.read((char*)&Size, sizeof(Size));
+	Coords spawn;
 	fin.read((char*)&spawn, sizeof(spawn));
+	int len;
 	fin.read((char*)&len, sizeof(len));
 	Coords *arr = new Coords[len];
-	for(int i=0; i<len; i++)
+	for(int i = 0; i < len; i++){
 		fin.read((char*)&arr[i], sizeof(arr[i]));
+	}
 	map.BorderCoordsCpy(arr, len, spawn);
 	delete [] arr;
 	fin.close();

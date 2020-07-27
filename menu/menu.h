@@ -12,53 +12,51 @@
 #ifndef __MENU_H__
 #define __MENU_H__
 
-//#include <ncurses.h>
+
 #include "../term/periph.h"
 #include "../term/files.h"
 
-//Размеры:
+// Размеры:
 
-//главного меню
+// Главного меню
 const int MENU_HEIGHT = 12;
 const int MENU_WIDTH = 20;
 
-//меню помощи
+// Меню помощи
 const int HELP_HEIGHT = 10;
 const int HELP_WIDTH = 35;
-//сдвиг в этом меню для постановки элементов на правой стороне
+// Сдвиг в этом меню для постановки элементов на правой стороне
 const int Help_WIDTH_RIGHT = 22;
 
-//меню паузы
+// Меню паузы
 const int PAUSE_HEIGHT = 6;
 const int PAUSE_WIDTH = 18;
 
-//информационное меню
+// Информационное меню
 const int INFO_HEIGHT = 4;
 const int INFO_WIDTH = 20;
-
-const int STR_LEN = 18;	//длина строкр
 
 
 class Menu {
 private:
-	WINDOW *menuWidow;		//указатель на главное меню
-	WINDOW *infoWidow;		//указатель на дополнительное меню
-	int buttons[4];		//настройки управления
-	CONFIG configMap;		//настройки карты
-	char nameFile[STR_LEN];	//файл карты
+	WINDOW *menuWidow;		// Указатель на главное меню
+	WINDOW *infoWidow;		// Указатель на дополнительное меню
+	int buttons[4];			// Настройки управления
+	CONFIG configMap;		// Настройки карты
+	char fullFileName[FULL_FILE_NAME_LEN];	// Полное название файла карты
 protected:
-	bool SearchMap();		//поиск карты
-	void LvlSettingsLoop();		//меню настроек игры
-	void ControlSettingsLoop();	//меню настроек управления
+	bool SearchMap();			// Поиск карты
+	void LvlSettingsLoop();		// Меню настроек игры
+	void ControlSettingsLoop();	// Меню настроек управления
 public:
-	void InitMainMenu();	//инициализация главного меню
-	int MainMenuLoop(); 	//цикл главного меню
-	void HelpLoop();		//информация
-	int PauseLoop();		//окно паузы
-	char* GetNameFile();	//возвращение названия файла
-	bool PrintInfo(bool Select, int width, int height, char *stringWithInfo);	//вывод информации в отдельном окне
-	CONFIG& GetConfigMap();		//возвращение настроек карты
-	int* SetControl();		//возвращение настроек управления
+	void InitMainMenu();	// Инициализация главного меню
+	int MainMenuLoop(); 	// Цикл главного меню
+	void HelpLoop();		// Информация
+	int PauseLoop();		// Окно паузы
+	char* GetFullFileName();	// Возвращение полного названия файла карты
+	bool PrintInfo(bool Select, int width, int height, char *stringWithInfo);	// Вывод информации в отдельном окне
+	CONFIG& GetConfigMap();		// Возвращение настроек карты
+	int* SetControl();			// Возвращение настроек управления
 };
 
 #endif

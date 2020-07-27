@@ -17,7 +17,7 @@
 #include "../player/snake.h"
 #include "../menu/map.h"
 #include "../menu/menu.h"
-#include <time.h>	//библиотека для работы со временем
+#include <ctime>	//библиотека для работы со временем
 
 //флаги состояния игры
 enum STATUS_GAME{GAME_WIN = 0,	//игра окончена

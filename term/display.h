@@ -7,7 +7,7 @@
  * для обновления, удаления и очистки окон.*
  * Для переноса программы на Windows или   *
  * Mac нужно редактировать этот файл.      *
- * Created by DSuhoi (2020) (C file)       *
+ * Created by DSuhoi (2020) (C++11)        *
  *** * * * * * * * * * * * * * * * * * * ***/
 
 
@@ -17,9 +17,17 @@
 #include <ncurses.h>
 
 // Перечисления для изменения цвета символа
-enum COLORS {GREEN = 1, YELLOW, RED, BLUE };
+enum COLORS {
+	GREEN = 1, 
+	YELLOW, 
+	RED, 
+	BLUE 
+};
+
 
 class Display {
+private:
+	Display(){}
 public:
 	static void Update(WINDOW *win);	// Обновление окна
 	static void Update();				// Обновление экрана в целом

@@ -1,4 +1,4 @@
-#include <time.h>
+#include <iostream>
 #include "../term/periph.h"
 #include "../term/files.h"
 #include "game.h"
@@ -7,7 +7,7 @@
 // Метод инициализации компонентов
 void Game::Start()
 {
-	initPeriph();			// Настройка периферии
+	Periph::InitPeriph();	// Настройка периферии
 	map = Map();			// Создание карты
 	snake = nullptr;		// Нулевой указатель
 	Display::InitColor();	// Настройка цветов
@@ -60,7 +60,7 @@ int Game::GenScore(int level)
 void Game::SelectCustomMap()
 {
 	int Size;
-	FileSystem::LoadMap(menu.GetNameFile(), Size, map);	// Если такого файла нет
+	FileSystem::LoadMap(menu.GetFullFileName(), Size, map);	// Если такого файла нет
 	menu.GetConfigMap().mapSize = Size;	// Присваиваем переменную
 }
 
@@ -103,7 +103,7 @@ void Game::Process(){
 		do{	// Цикл игры
 		
 			// Создание задержки (нужно ещё доработать этот алгоритм)
-			cnt = periph(menu.SetControl(), (float)10/menu.GetConfigMap().speed);	// Обрабатываем кнопки по пользовательскому шаблону
+			cnt = Periph::GetButton(menu.SetControl(), (float)10/menu.GetConfigMap().speed);	// Обрабатываем кнопки по пользовательскому шаблону
 		
 			switch (cnt){
 			case 'h': menu.HelpLoop();  break;	// Запускаем меню
@@ -113,11 +113,6 @@ void Game::Process(){
 			case ERR: snake->Move(snake->GetVector()); break;	// Перемещаемся без поворотов
 			default: snake->Move(cnt); break;	// Иначе задаем новый вектор движению игрока
 			};
-		
-			if(map.IsFruit(snake->InfoHead())){	// Если змея съела фрукт, то увеличиваем её длину
-				snake->IncSnakeLen();
-				map.SetFruitOnMap(snake->InfoHead(), snake->GetBodyCoords(), snake->GetSnakeLen());
-			}
 		
 			// Если активен режим телепорта
 			if(menu.GetConfigMap().teleport){
@@ -134,7 +129,12 @@ void Game::Process(){
 					snake->SetHeadCoords(snake->InfoHead().x, 1);
 				}
 			}
-		
+			
+			if(map.IsFruit(snake->InfoHead())){	// Если змея съела фрукт, то увеличиваем её длину
+				snake->IncSnakeLen();
+				map.SetFruitOnMap(snake->InfoHead(), snake->GetBodyCoords(), snake->GetSnakeLen());
+			}
+			
 			map.UpdateMap(snake->GetBodyCoords(), snake->GetSnakeLen());	// Обновляем карту	
 		
 			if(snake->GetSnakeLen()>oldSnakeLen){
@@ -150,7 +150,7 @@ void Game::Process(){
 		// Убиваем змею
 		map.SetMap(snake->InfoHead().x, snake->InfoHead().y, KILL);
 	
-		sleep(50);	// Задержка в 500мс
+		Periph::GameDelay(20);	// Задержка в 200мс
 	
 		if(resultLastGame < resultThisGame){	// Сохраняем результаты игры
 			gameScore[menu.GetConfigMap().mapSize*10 + (menu.GetConfigMap().speed-1)] = resultThisGame;
@@ -182,5 +182,5 @@ void Game::EndGame()
 		delete snake;	// Удаление объекта игрока
 	}
 	map.~Map();		// Удаление объекта карты
-	endPeriph();
+	Periph::ErasePeriph();
 }
