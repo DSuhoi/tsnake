@@ -7,7 +7,7 @@ void FileSystem::SaveRecords(long *score)
 {
 	std::ofstream fout(FILE_NAME_SCORE_STR, std::ios::binary);
 	for(int i = 0; i < 30; i++)	// 3 типа карты * 10 уровней скорости = 30 
-		fout.write((char*)&score[i],sizeof(score[i]));	// Пишем всё обратно
+		fout.write((char*)&score[i], sizeof(score[i]));	// Пишем всё обратно
 	fout.close();
 }
 
@@ -16,7 +16,7 @@ long FileSystem::LoadRecords(long *score, int MapSize, int level)
 {
 	std::ifstream fin(FILE_NAME_SCORE_STR, std::ios::binary);
 	for(int i = 0; i < 30; i++){
-		fin.read((char*)&score[i],sizeof(score[i]));	// Читаем всё
+		fin.read((char*)&score[i], sizeof(score[i]));	// Читаем всё
 	}
 	fin.close();
 	return score[10*MapSize + (level - 1)];	// Отправляем рекорд текущей игры
@@ -38,7 +38,7 @@ CONFIG FileSystem::LoadSettings(int *control)
 {
 	CONFIG conf;
 	std::ifstream fin(FILE_NAME_SETTINGS_STR, std::ios::binary);
-	fin.read((char*)&conf,sizeof(conf));
+	fin.read((char*)&conf, sizeof(conf));
 	for(int i = 0; i < 4; i++){
 		fin.read((char*)&control[i], sizeof(control[i]));
 	}
@@ -47,7 +47,7 @@ CONFIG FileSystem::LoadSettings(int *control)
 }
 
 // Чтение карты
-bool FileSystem::LoadMap(char* fullFileName, int &Size, Map &map)
+bool FileSystem::LoadMap(char *fullFileName, int &Size, Map &map)
 {	
 	std::ifstream fin(fullFileName, std::ios::binary);
 	if(!fin){ 

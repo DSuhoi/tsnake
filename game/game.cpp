@@ -103,7 +103,7 @@ void Game::Process(){
 		do{	// Цикл игры
 		
 			// Создание задержки (нужно ещё доработать этот алгоритм)
-			cnt = Periph::GetButton(menu.SetControl(), (float)10/menu.GetConfigMap().speed);	// Обрабатываем кнопки по пользовательскому шаблону
+			cnt = Periph::GetButton(menu.GetControl(), (float)10/menu.GetConfigMap().speed);	// Обрабатываем кнопки по пользовательскому шаблону
 		
 			switch (cnt){
 			case 'h': menu.HelpLoop();  break;	// Запускаем меню

@@ -131,7 +131,7 @@ bool Menu::SearchMap()
 }
 
 // Возвращение полного названия файла карты
-char* Menu::GetFullFileName()
+char *Menu::GetFullFileName()
 { 
 	return fullFileName; 
 }
@@ -584,7 +584,7 @@ CONFIG& Menu::GetConfigMap()
 }	
 
 // Возвращаем настройки управления
-int* Menu::SetControl()
+int *Menu::GetControl()
 { 
 	return buttons; 
 } 

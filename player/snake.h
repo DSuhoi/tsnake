@@ -31,7 +31,7 @@ public:
 	void InitSnake(Coords SpawnCoords, long MaxSnakeLen); // Установка начальных координат
 	void EraseSnake();					// Удаление параметров змеи
 	void Move(const int vector);		// Метод движения змеи
-	Coords* GetBodyCoords();			// Указатель на координаты змеи
+	Coords *GetBodyCoords();			// Указатель на координаты змеи
 	int GetVector();		// Получение направления движения
 	int GetSnakeLen();		// Получение длины змеи
 	void IncSnakeLen();		// Увеличение длины змеи на определённое кол-во элементов

@@ -4,15 +4,11 @@
 
 int main(void)
 {
-	Game game;	//объект игры
-	
-	game.Start();	//инициализация компонентов игры
-	
-	game.Process();	//процесс игры
-	
-	game.EndGame();	//завершение игры
+	Game game;		// Объект игры
+	game.Start();	// Инициализация компонентов игры
+	game.Process();	// Процесс игры
+	game.EndGame();	// Завершение игры
 	
 	exit(0);
-	
 	return 0;
 }

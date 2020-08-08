@@ -105,7 +105,7 @@ int Snake::GetSnakeLen()
 }
 
 // Указатель на координаты змеи
-Coords* Snake::GetBodyCoords()
+Coords *Snake::GetBodyCoords()
 { 
 	return BodyCoords; 
 }

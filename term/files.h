@@ -37,7 +37,7 @@ public:
 	
 	static long LoadRecords(long *score, int MapSize, int level);	// Получение результатов игр из файла
 	static CONFIG LoadSettings(int *control);						// Получение настроек из файла
-	static bool LoadMap(char* fullFileName, int &Size, Map &map);	// Чтение карты
+	static bool LoadMap(char *fullFileName, int &Size, Map &map);	// Чтение карты
 };
 
 #endif
