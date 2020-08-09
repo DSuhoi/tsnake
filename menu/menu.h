@@ -53,10 +53,10 @@ public:
 	int MainMenuLoop(); 	// Цикл главного меню
 	void HelpLoop();		// Информация
 	int PauseLoop();		// Окно паузы
-	char *GetFullFileName();	// Возвращение полного названия файла карты
 	bool PrintInfo(bool Select, int width, int height, char *stringWithInfo);	// Вывод информации в отдельном окне
 	CONFIG& GetConfigMap();		// Возвращение настроек карты
 	int *GetControl();			// Возвращение настроек управления
+	char *GetFullFileName();	// Возвращение полного названия файла карты
 };
 
 #endif
