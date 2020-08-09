@@ -17,34 +17,34 @@
 #include "../player/snake.h"
 #include "../menu/map.h"
 #include "../menu/menu.h"
-#include <ctime>	//библиотека для работы со временем
+#include <ctime>	// Библиотека для работы со временем
 
-//флаги состояния игры
-enum STATUS_GAME{GAME_WIN = 0,	//игра окончена
-			GAME_NOT_WIN,	//игра еще идёт
-			GAME_RESTART,	//игра перезапущена
-			RETURN_MENU,	//произошло возвращение в меню без проигрыша игры
-			GAME_END };		//игра завершена
+// Флаги состояния игры
+enum STATUS_GAME{GAME_WIN = 0,	// Игра окончена
+			GAME_NOT_WIN,		// Игра еще идёт
+			GAME_RESTART,		// Игра перезапущена
+			RETURN_MENU,		// Произошло возвращение в меню без проигрыша игры
+			GAME_END };			// Игра завершена
 
 
-class Game {	//класс игры
+class Game {	// Класс игры
 private: 
-	bool isGame; //игра начадась
-	Menu menu;		//меню
-	Map map;		//карта игры
-	Snake *snake;	//объект змеи
-	time_t GameTime;	//время начала игры
-	long gameScore[30];		//игровые рекорды
-protected:
-	void StartGame(int mode);	//метод настройки поля
-	bool CheckWin();	//проверка на проигрыш
-	int GenScore(int level);	//генерация счёта
-	void SelectCustomMap();	//выбор карты из файла
+	bool isGame; 	// Игра начадась
+	Menu menu;		// Меню
+	Map map;		// Карта игры
+	Snake *snake;	// Указатель на объект змеи
+	time_t GameTime;	// Время начала игры
+	long gameScore[30];		// Игровые рекорды
+
+	void StartGame(int mode);	// Метод настройки поля
+	bool CheckWin();	// Проверка на проигрыш
+	int GenScore(int level);	// Генерация счёта
+	void SelectCustomMap();	// Выбор карты из файла
 public:
-	~Game(){ EndGame(); }	//деструктор класса
-	void Start();	//метод инициализации компонентов
-	void Process();	//игровой процесс (основная логика)
-	void EndGame();	//завершение игры
+	~Game(){ EndGame(); }	// Деструктор класса
+	void Start();	// Метод инициализации компонентов
+	void Process();	// Игровой процесс (основная логика)
+	void EndGame();	// Завершение игры
 	
 };
 

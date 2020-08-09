@@ -44,7 +44,7 @@ private:
 	int buttons[4];			// Настройки управления
 	CONFIG configMap;		// Настройки карты
 	char fullFileName[FULL_FILE_NAME_LEN];	// Полное название файла карты
-protected:
+
 	bool SearchMap();			// Поиск карты
 	void LvlSettingsLoop();		// Меню настроек игры
 	void ControlSettingsLoop();	// Меню настроек управления

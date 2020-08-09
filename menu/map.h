@@ -50,7 +50,7 @@ private:
 	Coords spawnSnake;	// Координаты появления змеи
 	int numFruits;		// Кол-во фруктов
 	int numBorder;		// Кол-во препятствий
-protected:
+
 	void borderMap();	// Вывод границ
 public:
 	Map(); 
