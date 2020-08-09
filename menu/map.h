@@ -58,23 +58,22 @@ public:
 	void InitMap();				// Настройка карты
 	void EraseMap();			// Удаление параметров карты
 	void SelectSizeMap(int select);	// Выбор карты
-	void InitBorderCoords(Coords snake);// Настройка препятствий
+	void InitBorderCoords(Coords snakeCoords);	// Настройка препятствий
 	void InitFruitCoords(int number);	// Настройка количества фруктов
-	void SetFruitOnMap(Coords fruitCoords, Coords *snake, int number);	// Создание фруктов
+	void SetFruitOnMap(Coords fruitCoords, Coords *snakeCoords, int snakeLen);	// Создание фруктов
 	void UpdateMap(Coords *snake, int snakeLen);	// Обновление изображения всех объектов карты
-	//////////////////////////////////////////////////
+
 	void SetMap(int x, int y, chtype color);	// Установка символа на карте
 	void PrintSubMenuStatic(const long lastScore, const int level);	// Вывод статичной части подменю
 	void PrintSubMenuActive(const long score, time_t &firstTime);	// Вывод обновляющейся части подменю
 	void BorderCoordsCpy(Coords *borderCoords, int numCoords, Coords spawnCoords);	// Копирование координат
 	int GetHeight();	// Вывод высоты карты
 	int GetWidth();		// Вывод ширины карты
-	//////////////////////////////////////////////
+
 	Coords GetSpawnSnake();	// Установка координат появления змеи
-	bool IsSnake(Coords coord, Coords *snake, int snakeLen);	// Проверка координат игрока
-	bool IsFruit(Coords coord);	// Проверка координат фруктов
-	bool IsBorder(Coords coord);	// Проверка координат препятствий
-	//////////////////////////////////////////////
+	bool IsSnake(Coords coords, Coords *snakeCoords, int snakeLen);	// Проверка координат игрока
+	bool IsFruit(Coords coords);	// Проверка координат фруктов
+	bool IsBorder(Coords coords);	// Проверка координат препятствий
 };
 
 #endif
