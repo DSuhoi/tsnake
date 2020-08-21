@@ -10,12 +10,9 @@
 #ifndef __FILES_H__
 #define __FILES_H__
 
-const char MAIN_PATH_STR [] = "~/.local/share/tsnake/";	// The path to the preferences directory and maps
-const char FILE_NAME_SCORE_STR [] = "data/score.tsn";	// Path to the file with the table of records
-const char FILE_NAME_SETTINGS_STR [] = "data/settings.tsn";	// Path to the settings file
-const char FOLDER_MAP_STR [] = "data/maps/";	// Path to the directory with maps
-const char FORMAT_MAP_STR [] = ".lvl";			// The resolution of the map file
-const int FULL_FILE_NAME_LEN = 32;				// Length of the map name
+const char MAIN_PATH_STR [] = "/.local/share/tsnake/";	// The path to the preferences directory and maps
+const char FILE_NAME_SCORE_STR [] = "score.tsn";	// Path to the file with the table of records
+const char FILE_NAME_SETTINGS_STR [] = "settings.tsn";	// Path to the settings file
 
 struct CONFIG {			// Bit field settings of the card
 unsigned speed: 4;		// Speed of the player [1..10]

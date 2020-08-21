@@ -1,6 +1,6 @@
 #include <experimental/filesystem>
 #include <fstream>
-#include <cstring>
+#include <string>
 #include "files.h"
 
 namespace fs = std::experimental::filesystem;
@@ -8,7 +8,12 @@ namespace fs = std::experimental::filesystem;
 // Writing the game result to the file
 void FileSystem::SaveRecords(long *score)
 {
-	std::ofstream fout(FILE_NAME_SCORE_STR, std::ios::binary);
+	std::string pathStr = getenv("HOME");
+	pathStr += MAIN_PATH_STR;
+	pathStr += FILE_NAME_SCORE_STR;
+	fs::path filePath(pathStr);
+	
+	std::ofstream fout(filePath.native(), std::ios::binary);
 	for(int i = 0; i < 30; i++){	// 3 map types * 10 speed level = 30 
 		fout.write((char*)&score[i], sizeof(score[i]));	// Write to the open file
 	}
@@ -18,7 +23,15 @@ void FileSystem::SaveRecords(long *score)
 // Getting game results from the file
 long FileSystem::LoadRecords(long *score, int MapSize, int level)
 {
-	std::ifstream fin(FILE_NAME_SCORE_STR, std::ios::binary);
+	std::string pathStr = getenv("HOME");
+	pathStr += MAIN_PATH_STR;
+	pathStr += FILE_NAME_SCORE_STR;
+	fs::path filePath(pathStr);
+	
+	std::ifstream fin(filePath.native(), std::ios::binary);
+	if(!fin){
+		fs::create_directory(filePath.parent_path().native());
+	}
 	for(int i = 0; i < 30; i++){
 		fin.read((char*)&score[i], sizeof(score[i]));	// Read all
 	}
@@ -29,7 +42,12 @@ long FileSystem::LoadRecords(long *score, int MapSize, int level)
 // Write settings to the file
 void FileSystem::SaveSettings(CONFIG &conf, int *control)
 {
-	std::ofstream fout(FILE_NAME_SETTINGS_STR, std::ios::binary);
+	std::string pathStr = getenv("HOME");
+	pathStr += MAIN_PATH_STR;
+	pathStr += FILE_NAME_SETTINGS_STR;
+	fs::path filePath(pathStr);
+	
+	std::ofstream fout(filePath.native(), std::ios::binary);
 	fout.write((char*)&conf, sizeof(conf));	// Write the bite field to the config file
 	for(int i = 0; i < 4; i++){
 		fout.write((char*)&control[i], sizeof(control[i]));	// Write the control settings
@@ -40,8 +58,17 @@ void FileSystem::SaveSettings(CONFIG &conf, int *control)
 // Getting settings from the file
 CONFIG FileSystem::LoadSettings(int *control)
 {
+	std::string pathStr = getenv("HOME");
+	pathStr += MAIN_PATH_STR;
+	pathStr += FILE_NAME_SETTINGS_STR;
+	fs::path filePath(pathStr);
+	
+	std::ifstream fin(filePath.native(), std::ios::binary);
+	if(!fin){
+		fs::create_directory(filePath.parent_path().native());
+	}
+	
 	CONFIG conf;
-	std::ifstream fin(FILE_NAME_SETTINGS_STR, std::ios::binary);
 	fin.read((char*)&conf, sizeof(conf));
 	for(int i = 0; i < 4; i++){
 		fin.read((char*)&control[i], sizeof(control[i]));
