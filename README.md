@@ -9,8 +9,6 @@ Snake (Питон, Удав, Змейка и др.) — компьютерная
 2. Класс меню (Menu).
 3. Классы игрового процесса (Map и Snake).
 
-К программе прилагается редактор карт (в ветке [map_editor](https://github.com/DSuhoi/tsnake/tree/map_editor)) для создания уровней.
-
 ![Alt-игровой процесс](https://raw.githubusercontent.com/DSuhoi/dsuhoi.github.io/master/img/photo/tsnake/CustomMapTSnake.png "Игровой процесс")
 
 Игра TSnake на данный момент реализована только под UNIX терминалы.
