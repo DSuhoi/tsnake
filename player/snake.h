@@ -1,11 +1,11 @@
-/*** * * * * * * * * * * * * * * * * * * * * * * * * * * **
- * snake.h                                                *
- * Класс Snake содержит параметры игрока и методы взаимо- *
- * действия с полем. Основные параметры змеи - координаты *
- * тела и направление движения.                           *
- *                                                        *
- * Created by DSuhoi (2020) (C++11)                       *
- *** * * * * * * * * * * * * * * * * * * * * * * * * * * **/
+/*** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * ***
+ * snake.h                                                       *
+ * The Snake class contains player parameters and methods for    *
+ * interacting with the field. The main parameters of the snake   *
+ * are the coordinates of the body and the direction of movement.*
+ *                                                               *
+ * Created by DSuhoi (2020) (C++11)                              *
+ *** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * ***/
 
 
 #ifndef __SNAKE_H__
@@ -16,27 +16,27 @@
 #include "../term/display.h"
 
 
-const int START_SEG = 3;	// Начальное кол-во сегментов
-const int SEG_PLUS = 1;		// Прибавление змеи
+const int START_SEG = 3;	// Start number of segments
+const int SEG_PLUS = 1;		// Increasing body elements
 
-
-class Snake {	// Класс игрока
+// Class of player
+class Snake {
 private:
-	Coords *BodyCoords;	// Координаты тела змеи
-	int snakeLen;		// Кол-во сегментов	
-	int headVector;		// Направление движения змеи
+	Coords *BodyCoords;	// Coordinates of the snake's body
+	int snakeLen;		// Number of segments
+	int headVector;		// Direction of movement of the snake
 public:
 	Snake();
 	~Snake();
-	void InitSnake(Coords SpawnCoords, long MaxSnakeLen); // Установка начальных координат
-	void EraseSnake();					// Удаление параметров змеи
-	void Move(const int vector);		// Метод движения змеи
-	Coords *GetBodyCoords();			// Указатель на координаты змеи
-	int GetVector();		// Получение направления движения
-	int GetSnakeLen();		// Получение длины змеи
-	void IncSnakeLen();		// Увеличение длины змеи на определённое кол-во элементов
-	Coords InfoHead();		// Информация о координатах головы
-	void SetHeadCoords(int x, int y);	// Установка координат головы змеи
+	void InitSnake(Coords SpawnCoords, long MaxSnakeLen); // Setting the initial coordinates
+	void EraseSnake();					// Delete parameters of the snake
+	void Move(const int vector);		// Function of snake movement
+	Coords *GetBodyCoords();			// Pointer to the coordinates of the snake
+	int GetVector();		// Get the direction of movement
+	int GetSnakeLen();		// Getting the length of the snake
+	void IncSnakeLen();		// Increase the length of the snake by a certain number of elements
+	Coords InfoHead();		// Information about the coordinates of the head
+	void SetHeadCoords(int x, int y);	// Setting the coordinates of the snake's head
 };
 
 #endif

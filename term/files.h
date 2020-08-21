@@ -1,46 +1,41 @@
-/*** * * * * * * * * * * * * * * * * * * * ***
- * files.h                                   *
- * Библиотека для работы с файловой системой *
- * (запись и чтение данных из файлов).       *
- *                                           *
- * Created by DSuhoi (2020) (C++11)          *
- *** * * * * * * * * * * * * * * * * * * * ***/
+/*** * * * * * * * * * * * * * * * * * * * * ***
+ * files.h                                      *
+ * The library for working with the file system *
+ * (writing and reading data from files).       *
+ *                                             *
+ * Created by DSuhoi (2020) (C++11)            *
+ *** * * * * * * * * * * * * * * * * * * * * ***/
 
 
 #ifndef __FILES_H__
 #define __FILES_H__
 
-#include <string>
-#include "../menu/map.h"
+const char MAIN_PATH_STR [] = "~/.local/share/tsnake/";	// The path to the preferences directory and maps
+const char FILE_NAME_SCORE_STR [] = "data/score.tsn";	// Path to the file with the table of records
+const char FILE_NAME_SETTINGS_STR [] = "data/settings.tsn";	// Path to the settings file
+const char FOLDER_MAP_STR [] = "data/maps/";	// Path to the directory with maps
+const char FORMAT_MAP_STR [] = ".lvl";			// The resolution of the map file
+const int FULL_FILE_NAME_LEN = 32;				// Length of the map name
 
-
-const char MAIN_PATH_STR [] = "~/.local/share/tsnake/";	// Путь до директорий настроек и карт
-const char FILE_NAME_SCORE_STR [] = "data/score.tsn";	// Путь до файла с таблицей рекордов
-const char FILE_NAME_SETTINGS_STR [] = "data/settings.tsn";	// Путь до файла с настройками
-const char FOLDER_MAP_STR [] = "data/maps/";	// Путь до директории с картами
-const char FORMAT_MAP_STR [] = ".lvl";			// Разрешение файла карты
-const int FULL_FILE_NAME_LEN = 32;				// Длина названия карты
-
-struct CONFIG {			// Битовое поле с настройками карты
-unsigned speed: 4;		// Скорость игрока [1..10]
-unsigned mapSize: 2;	// Размер карты [0..2]
-unsigned numFruits: 7;	// Кол-во фруктов [1..99]
-unsigned border: 1;		// Препятствия 1/0
-unsigned teleport: 1;	// Телепортация змеи 1/0
-unsigned clearScore: 1;	// Очистка рекордов 1/0
+struct CONFIG {			// Bit field settings of the card
+unsigned speed: 4;		// Speed of the player [1..10]
+unsigned mapSize: 2;	// Map size [0..2]
+unsigned numFruits: 7;	// Number of fruits [1..99]
+unsigned border: 1;		// Borders 1/0
+unsigned teleport: 1;	// Snake teleportation 1/0
+unsigned clearScore: 1;	// Clearing records 1/0
 };
 
-
+// File System class
 class FileSystem{
 private:
 	FileSystem(){}
 public:
-	static void SaveRecords(long *score);	// Запись результата игры в файл
-	static void SaveSettings(CONFIG &conf, int *control);	// Запись настроек в файл
+	static void SaveRecords(long *score);	// Writing the game result to the file
+	static void SaveSettings(CONFIG &conf, int *control);	// Write settings to the file
 	
-	static long LoadRecords(long *score, int MapSize, int level);	// Получение результатов игр из файла
-	static CONFIG LoadSettings(int *control);						// Получение настроек из файла
-	//static bool LoadMap(char *fullFileName, int &Size, Map &map);	// Чтение карты
+	static long LoadRecords(long *score, int MapSize, int level);	// Getting game results from the file
+	static CONFIG LoadSettings(int *control);						// Getting settings from the file
 };
 
 #endif

@@ -3,50 +3,54 @@
 #include "../term/files.h"
 #include "game.h"
 
+// Defining Game class fields
+Snake *Game::snake;
+time_t Game::GameTime;
+long Game::gameScore[30];
 
-// Метод инициализации компонентов
+// Function for initializing components
 void Game::Start()
 {
-	Periph::InitPeriph();	// Настройка периферии
-	map = Map();			// Создание карты
-	snake = nullptr;		// Нулевой указатель
-	Display::InitColor();	// Настройка цветов
-	menu.InitMainMenu();	// Настройка главного меню
-	map.InitMap();			// Настройка размера карты
-	Display::Update();		// Обновление экрана
+	Periph::InitPeriph();	// Configure the periphery
+	snake = nullptr;		// Null pointer
+	Display::InitColor();	// Configure the colors
+	Menu::InitMainMenu();	// Configure the main menu
+	Map::InitMap();			// Configure the map size
+	Display::Update();		// Update the window
 }
 
-// Метод настройки поля
+// Function for configuring the field
 void Game::StartGame()
-{	// Настройка:
-	map.SelectSizeMap(menu.GetConfigMap().mapSize);	// Размер поля
+{	// Configure:
+	Map::SelectSizeMap(Menu::GetConfigMap().mapSize);	// Map size
 	
-	snake = new Snake(); // Создание игрока
-	// Размер змеи
-	snake->InitSnake(map.GetSpawnSnake(), map.GetHeight() * map.GetWidth());
-	if(menu.GetConfigMap().border)		// Если на поле нужны препятствия, то создаём их
-		map.InitBorderCoords(snake->InfoHead());
-	map.InitFruitCoords(menu.GetConfigMap().numFruits);	// Кол-во фруктов и их расположение	
-	Display::Update();		// Обновление экрана
-	GameTime = time(0);		// Запоминаем время начала игры
+	snake = new Snake(); // Creating player
+	//Snake size
+	snake->InitSnake(Map::GetSpawnSnake(), Map::GetHeight() * Map::GetWidth());
+	if(Menu::GetConfigMap().border){		// // If you need borders on the map, create their
+		Map::InitBorderCoords(snake->InfoHead());
+	}
+	Map::InitFruitCoords(Menu::GetConfigMap().numFruits);	//Number of fruits and their coordinates	
+	Display::Update();		// Updating screen
+	GameTime = time(0);		// Save the new game time
 }
 
-// Проверка на проигрыш
+// Check for fail
 bool Game::CheckWin()
 {
-	Coords tmp = snake->InfoHead();	// Положение головы
-	// Если голова не пересекла границы поля, своё тело или препятствие (если оно есть)
-	if(tmp.x == 0 || tmp.x == (map.GetWidth()) || tmp.y == 0 || 
-	tmp.y == (map.GetHeight()) || map.IsSnake(snake->InfoHead(),snake->GetBodyCoords(),snake->GetSnakeLen())
-	|| map.IsBorder(snake->InfoHead())){ 
-		return GAME_WIN;	// То возвращаем флаг окончания игры
+	Coords tmp = snake->InfoHead();	// Head position
+	// If head doesn't cross the map border, your body or other border
+	if(tmp.x == 0 || tmp.x == (Map::GetWidth()) || tmp.y == 0 || 
+	tmp.y == (Map::GetHeight()) || Map::IsSnake(snake->InfoHead(),snake->GetBodyCoords(),snake->GetSnakeLen())
+	|| Map::IsBorder(snake->InfoHead())){ 
+		return GAME_WIN;	// Then return the end game flag
 	}
 	else{ 
-		return GAME_NOT_WIN;	// Иначе игра ещё идёт
+		return GAME_NOT_WIN;	// Otherwise the game is still going on
 	}
 }
 
-// Генерация счёта
+// Generating the score
 int Game::GenScore(int level)
 {
 	srand(time(0));
@@ -54,132 +58,131 @@ int Game::GenScore(int level)
 	
 }
 
-// Игровой процесс (основная логика)
+// Game process (main logic)
 void Game::Process()
 {
-	// Переменная для сохранения промежуточных значений результата игры
+	// Variable to save the game result
 	int gameResult = 0;
 	while(1){
-		// Если не было дано команды перезагрузить игру, то заходим в меню
-		if(gameResult != GAME_RESTART && menu.MainMenuLoop() == 0){
-			// Если есть команда из меню об окончании, то выходим из игры
+		// If you were not given the command to restart the game, go to the menu
+		if(gameResult != GAME_RESTART && Menu::MainMenuLoop() == 0){
+			// End of the program
 			return;
 		}
-		// Обнуление результата прошлой игры
+		// Reset the result of the previous game
 		gameResult = 0;
 		
-		// Настройка игры
+		// Configure the game
 		StartGame();
 	
-		if(menu.GetConfigMap().clearScore){	// Если нужно стереть данные
-			// Обнуляем и записываем в файл
+		if(Menu::GetConfigMap().clearScore){
+			// If you need to erase data
 			for(int i = 0; i < 30; i++){
 				gameScore[i] = 0;
 			}	
 			FileSystem::SaveRecords(gameScore); 
-			menu.GetConfigMap().clearScore = false; 
+			Menu::GetConfigMap().clearScore = false; 
 		}
 		
-		// Чтение результатов прошлых игр
-		long resultLastGame = FileSystem::LoadRecords(gameScore, menu.GetConfigMap().mapSize, menu.GetConfigMap().speed);
-		// Результат текущей игры
+		// Reading the results of previous games
+		long resultLastGame = FileSystem::LoadRecords(gameScore, Menu::GetConfigMap().mapSize, Menu::GetConfigMap().speed);
+		// Result of the current game
 		long resultThisGame = 0;
 		
-		// Вывод статичной части меню
-		map.PrintSubMenuStatic(resultLastGame, menu.GetConfigMap().speed);
+		// Displays the static part of the menu
+		Map::PrintSubMenuStatic(resultLastGame, Menu::GetConfigMap().speed);
 		
-		int oldSnakeLen = snake->GetSnakeLen();	// Предыдущая длина змеи
-		// Цикл игры
+		int oldSnakeLen = snake->GetSnakeLen();	// Previous length of the snake
+		// Game Loop
 		do{
-			// Обрабатываем кнопки по пользовательскому шаблону
-			int currentButton = Periph::GetButton(menu.GetControl(), static_cast<float>(10/menu.GetConfigMap().speed));
+			// Processing buttons using a custom template
+			int currentButton = Periph::GetButton(Menu::GetControl(), static_cast<float>(10/Menu::GetConfigMap().speed));
 		
 			switch (currentButton){
-			case 'h':	// Запускаем меню
-				menu.HelpLoop();
+			case 'h':	// Menu launch
+				Menu::HelpLoop();
 				break;	
-			case 'p':	// Берём паузу
-				gameResult = menu.PauseLoop(); 
+			case 'p':	// Pause
+				gameResult = Menu::PauseLoop(); 
 				if(gameResult == GAME_END){
 					return;
 				}
 				break;
-			case KEY_EXIT:	// Выходим из игры
+			case KEY_EXIT:	//  Exit the game
 				return; 
 				break;	
-			case KEY_ENTER:	// Если другие клавиши не для управления, то
-			case ERR:	// Перемещаемся без поворотов
+			case KEY_ENTER:	// If the other keys are not for control, then
+			case ERR:	// Moving without turns
 				snake->Move(snake->GetVector()); 
 				break;	
-			default:	// Иначе задаем новый вектор движению игрока
+			default:	// Otherwise we set a new vector for the player's movement
 				snake->Move(currentButton); 
 				break;
 			};
 		
-			// Если активен режим телепорта
-			if(menu.GetConfigMap().teleport){
+			// If teleport mode is active
+			if(Menu::GetConfigMap().teleport){
 				if(snake->InfoHead().x == 0){ 
-					snake->SetHeadCoords(map.GetWidth()-1, snake->InfoHead().y);
+					snake->SetHeadCoords(Map::GetWidth()-1, snake->InfoHead().y);
 				}
-				else if(snake->InfoHead().x == map.GetWidth()){
+				else if(snake->InfoHead().x == Map::GetWidth()){
 					snake->SetHeadCoords(1, snake->InfoHead().y);
 				}
 				else if(snake->InfoHead().y == 0){ 
-					snake->SetHeadCoords(snake->InfoHead().x, map.GetHeight()-1);
+					snake->SetHeadCoords(snake->InfoHead().x, Map::GetHeight()-1);
 				}
-				else if(snake->InfoHead().y == map.GetHeight()){ 
+				else if(snake->InfoHead().y == Map::GetHeight()){ 
 					snake->SetHeadCoords(snake->InfoHead().x, 1);
 				}
 			}
 			
-			if(map.IsFruit(snake->InfoHead())){	// Если змея съела фрукт, то увеличиваем её длину
+			if(Map::IsFruit(snake->InfoHead())){	// If the snake ate the fruit, then increase its length
 				snake->IncSnakeLen();
-				map.SetFruitOnMap(snake->InfoHead(), snake->GetBodyCoords(), snake->GetSnakeLen());
+				Map::SetFruitOnMap(snake->InfoHead(), snake->GetBodyCoords(), snake->GetSnakeLen());
 			}
 			
-			map.UpdateMap(snake->GetBodyCoords(), snake->GetSnakeLen());	// Обновляем карту	
+			Map::UpdateMap(snake->GetBodyCoords(), snake->GetSnakeLen());	// Update the map
 		
 			if(snake->GetSnakeLen()>oldSnakeLen){
 				oldSnakeLen = snake->GetSnakeLen();
-				resultThisGame += GenScore(menu.GetConfigMap().speed);//(snake->getSnakeLen()-START_SEG)*12;
+				resultThisGame += GenScore(Menu::GetConfigMap().speed);
 			}
-			// Выводим текущие значения счета игры, уровня скорости и времени
-			map.PrintSubMenuActive(resultThisGame, GameTime);
+			// Output the current values of the game score, speed level, and time
+			Map::PrintSubMenuActive(resultThisGame, GameTime);
 		
-		// Проверяем игру с учётом выбора в меню паузы
+		// We check the game based on the pause menu selection
 		}while(CheckWin() == GAME_NOT_WIN && gameResult != RETURN_MENU && gameResult != GAME_RESTART);
 	
-		// Убиваем змею
-		map.SetMap(snake->InfoHead().x, snake->InfoHead().y, KILL);
+		// Kill the snake
+		Map::SetMap(snake->InfoHead().x, snake->InfoHead().y, KILL);
 	
-		Periph::GameDelay(20);	// Задержка в 200мс
+		Periph::GameDelay(20);	// Pause in 200ms
 	
-		if(resultLastGame < resultThisGame){	// Сохраняем результаты игры
-			gameScore[menu.GetConfigMap().mapSize*10 + (menu.GetConfigMap().speed-1)] = resultThisGame;
+		if(resultLastGame < resultThisGame){	// Save the game result
+			gameScore[Menu::GetConfigMap().mapSize*10 + (Menu::GetConfigMap().speed-1)] = resultThisGame;
 			FileSystem::SaveRecords(gameScore);
 		}
 
-		// Если не был запланирован выход из игры (проигрыш)
-		if(gameResult < GAME_RESTART){	// Даем пользователю выбор
-			if(menu.PrintInfo(INFO_WIDTH, INFO_HEIGHT,(char*)"  Restart Game ?", true)){
-				gameResult = GAME_RESTART;	// Если выбрана перезагрузка карты
+		// If you didn't plan to quit the game (lose)
+		if(gameResult < GAME_RESTART){	// Giving the user a choice
+			if(Menu::PrintInfo(INFO_WIDTH, INFO_HEIGHT,(char*)"  Restart Game ?", true)){
+				gameResult = GAME_RESTART;	// If reloading the map is selected
 			}
 		}
 	
-		delete snake;			// Удаляем змею
+		delete snake;			// Remove the snake
 		snake = nullptr;
 	
-		map.EraseMap();			// Удаляем карту
-		Display::Update();		// Обновляем экран
+		Map::EraseMap();		// Erase the map
+		Display::Update();		// Update the window
 	}
 }
 
-// Завершение игры
+// End of the game
 void Game::EndGame()
 {
 	if(snake != nullptr){ 
-		delete snake;	// Удаление объекта игрока
+		delete snake;	// Remove the player object
 	}
-	map.~Map();		// Удаление объекта карты
 	Periph::ErasePeriph();
 }

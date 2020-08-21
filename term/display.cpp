@@ -1,13 +1,13 @@
 #include "display.h"
 
 
-// Метод обёртка
+// Updating the entire screen
 void Display::Update()
 {
-	refresh();	// Функция обновления экрана
+	refresh();
 }
 
-// Обновление окна
+// Updating the window
 void Display::Update(WINDOW *win)
 {
 	wclear(win);	// Очищаем окно
@@ -17,47 +17,47 @@ void Display::Update(WINDOW *win)
 }
 
 
-// Удаление окна
+// Delete the window
 void Display::DeleteWindow(WINDOW *win)
 {
-	if(win!=nullptr){	// Если указатель на окно не пустой
-		 wclear(win);	// Очистка окна
-		 wrefresh(win); // Обновление окна
-		 delwin(win); 	// Удаление окна
+	if(win != nullptr){	// If the window pointer is not empty
+		wclear(win);	// Clear the window
+		wrefresh(win);	// Update the window
+		delwin(win); 	// Delete the window
 	} 
 	win = nullptr; 
 }
 
-// Инициализация основных цветов
+// Initializing primary colors
 void Display::InitColor()
-{	// Присвоение цветов
+{	// Color assignment
 	init_pair(GREEN, COLOR_GREEN, COLOR_BLACK);
 	init_pair(YELLOW, COLOR_YELLOW, COLOR_BLACK);
 	init_pair(RED, COLOR_RED, COLOR_BLACK);
 	init_pair(BLUE, COLOR_BLUE, COLOR_BLACK);
 }
 
-// Вывод текста
+// Print the text
 void Display::PrintScr(WINDOW *win, int x, int y, char *buff)
 {
-	mvwprintw(win, y, x, "%s", buff);	// Отсылаем массив по координатам
-	wrefresh(win);	// и обновляем окно
+	mvwprintw(win, y, x, "%s", buff);	// Sending the array by coordinates
+	wrefresh(win);	// and updating the window
 }
 
-// Вывод цветного текста
+// Print the color text
 void Display::PrintScr(WINDOW *win, int x, int y, char *buff, int color)
 {
-	wattron(win,COLOR_PAIR(color));	// Задаем цвет
+	wattron(win,COLOR_PAIR(color));	// Setting the color
 	PrintScr(win, x, y, buff);
-	wattroff(win,COLOR_PAIR(color));// Отключаем цвет
-	wrefresh(win);		// и обновляем окно
+	wattroff(win,COLOR_PAIR(color));// Disable the color
+	wrefresh(win);		// and updating the window
 }
 
-// Вывод символа
+// Print the character
 void Display::PrintScr(WINDOW *win, int x, int y, chtype ch)
 {
-	wmove(win,y,x);	// Ставим курсор на позицию
-	wdelch(win);	// Удаляем символ
-	winsch(win,ch);	// Вставляем свой символ
-	wrefresh(win);	// Обновляем окно
+	wmove(win,y,x);	// Putting the cursor on the position
+	wdelch(win);	// Deleting the symbol
+	winsch(win,ch);	// Insert your own character
+	wrefresh(win);	// Updating the window
 }

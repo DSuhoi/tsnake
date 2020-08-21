@@ -1,13 +1,12 @@
-/*** * * * * * * * * * * * * * * * * * * * * * * * * * ***
- * menu.h                                                *
- * Класс Menu содержит в себе указатели на окна, а также *
- * настройки управления и карты. В классе находятся      *
- * методы, отвечающих за меню настроек и информации.     *
- * По мере развития игры этот файл будет дополняться     *
- * новыми элементами.                                    *
- *                                                       *
- * Created by DSuhoi (2020) (C++11)                      *
- *** * * * * * * * * * * * * * * * * * * * * * * * * * ***/
+/*** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * ***
+ * menu.h                                                          *
+ * The Menu class contains pointers to Windows, as well as         *
+ * control settings and maps. The class contains methods that are  *
+ * responsible for the settings and information  menu. As the game *
+ * progresses, this file will be updated with new elements.         *
+ *                                                                 *
+ * Created by DSuhoi (2020) (C++11)                                *
+ *** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * ***/
 
 #ifndef __MENU_H__
 #define __MENU_H__
@@ -16,47 +15,45 @@
 #include "../term/periph.h"
 #include "../term/files.h"
 
-// Размеры:
+// Dimensions:
 
-// Главного меню
+// Main menu
 const int MENU_HEIGHT = 12;
 const int MENU_WIDTH = 20;
 
-// Меню помощи
+// Help menu
 const int HELP_HEIGHT = 10;
 const int HELP_WIDTH = 35;
-// Сдвиг в этом меню для постановки элементов на правой стороне
+// Shift in this menu to set items on the right side
 const int Help_WIDTH_RIGHT = 22;
 
-// Меню паузы
+// Pause menu
 const int PAUSE_HEIGHT = 6;
 const int PAUSE_WIDTH = 18;
 
-// Информационное меню
+// Info menu
 const int INFO_HEIGHT = 4;
 const int INFO_WIDTH = 20;
 
-
+// Class of menu
 class Menu {
 private:
-	WINDOW *menuWidow;		// Указатель на главное меню
-	WINDOW *infoWidow;		// Указатель на дополнительное меню
-	int buttons[4];			// Настройки управления
-	CONFIG configMap;		// Настройки карты
-	char fullFileName[FULL_FILE_NAME_LEN];	// Полное название файла карты
+	static WINDOW *menuWidow;		// Pointer to the main menu
+	static WINDOW *infoWidow;		// Pointer to the info menu
+	static int buttons[4];			// Control settings
+	static CONFIG configMap;			// <ap settings
 
-	void LvlSettingsLoop();		// Меню настроек игры
-	void ControlSettingsLoop();	// Меню настроек управления
+	Menu(){}	// Constructor
+	static void LvlSettingsLoop();		// Settings menu of the game
+	static void ControlSettingsLoop();	// Settings menu of the control
 public:
-	void InitMainMenu();	// Инициализация главного меню
-	int MainMenuLoop(); 	// Цикл главного меню
-	void HelpLoop();		// Информация
-	int PauseLoop();		// Окно паузы
-	bool PrintInfo(int width, int height, char *stringWithInfo, bool select);	// Вывод информации в отдельном окне
-	void PrintError();			// Вывод ошибки в отдельном окне
-	CONFIG& GetConfigMap();		// Возвращение настроек карты
-	int *GetControl();			// Возвращение настроек управления
-	char *GetFullFileName();	// Возвращение полного названия файла карты
+	static void InitMainMenu();	// Initializing the main menu
+	static int MainMenuLoop(); 	// Main menu loop
+	static void HelpLoop();		// Help loop
+	static int PauseLoop();		// Pause loop
+	static bool PrintInfo(int width, int height, char *stringWithInfo, bool select);	// Print information in a separate window
+	static CONFIG& GetConfigMap();		// Return the map settings
+	static int *GetControl();			// The return of the control settings
 };
 
 #endif

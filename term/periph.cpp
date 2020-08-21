@@ -4,25 +4,24 @@
 #include <unistd.h> 
 
 
-// Метод-обёртка ручной задержки
+// Function-manual delay wrapper
 void Periph::GameDelay(int delayTime)
 { 
 	usleep(delayTime * SLEEP_TIME); 
 }
 
-// Иницилизация экрана и обработки клавиш
+// Initializing the screen and key processing
 void Periph::InitPeriph()
 {
 	initscr();
 	start_color();
 	noecho();
-	//halfdelay(1);
 	nodelay(stdscr,true);
 	keypad(stdscr,true);
 	curs_set(0);
 }
 
-// Завершение функций обработки клавиш
+// End of key processing functions
 void Periph::ErasePeriph()
 {
 	keypad(stdscr,false);
@@ -30,13 +29,13 @@ void Periph::ErasePeriph()
 	endwin();
 }
 
-// Обработка кнопок
+// Button processing
 int Periph::GetButton()
 {
 	
-	usleep(100000);	// Задержка для приёма
+	usleep(100000);	// Delay for recieve
 	int button = getch();
-	flushinp();		// Очищаем буфер клавиатуры
+	flushinp();		// Clearing the keyboard buffer
 	int selectButton = ERR;
 	switch(button){
 	case KEY_DOWN: 
@@ -74,8 +73,7 @@ int Periph::GetButton()
 	return selectButton;
 }
 
-
-// Обработка игровых кнопок
+// Processing of game buttons
 int Periph::GetButton(int *gameButtons, float pauseDelay)
 {
 	usleep(pauseDelay*30000);

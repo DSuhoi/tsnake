@@ -1,21 +1,21 @@
-/*** * * * * * * * * * * * * * * * * * * * * * * * * * * * ***
- * periph.h                                                  *
- * Библиотека с функциями инициализации, отключения и работы *
- * обработчика клавиатуры.                                   *
- *                                                           *
- * Created by DSuhoi (2020) (C++11)                          *
- *** * * * * * * * * * * * * * * * * * * * * * * * * * * * ***/
+/*** * * * * * * * * * * * * * * * * * * * * * * * * * * ***
+ * periph.h                                                *
+ * The library with functions for initializing, disabling, *
+ * and running the keyboard handler.                       *
+ *                                                         *
+ * Created by DSuhoi (2020) (C++11)                        *
+ *** * * * * * * * * * * * * * * * * * * * * * * * * * * ***/
 
 
 #ifndef __PERIPH_H__
 #define __PERIPH_H__
 
 #include <ncurses.h>
-#include <unistd.h>		// Библиотека для usleep
+#include <unistd.h>		// Library for usleep() function
 
-const int SLEEP_TIME = 10000;	// Минимальная задержка
-const int CURS_KEY_MIN = 258;	// Номер (скан-код) клавиши курсора "down"
-const int CURS_KEY_MAX = 261;	// Номер (скан-код) клавиши курсора "right"
+const int SLEEP_TIME = 10000;	// Minimum delay
+const int CURS_KEY_MIN = 258;	// Number (scan code) of the "down" cursor key"
+const int CURS_KEY_MAX = 261;	// Number (scan code) of the "right" cursor key"
 
 enum CONTROL {
 	DOWN = 0, 
@@ -24,17 +24,17 @@ enum CONTROL {
 	RIGHT
 };
 
-
+// Peripherals class
 class Periph{
 private:
 	Periph(){}
 public:
-	static void GameDelay(int delayTime);	// Метод-обёртка ручной задержки
-	static void InitPeriph();	// Иницилизация экрана и обработки клавиш
-	static void ErasePeriph();	// Завершение функций обработки клавиш
+	static void GameDelay(int delayTime);	// Function-manual delay wrapper
+	static void InitPeriph();	// Initializing the screen and key processing
+	static void ErasePeriph();	// End of key processing functions
 	
-	static int GetButton();		// Обработка кнопок
-	static int GetButton(int *gameButtons, float pauseDelay);	// Обработка игровых кнопок
+	static int GetButton();		// Button processing
+	static int GetButton(int *gameButtons, float pauseDelay);	// Processing of game buttons
 };
 
 

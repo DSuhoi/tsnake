@@ -4,11 +4,9 @@
 
 int main(void)
 {
-	Game game;		// Объект игры
-	game.Start();	// Инициализация компонентов игры
-	game.Process();	// Процесс игры
-	game.EndGame();	// Завершение игры
-	
-	exit(0);
+	Game::Start();		// Initializing game components
+	Game::Process();	// Game process
+	Game::EndGame();	// The end of the game
+
 	return 0;
 }

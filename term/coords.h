@@ -1,12 +1,13 @@
 #ifndef __COORDS_H__
 #define __COORDS_H__
 
-class Coords {	//класс координат
+// Coordinate class
+class Coords {	
 public:
 	int x;
 	int y;
 	
-		//перегрузка операторов сравнения для координат
+	// Overloading comparison operators for coordinates
 	friend bool operator ==(Coords &cd1, Coords &cd2);
 	friend bool operator !=(Coords &cd1, Coords &cd2);
 };

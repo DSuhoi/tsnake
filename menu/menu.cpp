@@ -4,15 +4,21 @@
 #include "../term/display.h"
 #include "menu.h"
 
+// Defining Menu class fields
+WINDOW *Menu::menuWidow;
+WINDOW *Menu::infoWidow;
+int Menu::buttons[4];
+CONFIG Menu::configMap;
 
-// Инициализация главного меню
+
+// Initializing the main menu
 void Menu::InitMainMenu()
 {
-	int screenWidth = 0, screenHeight = 0;	// Размеры экран X*Y
+	int screenWidth = 0, screenHeight = 0;	// Screen size X*Y
 	getmaxyx(stdscr, screenHeight, screenWidth);
-	// Создание окна главного меню
+	// Creating the main menu window
 	menuWidow = newwin(MENU_HEIGHT, MENU_WIDTH,(screenHeight - MENU_HEIGHT)/2, (screenWidth - MENU_WIDTH)/2);
-	// Настройки управления и карты
+	// Control and map settings
 	buttons[DOWN] = KEY_DOWN;
 	buttons[UP] = KEY_UP;
 	buttons[LEFT] = KEY_LEFT;
@@ -21,33 +27,33 @@ void Menu::InitMainMenu()
 	configMap = FileSystem::LoadSettings(buttons);
 }
 
-// Цикл главного меню
+// Main menu loop
 int Menu::MainMenuLoop()
 {
-	// Массив из названий элементов меню
+	// Array of menu item names
 	std::string menuPart[5] ={"Start Game", "Lvl Settings", "Controls", "Help", "Exit"};
 	
-	// Очищаем и обновляем окно
+	// Clearing and updating the window
 	Display::Update(menuWidow);
-	// Выбор элемента меню (подсветка выбранного элемента)
+	// Selecting a menu elements (highlighting the selected item)
 	int hiLight = 0;	
 	while(1){
-		// Вывод названия игры
+		// Output the name of the game
 		Display::PrintScr(menuWidow, MENU_WIDTH/2 - 5, 0, (char*)"TSNAKE 1.3", BLUE);
 	
-		// Зелёные элементы
+		// Green elements
 		for(int cursPosition = 0; cursPosition < 5; cursPosition++){
-			if(cursPosition == hiLight){	// Выбранную строку подсвечиваем
+			if(cursPosition == hiLight){	// Highlight the selected line
 				wattron(menuWidow, COLOR_PAIR(GREEN));
 			}
-			// Выводим строки
+			// Print lines
 			Display::PrintScr(menuWidow, 2, cursPosition + 1, (char*)menuPart[cursPosition].c_str());
 			wattroff(menuWidow, COLOR_PAIR(GREEN));
 		}
-		// Читаем нажатые клавиши
+		// Reading the keystroke
 		switch(Periph::GetButton()){
 		case KEY_UP: 
-			if(hiLight > 0){	// Выбор элемента меню
+			if(hiLight > 0){	// Selecting a menu item
 				hiLight--;
 			} 
 			break;	
@@ -57,44 +63,45 @@ int Menu::MainMenuLoop()
 			}
 			break;
 		case KEY_EXIT: 
-			return 0; 		// Выход из программы
+			return 0; 		// Exit the program
 			break;		
 		case KEY_ENTER:
 			switch (hiLight){
 			case 0: 
-				return 1; 	// Если это игра, то выходим из меню
+				return 1; 	// If this is a game, then exit the menu
 				break;	
 			case 1: 
-				LvlSettingsLoop();  // Настройки уровня
+				LvlSettingsLoop();  // Level settings
 				break;		
 			case 2: 
-				ControlSettingsLoop(); // Настройки управления
+				ControlSettingsLoop(); // Control settings
 				break;	
 			case 3: 
-				HelpLoop(); // Информация
+				HelpLoop(); // Information
 				break;				
 			case 4: 
-				return 0; // Выход из программы
+				return 0; // Exit the program
 				break;
 			}; 
-			Display::Update(menuWidow); break;
+			Display::Update(menuWidow);
+			break;
 		};
 	}
 }
 
-// Меню настроек игры
+// Settings menu of the game
 void Menu::LvlSettingsLoop()
 {
-	// Элементы меню, параметры карты и ответы
+	// Menu elements, map parameters, and responses
 	std::string menuPart[8] = {"Back", "Speed:", "Fruit:","Map Size:", 
 		"Border:", "Teleport:", "Erase Settings", "Erase Records"};
 	std::string mapSize[3] = {"Small", "Medium", "Large"};
 	std::string selectStr[2] = {"Off", "On"};
-	// Символьный массив под вывод строк меню
+	// Character array for displaying menu lines
 	char buffStr[10];
-	// Обновление окна меню
+	// Updating the menu window	
 	Display::Update(menuWidow);
-	// Вид скобок (0 - прямоугольные, 1 -  острые)
+	// Type of brackets (0 - rectangular, 1-sharp)
 	int currentBracket = 0;
 	int hiLight = 0;
 	while(1){
@@ -103,7 +110,7 @@ void Menu::LvlSettingsLoop()
 		
 		for(int cursPosition = 0; cursPosition < 8;cursPosition++){
 			if(cursPosition == hiLight){
-				// Включение зелёной подсветки у выбранного элемента
+				// Enable the green light for the selected element
 				wattron(menuWidow, COLOR_PAIR(GREEN));
 				currentBracket = 1;
 			}
@@ -111,7 +118,7 @@ void Menu::LvlSettingsLoop()
 				currentBracket = 0;
 			}
 			
-			// Определение параметра по позиции курсора отрисовки меню
+			// Defining a parameter based on the position of the menu rendering cursor
 			char parametr[7] = "";
 			switch(cursPosition){
 			case 1:
@@ -132,32 +139,32 @@ void Menu::LvlSettingsLoop()
 			};
 			
 			if(cursPosition == 0){
-				// Вывод параметра выхода из меню
+				// Print the exit parameter from the menu
 				Display::PrintScr(menuWidow, 2, 1, (char*)menuPart[0].c_str());
 			}
 			else if(cursPosition > 5){
-				// Вывод параметра очистки настроек
+				// Print the parameter for clearing settings
 				Display::PrintScr(menuWidow, 2, (MENU_HEIGHT - 9) + cursPosition, (char*)menuPart[cursPosition].c_str());
 			}
 			else{
-				// Левые и правые скобки
+				// Left and right brackets
 				char bracketL[2] = {'[', '<'};
 				char bracketR[2] = {']', '>'};
-				// Генерация строки меню
+				// Generating the menu bar
 				sprintf(buffStr,"%c%s%c", bracketL[currentBracket], parametr, bracketR[currentBracket]);
-				// Вывод названия параметра и его значения (по центру)
+				// Displays the parameter name and its value (centered)
 				Display::PrintScr(menuWidow, MENU_WIDTH - strlen(buffStr)/2 - 5, cursPosition + 2, buffStr);
 				Display::PrintScr(menuWidow, 2, cursPosition + 2, (char*)menuPart[cursPosition].c_str());
 			}
 		
-			// Очистка массива
+			// Clearing the array
 			for(int index = 0; index < 9; index++){ 
 				buffStr[index] = 0;
 			}
-			// Отключение зелёной подсветки
+			// Disable the green light
 			wattroff(menuWidow, COLOR_PAIR(GREEN));
 		}
-		// Обработка нажатых клавиш
+		// Processing keystrokes
 		switch(Periph::GetButton()){
 		case KEY_UP: 
 			if(hiLight > 0){ 
@@ -169,10 +176,10 @@ void Menu::LvlSettingsLoop()
 				hiLight++;
 			} 
 			break;
-		case KEY_LEFT: // В зависимости от элемента настраиваем параметры
+		case KEY_LEFT: // Depending on the element, configure the parameters
 			switch(hiLight){
 			case 1: 
-				// Уменьшение скорости, кол-ва фруктов на карте и её размеры
+				// Speed reduction, number of fruits on the map and its size
 				if(configMap.speed > 1){ 
 					configMap.speed--;
 				} 
@@ -188,15 +195,15 @@ void Menu::LvlSettingsLoop()
 				} 
 				break;
 			case 4: 
-				// Отключение препятствий
+				// Disabling obstacles
 				configMap.border = false; 
 				break;
 			case 5: 
-				// Отключение возможности к телепортации
+				// Disables the ability to teleport
 				configMap.teleport = false; 
 				break;
 			};
-			// Обновление меню настроек
+			// Updating the settings menu
 			Display::Update(menuWidow);
 			break;
 		case KEY_RIGHT:
@@ -222,7 +229,7 @@ void Menu::LvlSettingsLoop()
 				configMap.teleport = true; 
 				break;
 			};
-			// Обновление меню настроек
+			// Updating the settings menu
 			Display::Update(menuWidow);
 			break;
 		case KEY_EXIT: 
@@ -231,33 +238,33 @@ void Menu::LvlSettingsLoop()
 			break;
 		case KEY_ENTER: 
 			if(hiLight == 0){ 
-				// Сохранение настроек в файле при выходе из меню
+				// Saving settings in a file when exiting the menu
 				FileSystem::SaveSettings(configMap,buttons); 
 				return; 
 			}
 			else if(hiLight == 6){
-				// Настройки по умолчанию
+				// Default settings
 				configMap = {8, 1, 1, false, false, false};
-				// Обновление меню настроек
+				// Updating the settings menu
 				Display::Update(menuWidow); 
 			}
 			else if(hiLight == 7){
-				// Вывод меню об очистке рекордов
+				// Displays the menu about clearing records
 				if(PrintInfo(INFO_WIDTH - 6, INFO_HEIGHT,(char*)"CLEAR DATA ?", true)){
 					configMap.clearScore = true;
 				}
 			}
-			// Обновление экрана
+			// Update the screen
 			Display::Update();
 			break;
 		};
 	}
 }
 
-// Меню настроек управления
+// Settings menu of the control
 void Menu::ControlSettingsLoop()
 {
-	// Элементы меню и названия клавиш курсора (можно было сделать через map контейнер)
+	// Menu elements and cursor key names (could be done via map container)
 	std::string menuPart[7] = {"Back", "Key Down:", "Key Up:", "Key Left:", "Key Right:", "Erase Settings"};
 	std::string cursKey[4] = {"down ", "up  ", "left ", "right"};
 	
@@ -269,11 +276,11 @@ void Menu::ControlSettingsLoop()
 		Display::PrintScr(menuWidow, MENU_WIDTH/2 - 4, 0, (char*)"Controls", BLUE);
 	
 		for(int cursPosition = 0; cursPosition < 6; cursPosition++){
-			// Подсветка курсора
+			// Cursor highlighting
 			if(cursPosition == hiLight){ 
 				wattron(menuWidow, COLOR_PAIR(GREEN));
 			}
-			// Отображение кнопок
+			// Button display
 			if(0 < cursPosition && cursPosition < 5){
 				if(buttons[cursPosition - 1] < CURS_KEY_MIN || CURS_KEY_MAX < buttons[cursPosition - 1]){
 					Display::PrintScr(menuWidow, MENU_WIDTH - 7, cursPosition + 2, buttons[cursPosition - 1]);
@@ -284,11 +291,11 @@ void Menu::ControlSettingsLoop()
 			}
 		
 			if(cursPosition == 0){
-				// Вывод параметра выхода из меню
+				// Print the exit parameter from the menu
 				Display::PrintScr(menuWidow, 2, 1, (char*)menuPart[0].c_str());
 			}
 			else if(cursPosition == 5){ 
-				// Вывод параметра очистки настроек
+				// Print the parameter for clearing settings
 				Display::PrintScr(menuWidow, 2, MENU_HEIGHT - 3, (char*)menuPart[5].c_str());
 			}
 			else{ 
@@ -310,32 +317,32 @@ void Menu::ControlSettingsLoop()
 			} 
 			break;
 		case KEY_EXIT:
-			// Сохранение клавиш в файле при выходе из меню
+			// Saving keys in a file when exiting the menu
 			FileSystem::SaveSettings(configMap,buttons); 
 			return; 
 			break;
 		case KEY_ENTER: 
 			if(hiLight == 0){
-				// Сохранение клавиш в файле при выходе из меню
+				// Saving keys in a file when exiting the menu
 				FileSystem::SaveSettings(configMap,buttons); 
 				return; 
 			}
 			else if(hiLight == 5){
-				// Сброс клавиш
+				// Reset keys
 				buttons[DOWN] = KEY_DOWN;
 				buttons[UP] = KEY_UP;
 				buttons[LEFT] = KEY_LEFT;
 				buttons[RIGHT] = KEY_RIGHT;
 			}
 			else {
-				// Создаем информационное окно для обработки нажатой клавиши
+				// Creating an information window for processing the pressed key
 				PrintInfo(INFO_WIDTH, INFO_HEIGHT - 1, (char*)"Press the button!", false);
 				cbreak();
-				nodelay(stdscr, false);			// Отменяем задержку
-				int recievedButton = getch();	// Принимаем символ
-				nodelay(stdscr, true);			// Возобновляем задержку
-				Display::DeleteWindow(infoWidow);	// Удаляем окно
-				// Присваиваем символ
+				nodelay(stdscr, false);			// Disable the delay
+				int recievedButton = getch();	// Recieve the symbol
+				nodelay(stdscr, true);			// Enable the delay
+				Display::DeleteWindow(infoWidow);	// Delete the window
+				// Assign a character
 				switch(hiLight){
 				case 1: 
 					buttons[DOWN] = recievedButton; 
@@ -359,21 +366,21 @@ void Menu::ControlSettingsLoop()
 	}
 }
 
-// Информация
+// Information
 void Menu::HelpLoop()
 {
-	// Названия клавиш курсора
+	// Name of cursor keys
 	std::string cursKey[4] = {"down", "up", "left", "right"};
 	
 	int screenWidth = 0, screenHeight = 0;
 	getmaxyx(stdscr, screenHeight, screenWidth);
-	// Создаем информационное окно в центре экрана
+	// Creating the info window in the center of the screen
 	infoWidow = newwin(HELP_HEIGHT, HELP_WIDTH, (screenHeight - HELP_HEIGHT)/2, (screenWidth - HELP_WIDTH)/2);
 	Display::Update(infoWidow);
 	
 	bool select = false;
 	while(1){
-		// Вывод информации об управлении и игре
+		// Print information about control and the game
 		Display::PrintScr(infoWidow, HELP_WIDTH - 6, 0, (char*)"HELP", BLUE);
 	
 		if(!select){
@@ -392,7 +399,7 @@ void Menu::HelpLoop()
 			Display::PrintScr(infoWidow, Help_WIDTH_RIGHT, 7, 'h');
 			Display::PrintScr(infoWidow, Help_WIDTH_RIGHT, 8, 'q');
 	
-			// Вывод клавиш управления
+			// Print of control keys
 			for(int currentButton = 0; currentButton < 4; currentButton++){
 				if(buttons[currentButton] < CURS_KEY_MIN || CURS_KEY_MAX < buttons[currentButton]){
 					Display::PrintScr(infoWidow, Help_WIDTH_RIGHT, currentButton + 2, buttons[currentButton]);
@@ -403,7 +410,7 @@ void Menu::HelpLoop()
 			}
 		}
 		else {
-			// Вывод справочной информации
+			// Print reference information
 			Display::PrintScr(infoWidow, 1, 0, (char*)"(2)", BLUE);
 			Display::PrintScr(infoWidow, 2, 1, (char*)"About:", YELLOW);
 			Display::PrintScr(infoWidow, 2, 2, (char*)"Game", GREEN);
@@ -422,11 +429,11 @@ void Menu::HelpLoop()
 			Display::PrintScr(infoWidow, 5, 8, (char*)"Thanks for playing!");
 			wattroff(infoWidow, COLOR_PAIR(GREEN));
 		}
-		switch(Periph::GetButton()){	//Выход из информационного меню
+		switch(Periph::GetButton()){	//Exit the information menu
 		case KEY_ENTER:
 		case KEY_EXIT:
 		case 'h':
-			// Удаление информационного окна
+			// Deleting the info window
 			Display::DeleteWindow(infoWidow); 
 			return; 
 			break;
@@ -442,19 +449,19 @@ void Menu::HelpLoop()
 	}
 }
 
-// Окно паузы
+// Pause loop
 int Menu::PauseLoop()
 {
-	// Элементы окна
+	// Window element
 	std::string pauseMenuStr[4] = {"Resume", "Restart", "Quit to Menu", "Quit Game"};
 	
 	int screenWidth = 0, screenHeight = 0;
 	getmaxyx(stdscr, screenHeight, screenWidth);
-	// Создание окна
+	// Create the window
 	infoWidow = newwin(PAUSE_HEIGHT, PAUSE_WIDTH, (screenHeight - PAUSE_HEIGHT)/2, (screenWidth - PAUSE_WIDTH)/2);
 	Display::Update(infoWidow);
 	Display::PrintScr(infoWidow, PAUSE_WIDTH - 7, 0, (char*)"PAUSE", BLUE);
-	// Подсветка меню
+	// Menu highlighting
 	int hiLight = 0;
 	while(1){
 
@@ -475,7 +482,7 @@ int Menu::PauseLoop()
 		case 'p': Display::DeleteWindow(infoWidow); return 0; break;
 		case KEY_ENTER: 
 			Display::DeleteWindow(infoWidow);
-			switch(hiLight){	// Возвращение выбора
+			switch(hiLight){
 			case 0: 
 				return 0; 
 				break;
@@ -494,25 +501,25 @@ int Menu::PauseLoop()
 	}
 }
 
-// Вывод информации в отдельном окне
+// Print information in a separate window
 bool Menu::PrintInfo(int width, int height, char *stringWithInfo, bool select)
 {
 	int screenWidth, screenHeight;
 	getmaxyx(stdscr, screenHeight, screenWidth);
-	// Создаем информационное меню в центре экрана
+	// Creating an information menu in the center of the screen
 	infoWidow = newwin(height, width, (screenHeight - height)/2, (screenWidth - width)/2);
 	Display::Update(infoWidow);
-	// и выводим текст
+	// and output the text
 	Display::PrintScr(infoWidow, width - 6, 0, (char*)"INFO", BLUE);
 	Display::PrintScr(infoWidow, 1, 1, stringWithInfo, BLUE);
 	
-	if(select){	// Если это вопрос (с выбором ответа в виде "Да" или "Нет")
+	if(select){	// If this is a question (with a choice of answer in the form of "Yes" or " No")
 		wattron(infoWidow, COLOR_PAIR(GREEN));
 		std::string selectStr[2] = {"<No> ", "<Yes>"};
 		bool hiLight = false;
 		while(1){
 			Display::PrintScr(infoWidow, (width/2 - 2), height - 2,(char*)selectStr[hiLight].c_str());
-			switch (Periph::GetButton()){	// Обработка нажатых клавиш
+			switch (Periph::GetButton()){	// Processing keystrokes
 			case KEY_LEFT: 
 				hiLight = false; 
 				break;
@@ -522,7 +529,7 @@ bool Menu::PrintInfo(int width, int height, char *stringWithInfo, bool select)
 			case KEY_ENTER: 
 				wattroff(infoWidow, COLOR_PAIR(GREEN)); 
 				Display::DeleteWindow(infoWidow); 
-				return hiLight; // Возвращаем ответ
+				return hiLight; // Return the answer
 				break;
 			};
 		} 
@@ -530,13 +537,13 @@ bool Menu::PrintInfo(int width, int height, char *stringWithInfo, bool select)
 	return false;
 }
 
-// Возвращаем настройки карты
+// Return the map settings
 CONFIG& Menu::GetConfigMap()
 { 
 	return configMap; 
 }	
 
-// Возвращаем настройки управления
+// The return of the control settings
 int *Menu::GetControl()
 { 
 	return buttons; 

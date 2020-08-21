@@ -1,14 +1,14 @@
-/*** * * * * * * * * * * * * * * ***
- * game.h                          *
- * Класс игры Game, который        *
- * объединяет другие классы Map,   *
- * Menu и Snake. В нём реализованы *
- * инициализация всех компоентов и *
- * их удаление, обработка состояния*
- * игры и вывод результатов.       *
- *                                 *
- * Created by DSuhoi (2020) (C++11)*
- *** * * * * * * * * * * * * * * ***/
+/*** * * * * * * * * * * * * * * * ***
+ * game.h                            *
+ * The Game class that combines other*
+ * Map, Menu, and Snake classes.     *
+ * It implements initialization of   *
+ * all components and their removal, *
+ * game state processing, and output *
+ * of results.                       *
+ *                                   *
+ * Created by DSuhoi (2020) (C++11)  *
+ *** * * * * * * * * * * * * * * * ***/
 
 
 #ifndef __GAME_H__
@@ -17,33 +17,31 @@
 #include "../player/snake.h"
 #include "../menu/map.h"
 #include "../menu/menu.h"
-#include <ctime>	// Библиотека для работы со временем
+#include <ctime>	// Library for working with time
 
-// Флаги состояния игры
-enum STATUS_GAME{GAME_WIN = 0,	// Игра окончена
-			GAME_NOT_WIN,		// Игра еще идёт
-			GAME_RESTART,		// Игра перезапущена
-			RETURN_MENU,		// Произошло возвращение в меню без проигрыша игры
-			GAME_END };			// Игра завершена
+// Game status flag
+enum STATUS_GAME{GAME_WIN = 0,
+			GAME_NOT_WIN,
+			GAME_RESTART,
+			RETURN_MENU,
+			GAME_END };
 
-
-class Game {	// Класс игры
+// Class of game
+class Game {
 private: 
-	Menu menu;		// Меню
-	Map map;		// Карта игры
-	Snake *snake;	// Указатель на объект змеи
-	time_t GameTime;	// Время начала игры
-	long gameScore[30];		// Игровые рекорды
-
-	void StartGame();	// Метод настройки поля
-	bool CheckWin();	// Проверка на проигрыш
-	int GenScore(int level);	// Генерация счёта
-	void SelectCustomMap();	// Выбор карты из файла
+	static Snake *snake;	// Pointer to the snake object
+	static time_t GameTime;	// Start time of the game
+	static long gameScore[30];		// Last records
+	
+	
+	Game(){}	// Constructor
+	static void StartGame();	// Function for configuring the field
+	static bool CheckWin();		// Check for fail
+	static int GenScore(int level);	// Generating the score
 public:
-	~Game(){ EndGame(); }	// Деструктор класса
-	void Start();	// Метод инициализации компонентов
-	void Process();	// Игровой процесс (основная логика)
-	void EndGame();	// Завершение игры
+	static void Start();	// Function for initializing components
+	static void Process();	// Game process (main logic)
+	static void EndGame();	// End of the game
 	
 };
 
