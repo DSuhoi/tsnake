@@ -25,7 +25,7 @@ void Menu::InitMainMenu()
 int Menu::MainMenuLoop()
 {
 	// Массив из названий элементов меню
-	std::string menuPart[6] ={"Start Game", "Load Map", "Lvl Settings", "Controls", "Help", "Exit"};
+	std::string menuPart[5] ={"Start Game", "Lvl Settings", "Controls", "Help", "Exit"};
 	
 	// Очищаем и обновляем окно
 	Display::Update(menuWidow);
@@ -36,7 +36,7 @@ int Menu::MainMenuLoop()
 		Display::PrintScr(menuWidow, MENU_WIDTH/2 - 5, 0, (char*)"TSNAKE 1.3", BLUE);
 	
 		// Зелёные элементы
-		for(int cursPosition = 0; cursPosition < 6; cursPosition++){
+		for(int cursPosition = 0; cursPosition < 5; cursPosition++){
 			if(cursPosition == hiLight){	// Выбранную строку подсвечиваем
 				wattron(menuWidow, COLOR_PAIR(GREEN));
 			}
@@ -52,7 +52,7 @@ int Menu::MainMenuLoop()
 			} 
 			break;	
 		case KEY_DOWN: 
-			if(hiLight < 5){ 
+			if(hiLight < 4){ 
 				hiLight++; 
 			}
 			break;
@@ -65,64 +65,21 @@ int Menu::MainMenuLoop()
 				return 1; 	// Если это игра, то выходим из меню
 				break;	
 			case 1: 
-				if(SearchMap()) 
-					return 2; 
-				break;
-			case 2: 
 				LvlSettingsLoop();  // Настройки уровня
 				break;		
-			case 3: 
+			case 2: 
 				ControlSettingsLoop(); // Настройки управления
 				break;	
-			case 4: 
+			case 3: 
 				HelpLoop(); // Информация
 				break;				
-			case 5: 
+			case 4: 
 				return 0; // Выход из программы
 				break;
 			}; 
 			Display::Update(menuWidow); break;
 		};
 	}
-}
-
-// Поиск карты
-bool Menu::SearchMap()
-{
-	// Стираем символьный массив
-	memset(fullFileName, 0, FULL_FILE_NAME_LEN);
-	
-	int screenWidth = 0, screenHeight = 0;
-	getmaxyx(stdscr, screenHeight, screenWidth);
-	// Создаем информационное окно в центре экрана
-	infoWidow = newwin(INFO_HEIGHT - 1, INFO_WIDTH + 15, (screenHeight - INFO_HEIGHT + 1)/2, (screenWidth - INFO_WIDTH - 15)/2);
-	Display::Update(infoWidow);
-	Display::PrintScr(infoWidow, (INFO_WIDTH + 15)/2 - 4, 0, (char*)"Load Map", BLUE);
-	Display::PrintScr(infoWidow, 2, 1, (char*)"File name: ", GREEN);
-	
-	echo();		// Режим отображения ввода включён
-	char fileName[FULL_FILE_NAME_LEN];		// Полный путь до файла и его название
-	wscanw(infoWidow, "%s", fileName);		// Считываем имя файла
-	strcat(fullFileName, FOLDER_MAP_STR);	// Копирование пути
-	strcat(fullFileName, fileName);			// Копирование имени
-	strcat(fullFileName, FORMAT_MAP_STR);	// Копирование формата файла (.lvl)
-	noecho();	// Режим отображения ввода выключён
-	
-	Display::DeleteWindow(infoWidow);	// Удаление окна
-	
-	if(fullFileName[0] == 0){ 
-		return false;	// Выход
-	}
-	// Проверка файла
-	std::ifstream fin(fullFileName);
-	if(!fin){	// Вывод ошибки в случае отсутствия файла
-		PrintInfo(false, INFO_WIDTH + 5, INFO_HEIGHT - 1, (char*)"ERROR: File not found!");
-		getchar();
-		Display::DeleteWindow(infoWidow);	// Удаление окна
-		return false;
-	}
-	fin.close();
-	return true;
 }
 
 // Меню настроек игры
@@ -286,7 +243,7 @@ void Menu::LvlSettingsLoop()
 			}
 			else if(hiLight == 7){
 				// Вывод меню об очистке рекордов
-				if(PrintInfo(true, INFO_WIDTH - 6, INFO_HEIGHT,(char*)"CLEAR DATA ?")){
+				if(PrintInfo(INFO_WIDTH - 6, INFO_HEIGHT,(char*)"CLEAR DATA ?", true)){
 					configMap.clearScore = true;
 				}
 			}
@@ -372,7 +329,7 @@ void Menu::ControlSettingsLoop()
 			}
 			else {
 				// Создаем информационное окно для обработки нажатой клавиши
-				PrintInfo(false, INFO_WIDTH, INFO_HEIGHT - 1, (char*)"Press the button!");
+				PrintInfo(INFO_WIDTH, INFO_HEIGHT - 1, (char*)"Press the button!", false);
 				cbreak();
 				nodelay(stdscr, false);			// Отменяем задержку
 				int recievedButton = getch();	// Принимаем символ
@@ -538,7 +495,7 @@ int Menu::PauseLoop()
 }
 
 // Вывод информации в отдельном окне
-bool Menu::PrintInfo(bool Select, int width, int height, char *stringWithInfo)
+bool Menu::PrintInfo(int width, int height, char *stringWithInfo, bool select)
 {
 	int screenWidth, screenHeight;
 	getmaxyx(stdscr, screenHeight, screenWidth);
@@ -549,7 +506,7 @@ bool Menu::PrintInfo(bool Select, int width, int height, char *stringWithInfo)
 	Display::PrintScr(infoWidow, width - 6, 0, (char*)"INFO", BLUE);
 	Display::PrintScr(infoWidow, 1, 1, stringWithInfo, BLUE);
 	
-	if(Select){	// Если это вопрос (с выбором ответа в виде "Да" или "Нет")
+	if(select){	// Если это вопрос (с выбором ответа в виде "Да" или "Нет")
 		wattron(infoWidow, COLOR_PAIR(GREEN));
 		std::string selectStr[2] = {"<No> ", "<Yes>"};
 		bool hiLight = false;
@@ -583,10 +540,4 @@ CONFIG& Menu::GetConfigMap()
 int *Menu::GetControl()
 { 
 	return buttons; 
-}
-
-// Возвращение полного названия файла карты
-char *Menu::GetFullFileName()
-{ 
-	return fullFileName; 
 }

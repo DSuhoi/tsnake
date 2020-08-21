@@ -17,21 +17,18 @@ void Game::Start()
 }
 
 // Метод настройки поля
-void Game::StartGame(int mode)
+void Game::StartGame()
 {	// Настройка:
-	if(mode == 1) 
-		SelectCustomMap();	// Выбор пользовательской карты
 	map.SelectSizeMap(menu.GetConfigMap().mapSize);	// Размер поля
 	
 	snake = new Snake(); // Создание игрока
-	// Размер змеи и её способность к телепортации
-	snake->InitSnake(map.GetSpawnSnake(), map.GetHeight()*map.GetWidth());
-	if(menu.GetConfigMap().border && !mode)		// Если на поле нужны препятствия, то создаём их
+	// Размер змеи
+	snake->InitSnake(map.GetSpawnSnake(), map.GetHeight() * map.GetWidth());
+	if(menu.GetConfigMap().border)		// Если на поле нужны препятствия, то создаём их
 		map.InitBorderCoords(snake->InfoHead());
 	map.InitFruitCoords(menu.GetConfigMap().numFruits);	// Кол-во фруктов и их расположение	
 	Display::Update();		// Обновление экрана
 	GameTime = time(0);		// Запоминаем время начала игры
-	isGame = true;			// Игра началась!
 }
 
 // Проверка на проигрыш
@@ -57,31 +54,22 @@ int Game::GenScore(int level)
 	
 }
 
-void Game::SelectCustomMap()
-{
-	int Size;
-	FileSystem::LoadMap(menu.GetFullFileName(), Size, map);	// Если такого файла нет
-	menu.GetConfigMap().mapSize = Size;	// Присваиваем переменную
-}
-
-
 // Игровой процесс (основная логика)
-void Game::Process(){
-	
-	int cnt = 0;		// Переменная для сохранения промежуточных значений результата игры
-	int modeMap = 0;	// Режим игры
-	
+void Game::Process()
+{
+	// Переменная для сохранения промежуточных значений результата игры
+	int gameResult = 0;
 	while(1){
-	
-		if(cnt != GAME_RESTART){ 	// Если не было дано команды перезагрузить игру, то заходим в меню
-			switch(menu.MainMenuLoop()){
-			case 0: return; break;	// Если есть команда из меню об окончании, то выходим из игры
-			case 1: modeMap = 0; break;	// Если это обычная игра
-			case 2: modeMap = 1; break;	// Если это игра на карте из файла
-			}; 	
+		// Если не было дано команды перезагрузить игру, то заходим в меню
+		if(gameResult != GAME_RESTART && menu.MainMenuLoop() == 0){
+			// Если есть команда из меню об окончании, то выходим из игры
+			return;
 		}
-	
-		StartGame(modeMap);		// Настройка игры
+		// Обнуление результата прошлой игры
+		gameResult = 0;
+		
+		// Настройка игры
+		StartGame();
 	
 		if(menu.GetConfigMap().clearScore){	// Если нужно стереть данные
 			// Обнуляем и записываем в файл
@@ -90,28 +78,42 @@ void Game::Process(){
 			}	
 			FileSystem::SaveRecords(gameScore); 
 			menu.GetConfigMap().clearScore = false; 
-			menu.GetConfigMap().clearScore = 0;
-		} 
-	
+		}
+		
+		// Чтение результатов прошлых игр
 		long resultLastGame = FileSystem::LoadRecords(gameScore, menu.GetConfigMap().mapSize, menu.GetConfigMap().speed);
+		// Результат текущей игры
 		long resultThisGame = 0;
-	
+		
+		// Вывод статичной части меню
 		map.PrintSubMenuStatic(resultLastGame, menu.GetConfigMap().speed);
-	
+		
 		int oldSnakeLen = snake->GetSnakeLen();	// Предыдущая длина змеи
-	
-		do{	// Цикл игры
+		// Цикл игры
+		do{
+			// Обрабатываем кнопки по пользовательскому шаблону
+			int currentButton = Periph::GetButton(menu.GetControl(), static_cast<float>(10/menu.GetConfigMap().speed));
 		
-			// Создание задержки (нужно ещё доработать этот алгоритм)
-			cnt = Periph::GetButton(menu.GetControl(), (float)10/menu.GetConfigMap().speed);	// Обрабатываем кнопки по пользовательскому шаблону
-		
-			switch (cnt){
-			case 'h': menu.HelpLoop();  break;	// Запускаем меню
-			case 'p': cnt = menu.PauseLoop(); if(cnt==GAME_END) return; break;	// Берём паузу
-			case KEY_EXIT: return; break;	// Выходим из игры
+			switch (currentButton){
+			case 'h':	// Запускаем меню
+				menu.HelpLoop();
+				break;	
+			case 'p':	// Берём паузу
+				gameResult = menu.PauseLoop(); 
+				if(gameResult == GAME_END){
+					return;
+				}
+				break;
+			case KEY_EXIT:	// Выходим из игры
+				return; 
+				break;	
 			case KEY_ENTER:	// Если другие клавиши не для управления, то
-			case ERR: snake->Move(snake->GetVector()); break;	// Перемещаемся без поворотов
-			default: snake->Move(cnt); break;	// Иначе задаем новый вектор движению игрока
+			case ERR:	// Перемещаемся без поворотов
+				snake->Move(snake->GetVector()); 
+				break;	
+			default:	// Иначе задаем новый вектор движению игрока
+				snake->Move(currentButton); 
+				break;
 			};
 		
 			// Если активен режим телепорта
@@ -145,7 +147,7 @@ void Game::Process(){
 			map.PrintSubMenuActive(resultThisGame, GameTime);
 		
 		// Проверяем игру с учётом выбора в меню паузы
-		}while(CheckWin() == GAME_NOT_WIN && cnt != RETURN_MENU && cnt != GAME_RESTART);
+		}while(CheckWin() == GAME_NOT_WIN && gameResult != RETURN_MENU && gameResult != GAME_RESTART);
 	
 		// Убиваем змею
 		map.SetMap(snake->InfoHead().x, snake->InfoHead().y, KILL);
@@ -158,27 +160,24 @@ void Game::Process(){
 		}
 
 		// Если не был запланирован выход из игры (проигрыш)
-		if(cnt < GAME_RESTART){	// Даем пользователю выбор
-			if(menu.PrintInfo(true, INFO_WIDTH, INFO_HEIGHT,(char*)"  Restart Game ?")){
-				cnt = GAME_RESTART;	// Если выбрана перезагрузка карты
+		if(gameResult < GAME_RESTART){	// Даем пользователю выбор
+			if(menu.PrintInfo(INFO_WIDTH, INFO_HEIGHT,(char*)"  Restart Game ?", true)){
+				gameResult = GAME_RESTART;	// Если выбрана перезагрузка карты
 			}
 		}
 	
 		delete snake;			// Удаляем змею
-		snake = NULL;
+		snake = nullptr;
 	
 		map.EraseMap();			// Удаляем карту
 		Display::Update();		// Обновляем экран
-	
-		isGame = false;			// Игра окончена		
-	
 	}
 }
 
 // Завершение игры
 void Game::EndGame()
 {
-	if(snake != NULL){ 
+	if(snake != nullptr){ 
 		delete snake;	// Удаление объекта игрока
 	}
 	map.~Map();		// Удаление объекта карты

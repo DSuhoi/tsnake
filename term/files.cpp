@@ -1,13 +1,17 @@
+#include <experimental/filesystem>
 #include <fstream>
 #include <cstring>
 #include "files.h"
+
+namespace fs = std::experimental::filesystem;
 
 // Запись результата игры в файл
 void FileSystem::SaveRecords(long *score)
 {
 	std::ofstream fout(FILE_NAME_SCORE_STR, std::ios::binary);
-	for(int i = 0; i < 30; i++)	// 3 типа карты * 10 уровней скорости = 30 
+	for(int i = 0; i < 30; i++){	// 3 типа карты * 10 уровней скорости = 30 
 		fout.write((char*)&score[i], sizeof(score[i]));	// Пишем всё обратно
+	}
 	fout.close();
 }
 
@@ -47,9 +51,16 @@ CONFIG FileSystem::LoadSettings(int *control)
 }
 
 // Чтение карты
+/*
 bool FileSystem::LoadMap(char *fullFileName, int &Size, Map &map)
 {	
-	std::ifstream fin(fullFileName, std::ios::binary);
+	std::string pathStr = MAIN_PATH_STR;
+	pathStr += FOLDER_MAP_STR;
+	pathStr += fullFileName;
+	pathStr += FORMAT_MAP_STR;
+	
+	fs::path filePath = pathStr;
+	std::ifstream fin(filePath.native(), std::ios::binary);
 	if(!fin){ 
 		return false;
 	}
@@ -67,3 +78,4 @@ bool FileSystem::LoadMap(char *fullFileName, int &Size, Map &map)
 	fin.close();
 	return true;
 }
+*/

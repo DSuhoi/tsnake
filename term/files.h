@@ -10,8 +10,11 @@
 #ifndef __FILES_H__
 #define __FILES_H__
 
+#include <string>
 #include "../menu/map.h"
 
+
+const char MAIN_PATH_STR [] = "~/.local/share/tsnake/";	// Путь до директорий настроек и карт
 const char FILE_NAME_SCORE_STR [] = "data/score.tsn";	// Путь до файла с таблицей рекордов
 const char FILE_NAME_SETTINGS_STR [] = "data/settings.tsn";	// Путь до файла с настройками
 const char FOLDER_MAP_STR [] = "data/maps/";	// Путь до директории с картами
@@ -37,7 +40,7 @@ public:
 	
 	static long LoadRecords(long *score, int MapSize, int level);	// Получение результатов игр из файла
 	static CONFIG LoadSettings(int *control);						// Получение настроек из файла
-	static bool LoadMap(char *fullFileName, int &Size, Map &map);	// Чтение карты
+	//static bool LoadMap(char *fullFileName, int &Size, Map &map);	// Чтение карты
 };
 
 #endif

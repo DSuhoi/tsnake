@@ -29,14 +29,13 @@ enum STATUS_GAME{GAME_WIN = 0,	// Игра окончена
 
 class Game {	// Класс игры
 private: 
-	bool isGame; 	// Игра начадась
 	Menu menu;		// Меню
 	Map map;		// Карта игры
 	Snake *snake;	// Указатель на объект змеи
 	time_t GameTime;	// Время начала игры
 	long gameScore[30];		// Игровые рекорды
 
-	void StartGame(int mode);	// Метод настройки поля
+	void StartGame();	// Метод настройки поля
 	bool CheckWin();	// Проверка на проигрыш
 	int GenScore(int level);	// Генерация счёта
 	void SelectCustomMap();	// Выбор карты из файла

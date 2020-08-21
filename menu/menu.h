@@ -45,7 +45,6 @@ private:
 	CONFIG configMap;		// Настройки карты
 	char fullFileName[FULL_FILE_NAME_LEN];	// Полное название файла карты
 
-	bool SearchMap();			// Поиск карты
 	void LvlSettingsLoop();		// Меню настроек игры
 	void ControlSettingsLoop();	// Меню настроек управления
 public:
@@ -53,7 +52,8 @@ public:
 	int MainMenuLoop(); 	// Цикл главного меню
 	void HelpLoop();		// Информация
 	int PauseLoop();		// Окно паузы
-	bool PrintInfo(bool Select, int width, int height, char *stringWithInfo);	// Вывод информации в отдельном окне
+	bool PrintInfo(int width, int height, char *stringWithInfo, bool select);	// Вывод информации в отдельном окне
+	void PrintError();			// Вывод ошибки в отдельном окне
 	CONFIG& GetConfigMap();		// Возвращение настроек карты
 	int *GetControl();			// Возвращение настроек управления
 	char *GetFullFileName();	// Возвращение полного названия файла карты

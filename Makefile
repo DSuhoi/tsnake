@@ -1,7 +1,7 @@
 CC = g++
-CFLAGS = -std=c++11 -O2 -Wall -c 
+CFLAGS = -std=c++17 -O2 -Wall -c 
 OFLAGS = -Wall -o
-LIBS = -lncurses
+LIBS = -lncurses -lstdc++fs
 LIB_PACK = ar rc
 OBJ = main.o game.o map.o menu.o snake.o display.o periph.o files.o coords.o
 
