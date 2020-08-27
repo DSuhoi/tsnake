@@ -16,27 +16,27 @@
 #include "../term/display.h"
 
 
-const int START_SEG = 3;	// Start number of segments
-const int SEG_PLUS = 1;		// Increasing body elements
+const int START_SEG = 3;    // Start number of segments
+const int SEG_PLUS = 1;     // Increasing body elements
 
 // Class of player
 class Snake {
 private:
-	Coords *BodyCoords;	// Coordinates of the snake's body
-	int snakeLen;		// Number of segments
-	int headVector;		// Direction of movement of the snake
+    Coords *bodyCoords; // Coordinates of the snake's body
+    int snakeLen;       // Number of segments
+    int headVector;     // Direction of movement of the snake
 public:
-	Snake();
-	~Snake();
-	void InitSnake(Coords SpawnCoords, long MaxSnakeLen); // Setting the initial coordinates
-	void EraseSnake();					// Delete parameters of the snake
-	void Move(const int vector);		// Function of snake movement
-	Coords *GetBodyCoords();			// Pointer to the coordinates of the snake
-	int GetVector();		// Get the direction of movement
-	int GetSnakeLen();		// Getting the length of the snake
-	void IncSnakeLen();		// Increase the length of the snake by a certain number of elements
-	Coords InfoHead();		// Information about the coordinates of the head
-	void SetHeadCoords(int x, int y);	// Setting the coordinates of the snake's head
+    Snake();
+    ~Snake();
+    void initSnake(Coords SpawnCoords, long MaxSnakeLen); // Setting the initial coordinates
+    void eraseSnake();                  // Delete parameters of the snake
+    void move(const int vector);        // Function of snake movement
+    Coords *getBodyCoords();            // Pointer to the coordinates of the snake
+    int getVector();        // Get the direction of movement
+    int getSnakeLen();      // Getting the length of the snake
+    void incSnakeLen();     // Increase the length of the snake by a certain number of elements
+    Coords infoHead();      // Information about the coordinates of the head
+    void setHeadCoords(int x, int y);   // Setting the coordinates of the snake's head
 };
 
 #endif
