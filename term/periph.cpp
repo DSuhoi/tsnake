@@ -37,7 +37,7 @@ int Periph::getButton()
     int button = getch();
     flushinp();     // Clearing the keyboard buffer
     int selectButton = ERR;
-    switch(button){
+    switch(button) {
     case KEY_DOWN: 
         selectButton = KEY_DOWN; 
         break;
@@ -80,20 +80,16 @@ int Periph::getButton(int *gameButtons, float pauseDelay)
     int button = getch();
     flushinp();
     int selectButton = ERR;
-    if(button == gameButtons[DOWN]){ 
+    if(button == gameButtons[DOWN]) { 
         selectButton = KEY_DOWN;
-    }
-    else if(button == gameButtons[UP]){ 
+    } else if(button == gameButtons[UP]) { 
         selectButton = KEY_UP;
-    }
-    else if(button == gameButtons[LEFT]){ 
+    } else if(button == gameButtons[LEFT]) { 
         selectButton = KEY_LEFT;
-    }
-    else if(button == gameButtons[RIGHT]){ 
+    } else if(button == gameButtons[RIGHT]) { 
         selectButton = KEY_RIGHT;
-    }
-    else{ 
-        switch(button){
+    } else { 
+        switch(button) {
         case 10: 
             selectButton = KEY_ENTER; 
             break;
