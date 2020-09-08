@@ -75,7 +75,7 @@ void Game::process()
     
         if(Menu::getConfigMap().clearScore) {
             // If you need to erase data
-            for(int i = 0; i < 30; i++)
+            for(unsigned int i = 0; i < 30; i++)
                 gameScore[i] = 0;
             FileSystem::saveRecords(gameScore); 
             Menu::getConfigMap().clearScore = false; 

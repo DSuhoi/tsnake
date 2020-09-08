@@ -36,13 +36,13 @@ int Menu::mainMenuLoop()
     // Clearing and updating the window
     Display::update(menuWidow);
     // Selecting a menu elements (highlighting the selected item)
-    int hiLight = 0;    
+    unsigned int hiLight = 0;    
     while(1) {
         // Output the name of the game
         Display::printScr(menuWidow, MENU_WIDTH/2 - 5, 0, (char*)"TSNAKE 1.3", BLUE);
     
         // Green elements
-        for(int cursPosition = 0; cursPosition < 5; cursPosition++) {
+        for(unsigned int cursPosition = 0; cursPosition < 5; cursPosition++) {
             if(cursPosition == hiLight)   // Highlight the selected line
                 wattron(menuWidow, COLOR_PAIR(GREEN));
             // Print lines
@@ -52,7 +52,7 @@ int Menu::mainMenuLoop()
         // Reading the keystroke
         switch(Periph::getButton()) {
         case KEY_UP: 
-            if(hiLight > 0)    // Selecting a menu item
+            if(hiLight > 0)     // Selecting a menu item
                 hiLight--;
             break;  
         case KEY_DOWN: 
@@ -60,24 +60,24 @@ int Menu::mainMenuLoop()
                 hiLight++; 
             break;
         case KEY_EXIT: 
-            return 0;       // Exit the program
+            return 0;           // Exit the program
             break;      
         case KEY_ENTER:
             switch (hiLight) {
             case 0: 
-                return 1;   // If this is a game, then exit the menu
+                return 1;       // If this is a game, then exit the menu
                 break;  
             case 1: 
-                lvlSettingsLoop();  // Level settings
+                lvlSettingsLoop();      // Level settings
                 break;      
             case 2: 
-                controlSettingsLoop(); // Control settings
+                controlSettingsLoop();  // Control settings
                 break;  
             case 3: 
                 helpLoop(); // Information
                 break;              
             case 4: 
-                return 0; // Exit the program
+                return 0;   // Exit the program
                 break;
             }; 
             Display::update(menuWidow);
@@ -100,12 +100,12 @@ void Menu::lvlSettingsLoop()
     Display::update(menuWidow);
     // Type of brackets (0 - rectangular, 1-sharp)
     int currentBracket = 0;
-    int hiLight = 0;
+    unsigned int hiLight = 0;
     while(1) {
     
         Display::printScr(menuWidow, MENU_WIDTH/2 - 6, 0, (char*)"Lvl Settings", BLUE);
         
-        for(int cursPosition = 0; cursPosition < 8; cursPosition++) {
+        for(unsigned int cursPosition = 0; cursPosition < 8; cursPosition++) {
             if(cursPosition == hiLight) {
                 // Enable the green light for the selected element
                 wattron(menuWidow, COLOR_PAIR(GREEN));
@@ -152,7 +152,7 @@ void Menu::lvlSettingsLoop()
             }
         
             // Clearing the array
-            for(int index = 0; index < 9; index++)
+            for(unsigned int index = 0; index < 9; index++)
                 buffStr[index] = 0;
             // Disable the green light
             wattroff(menuWidow, COLOR_PAIR(GREEN));
@@ -253,12 +253,12 @@ void Menu::controlSettingsLoop()
     
     Display::update(menuWidow);
     
-    int hiLight = 0;
+    unsigned int hiLight = 0;
     while(1) {
     
         Display::printScr(menuWidow, MENU_WIDTH/2 - 4, 0, (char*)"Controls", BLUE);
     
-        for(int cursPosition = 0; cursPosition < 6; cursPosition++) {
+        for(unsigned int cursPosition = 0; cursPosition < 6; cursPosition++) {
             // Cursor highlighting
             if(cursPosition == hiLight)
                 wattron(menuWidow, COLOR_PAIR(GREEN));
@@ -431,10 +431,10 @@ int Menu::pauseLoop()
     Display::update(infoWidow);
     Display::printScr(infoWidow, PAUSE_WIDTH - 7, 0, (char*)"PAUSE", BLUE);
     // Menu highlighting
-    int hiLight = 0;
+    unsigned int hiLight = 0;
     while(1) {
 
-        for(int i = 0; i < 4; i++) {
+        for(unsigned int i = 0; i < 4; i++) {
             if(i == hiLight)
                 wattron(infoWidow, COLOR_PAIR(GREEN));
             Display::printScr(infoWidow, 2, i + 1, (char*)pauseMenuStr[i].c_str());

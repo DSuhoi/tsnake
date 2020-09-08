@@ -22,9 +22,9 @@ const int SEG_PLUS = 1;     // Increasing body elements
 // Class of player
 class Snake {
 private:
-    Coords *bodyCoords; // Coordinates of the snake's body
-    int snakeLen;       // Number of segments
-    int headVector;     // Direction of movement of the snake
+    Coords *bodyCoords;     // Coordinates of the snake's body
+    int snakeLen;           // Number of segments
+    int headVector;         // Direction of movement of the snake
 public:
     Snake();
     ~Snake();
@@ -32,10 +32,10 @@ public:
     void eraseSnake();                  // Delete parameters of the snake
     void move(const int vector);        // Function of snake movement
     Coords *getBodyCoords();            // Pointer to the coordinates of the snake
-    int getVector();        // Get the direction of movement
-    int getSnakeLen();      // Getting the length of the snake
-    void incSnakeLen();     // Increase the length of the snake by a certain number of elements
-    Coords infoHead();      // Information about the coordinates of the head
+    int getVector();                    // Get the direction of movement
+    int getSnakeLen();                  // Getting the length of the snake
+    void incSnakeLen();                 // Increase the length of the snake by a certain number of elements
+    Coords infoHead();                  // Information about the coordinates of the head
     void setHeadCoords(int x, int y);   // Setting the coordinates of the snake's head
 };
 

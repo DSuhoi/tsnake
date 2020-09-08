@@ -8,8 +8,8 @@ WINDOW *Map::map = nullptr;
 Coords *Map::borders = nullptr;
 Coords *Map::fruits = nullptr;
 Coords Map::spawnSnake = {3, 3};
-int Map::numFruits = 0;
-int Map::numBorder = 0;
+unsigned int Map::numFruits = 0;
+unsigned int Map::numBorder = 0;
 
 
 // Configure the map
@@ -80,7 +80,7 @@ void Map::initFruitCoords(int number)
     fruits = new Coords[numFruits]; // Allocate memory for the coordinates of the fruit
     std::srand(unsigned(std::time(0))); // Generating numbers from the date
     Coords randomCoords;    // Coordinates of the fruit
-    for(int i = 0; i < numFruits; i++) {
+    for(unsigned int i = 0; i < numFruits; i++) {
         do {     
             randomCoords.x = std::rand()% width;    // Random coordinates
             randomCoords.y = std::rand()% height;
@@ -100,7 +100,7 @@ void Map::initBorderCoords(Coords snakeCoords)
     
     std::srand(unsigned(std::time(0))); // Generating numbers from the date
     Coords randomCoords;
-    for(int i = 0; i < numBorder; i++) { 
+    for(unsigned int i = 0; i < numBorder; i++) { 
         do {
             randomCoords.x = std::rand()% width;    // Generate and check the coordinates
             randomCoords.y = std::rand()% height;   // No closer than 5 blocks to the initial position of the snake
@@ -117,7 +117,7 @@ void Map::setFruitOnMap(Coords fruitCoords, Coords *snakeCoords, int snakeLen)
     std::srand(unsigned(std::time(0))); // Generate numbers at a time
     int errorCounter = 0;   // Repeat count
     Coords randomCoords;
-    for(int set = 0; set < numFruits;set++)
+    for(unsigned int set = 0; set < numFruits;set++)
         if(fruitCoords == fruits[set]) {
             do { 
                 if(errorCounter++ > 1000) return; // If more than 1000 repetitions have passed, we exit the loop
@@ -139,7 +139,7 @@ void Map::borderCoordsCpy(Coords *borderCoords, int numCoords, Coords spawnCoord
     if(borders == nullptr)
         borders = new Coords[numBorder];
     
-    for(int i = 0; i < numBorder; i++)
+    for(unsigned int i = 0; i < numBorder; i++)
         borders[i] = borderCoords[i];
     
     spawnSnake = spawnCoords;
@@ -159,17 +159,17 @@ void Map::updateMap(Coords *snakeCoords, int snakeLen)
         setMap(width, i, BORDERCHR); 
     }
     // Updating other borders
-    for(int i = 0; i < numBorder; i++) {
+    for(unsigned int i = 0; i < numBorder; i++) {
         setMap(borders[i].x, borders[i].y, BORDERCHR);
     }
     // Updating fruits
-    for(int i = 0; i < numFruits; i++) {
+    for(unsigned int i = 0; i < numFruits; i++) {
         setMap(fruits[i].x, fruits[i].y, FRUITCHR);
     }
     
     setMap(snakeCoords[snakeLen].x, snakeCoords[snakeLen].y, EMPTYCHR); // Cleaning the snake's tail
     // Updating snake body
-    for(int i = snakeLen; i > 0; i--)
+    for(unsigned int i = snakeLen; i > 0; i--)
         setMap(snakeCoords[i-1].x, snakeCoords[i-1].y, BODYCHR);
     
     setMap(snakeCoords[0].x, snakeCoords[0].y, HEAD);   // Put the character of the head
@@ -178,7 +178,7 @@ void Map::updateMap(Coords *snakeCoords, int snakeLen)
 // Checking the player's coordinates
 bool Map::isSnake(Coords coords, Coords *snakeCoords, int snakeLen)
 {
-    for(int i = snakeLen; i > 0; i--)
+    for(unsigned int i = snakeLen; i > 0; i--)
         if(coords == snakeCoords[i])
             return true;  
     return false;
@@ -187,7 +187,7 @@ bool Map::isSnake(Coords coords, Coords *snakeCoords, int snakeLen)
 // Check the coordinates of the fruits
 bool Map::isFruit(Coords coords)
 {
-    for(int i = 0; i < numFruits; i++)
+    for(unsigned int i = 0; i < numFruits; i++)
         if(coords == fruits[i])
             return true;
     return false;
@@ -200,7 +200,7 @@ bool Map::isBorder(Coords coords)
     if(borders == nullptr)
         return false;
     
-    for(int i = 0; i < numBorder; i++)
+    for(unsigned int i = 0; i < numBorder; i++)
         if(coords == borders[i])
             return true;
     return false;
@@ -220,11 +220,11 @@ void Map::printSubMenuStatic(const long lastScore, const int level)
 // Print the dynamic part of the submenu
 void Map::printSubMenuActive(const long score, time_t &firstTime)
 {
-    int allTime = time(0) - firstTime;  // All the time since the game started
-    unsigned int sec = allTime % 60;        // Seconds
-    unsigned int min = allTime / 60;        // Minuts
-    char buffScore[14]; // Array for the score
-    char buffTime[15];  // Array for the time
+    int allTime = time(0) - firstTime;      // All the time since the game started
+    unsigned int sec = allTime % 60;       // Seconds
+    unsigned int min = allTime / 60;       // Minuts
+    char buffScore[14];                     // Array for the score
+    char buffTime[15];                      // Array for the time
     sprintf(buffScore,"Score: %0*ld", 6, score);
     sprintf(buffTime,"Time: %0*d:%0*d", 2, min, 2, sec);
     Display::printScr(map, 2, HEIGHT, buffScore,YELLOW);

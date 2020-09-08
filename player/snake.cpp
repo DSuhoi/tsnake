@@ -76,7 +76,7 @@ void Snake::move(const int vector)
 void Snake::incSnakeLen()
 {
     snakeLen += SEG_PLUS; // Increase the length if you eat a fruit
-    for(int seg = snakeLen; seg > snakeLen-SEG_PLUS; seg--)
+    for(int seg = snakeLen; seg > snakeLen - SEG_PLUS; seg--)
         bodyCoords[seg] = bodyCoords[snakeLen - SEG_PLUS];
      
 }

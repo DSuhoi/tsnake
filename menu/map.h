@@ -49,8 +49,8 @@ private:
     static Coords *borders;     // Pointer to the coordinates of the borders
     static Coords *fruits;      // Pointer to the coordinates of the fruits
     static Coords spawnSnake;   // Coordinates of the snake spawn
-    static int numFruits;       // number of fruits
-    static int numBorder;       // number of borders
+    static unsigned int numFruits;       // number of fruits
+    static unsigned int numBorder;       // number of borders
     
     Map(){} // Constructor
     static void borderMap();    // Printing borders
