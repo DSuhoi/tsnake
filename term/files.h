@@ -26,12 +26,12 @@ unsigned clearScore: 1; // Clearing records 1/0
 // File System class
 class FileSystem{
 private:
-    FileSystem(){}
+	FileSystem(){}
 public:
-    static void saveRecords(long *score);                           // Writing the game result to the file
-    static void saveSettings(CONFIG &conf, int *control);           // Write settings to the file
-    static long loadRecords(long *score, int MapSize, int level);   // Getting game results from the file
-    static CONFIG loadSettings(int *control);                       // Getting settings from the file
+	static void saveRecords(long *score);                           // Writing the game result to the file
+	static void saveSettings(CONFIG &conf, int *control);           // Write settings to the file
+	static long loadRecords(long *score, int MapSize, int level);   // Getting game results from the file
+	static CONFIG loadSettings(int *control);                       // Getting settings from the file
 };
 
 #endif
