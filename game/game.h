@@ -21,29 +21,29 @@
 
 // Game status flag
 enum STATUS_GAME {
-	GAME_WIN = 0,
-	GAME_NOT_WIN,
-	GAME_RESTART,
-	RETURN_MENU,
-	GAME_END
+    GAME_WIN = 0,
+    GAME_NOT_WIN,
+    GAME_RESTART,
+    RETURN_MENU,
+    GAME_END
 };
 
 // Class of game
 class Game {
 private: 
-	static Snake *snake;            // Pointer to the snake object
-	static time_t gameTime;         // Start time of the game
-	static long gameScore[30];      // Last records
-	
-	Game(){}                        // Constructor
-	static void startGame();        // Function for configuring the field
-	static bool checkWin();         // Check for fail
-	static int genScore(int level); // Generating the score
+    static Snake *snake;            // Pointer to the snake object
+    static time_t gameTime;         // Start time of the game
+    static long gameScore[30];      // Last records
+    
+    Game(){}                        // Constructor
+    static void startGame();        // Function for configuring the field
+    static bool checkWin();         // Check for fail
+    static int genScore(int level); // Generating the score
 public:
-	static void start();            // Function for initializing components
-	static void process();          // Game process (main logic)
-	static void endGame();          // End of the game
-	
+    static void start();            // Function for initializing components
+    static void process();          // Game process (main logic)
+    static void endGame();          // End of the game
+    
 };
 
 #endif
