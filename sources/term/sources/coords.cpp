@@ -1,4 +1,4 @@
-#include "coords.h"
+#include "../coords.h"
 
 // Overloading comparison operators for coordinates
 bool operator==(Coords &cd1, Coords &cd2)

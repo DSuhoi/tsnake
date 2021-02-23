@@ -1,7 +1,7 @@
 #include <iostream>
-#include "../term/periph.h"
-#include "../term/files.h"
-#include "game.h"
+#include "../../term/periph.h"
+#include "../../term/files.h"
+#include "../game.h"
 
 // Defining Game class fields
 Snake *Game::snake;

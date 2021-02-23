@@ -1,8 +1,8 @@
 #include <iostream>
 #include <fstream>
 #include <cstring>
-#include "../term/display.h"
-#include "menu.h"
+#include "../../term/display.h"
+#include "../menu.h"
 
 // Defining Menu class fields
 WINDOW *Menu::menuWidow;

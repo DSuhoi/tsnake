@@ -1,9 +1,9 @@
-#include <experimental/filesystem>
+#include <filesystem>
 #include <fstream>
 #include <string>
-#include "files.h"
+#include "../files.h"
 
-namespace fs = std::experimental::filesystem;
+namespace fs = std::filesystem;
 
 // Writing the game result to the file
 void FileSystem::saveRecords(long *score)
