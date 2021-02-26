@@ -8,7 +8,7 @@ include_directories(../../term/include)
 
 project(${PROJECT})
 
-add_library(${PROJECT} STATIC ${HEADERS} ${SOURCES})
+add_library(${PROJECT} STATIC ${SOURCES})
 
 set_target_properties(${PROJECT} PROPERTIES
     CXX_STANDARD 17
