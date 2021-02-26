@@ -1,5 +1,5 @@
 #include <iostream>
-#include "map.h"
+#include "map.hpp"
 
 // Defining Map class fields
 int Map::height = 0;        

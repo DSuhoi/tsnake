@@ -7,8 +7,8 @@
  *** * * * * * * * * * * * * * * * * * * * * * * * * * * ***/
 
 
-#ifndef __PERIPH_H__
-#define __PERIPH_H__
+#ifndef __PERIPH_HPP__
+#define __PERIPH_HPP__
 
 #include <ncurses.h>
 #include <unistd.h>     // Library for usleep() function

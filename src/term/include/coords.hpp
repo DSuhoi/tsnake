@@ -1,5 +1,5 @@
-#ifndef __COORDS_H__
-#define __COORDS_H__
+#ifndef __COORDS_HPP__
+#define __COORDS_HPP__
 
 // Coordinate class
 class Coords {  

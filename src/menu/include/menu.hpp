@@ -8,12 +8,12 @@
  * Created by DSuhoi (2020) (C++11)                                *
  *** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * ***/
 
-#ifndef __MENU_H__
-#define __MENU_H__
+#ifndef __MENU_HPP__
+#define __MENU_HPP__
 
 
-#include "periph.h"
-#include "files.h"
+#include "periph.hpp"
+#include "files.hpp"
 
 // Dimensions:
 

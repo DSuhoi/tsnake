@@ -11,8 +11,8 @@
  *** * * * * * * * * * * * * * * * * * * * * * ***/
 
 
-#ifndef __DISPLAY_H__
-#define __DISPLAY_H__
+#ifndef __DISPLAY_HPP__
+#define __DISPLAY_HPP__
 
 #include <ncurses.h>
 

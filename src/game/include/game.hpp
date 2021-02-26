@@ -11,12 +11,12 @@
  *** * * * * * * * * * * * * * * * ***/
 
 
-#ifndef __GAME_H__
-#define __GAME_H__
+#ifndef __GAME_HPP__
+#define __GAME_HPP__
 
-#include "snake.h"
-#include "map.h"
-#include "menu.h"
+#include "snake.hpp"
+#include "map.hpp"
+#include "menu.hpp"
 #include <ctime>    // Library for working with time
 
 // Game status flag

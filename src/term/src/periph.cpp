@@ -1,7 +1,7 @@
 #include <ncurses.h>
 #include <unistd.h> 
-#include "menu.h"
-#include "periph.h"
+#include "menu.hpp"
+#include "periph.hpp"
 
 
 // Function-manual delay wrapper

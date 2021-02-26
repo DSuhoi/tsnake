@@ -1,7 +1,7 @@
 #include <filesystem>
 #include <fstream>
 #include <string>
-#include "files.h"
+#include "files.hpp"
 
 namespace fs = std::filesystem;
 

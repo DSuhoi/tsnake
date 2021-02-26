@@ -8,12 +8,12 @@
  *** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * ***/
 
 
-#ifndef __SNAKE_H__
-#define __SNAKE_H__
+#ifndef __SNAKE_HPP__
+#define __SNAKE_HPP__
 
 #include <ncurses.h>
-#include "coords.h"
-#include "display.h"
+#include "coords.hpp"
+#include "display.hpp"
 
 
 const int START_SEG = 3;    // Start number of segments

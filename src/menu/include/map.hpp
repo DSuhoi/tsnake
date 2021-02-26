@@ -9,13 +9,13 @@
  *** * * * * * * * * * * * * * * * * * * * * * * * * * ***/
 
 
-#ifndef __MAP_H__
-#define __MAP_H__
+#ifndef __MAP_HPP__
+#define __MAP_HPP__
 
 #include <ncurses.h>
 #include <ctime>
-#include "coords.h"
-#include "display.h"
+#include "coords.hpp"
+#include "display.hpp"
 
 // Map and fruit characters
 const char BORDERCHR = '#';
