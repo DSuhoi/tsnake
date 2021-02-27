@@ -3,69 +3,69 @@
 // Constructor
 Snake::Snake()
 { 
-    bodyCoords = nullptr;
+    body_coords = nullptr;
 }   
 
 // Destructor
 Snake::~Snake()
 { 
-    eraseSnake();
+    erase_snake();
 }   
 
 // Setting the initial coordinates
-void Snake::initSnake(Coords SpawnCoords, long MaxSnakeLen)
+void Snake::init_snake(Coords spawn_coords, long max_snake_len)
 {
     // Create the snake (body coordinates)
-    bodyCoords = new Coords[MaxSnakeLen];
-    snakeLen = START_SEG;
+    body_coords = new Coords[max_snake_len];
+    snake_len = START_SEG;
     // Setting the coordinates of the appearance of the snake
-    bodyCoords[0] = SpawnCoords;
-    headVector = KEY_RIGHT;
-    for (int i = snakeLen; i >= 0; --i)
-        bodyCoords[i] = bodyCoords[0];
+    body_coords[0] = spawn_coords;
+    head_vector = KEY_RIGHT;
+    for (int i = snake_len; i >= 0; --i)
+        body_coords[i] = body_coords[0];
 }
 
 // Delete parameters of the snake
-void Snake::eraseSnake()
+void Snake::erase_snake()
 {
     // Delete the coordinates of the snake's body
-    if (bodyCoords != nullptr) { 
-        delete [] bodyCoords; 
-        bodyCoords = nullptr;
+    if (body_coords != nullptr) { 
+        delete [] body_coords; 
+        body_coords = nullptr;
     }   
     
-    snakeLen = START_SEG;
-    headVector = 0;
+    snake_len = START_SEG;
+    head_vector = 0;
 }
 
 // Function of snake movement
 void Snake::move(const int vector)
 {
     // Assign new characters further (to save the direction of travel)
-    for (int i = snakeLen; i > 0; --i)
-        bodyCoords[i] = bodyCoords[i - 1];
+    for (int i = snake_len; i > 0; --i)
+        body_coords[i] = body_coords[i - 1];
     
     // Determining the direction and moving there
-    switch (headVector) {
+    switch (head_vector) {
     case KEY_LEFT:
         if (vector != KEY_RIGHT)
-            headVector = vector;
-        --bodyCoords[0].x;
+            head_vector = vector;
+        --body_coords[0].x;
         break;
     case KEY_RIGHT:
         if (vector != KEY_LEFT)
-            headVector = vector;
-        ++bodyCoords[0].x; 
+            head_vector = vector;
+        ++body_coords[0].x; 
         break;
     case KEY_UP:
         if (vector != KEY_DOWN)
-            headVector = vector;
-        --bodyCoords[0].y; 
+            head_vector = vector;
+        --body_coords[0].y; 
         break;
     case KEY_DOWN:
         if (vector != KEY_UP)
-            headVector = vector;
-        ++bodyCoords[0].y; 
+            head_vector = vector;
+        ++body_coords[0].y; 
         break;
     default: 
         break;
@@ -73,41 +73,41 @@ void Snake::move(const int vector)
 }
 
 // Increase the length of the snake by a certain number of elements
-void Snake::incSnakeLen()
+void Snake::inc_snake_len()
 {
-    snakeLen += SEG_PLUS; // Increase the length if you eat a fruit
-    for (int seg = snakeLen; seg > snakeLen - SEG_PLUS; seg--)
-        bodyCoords[seg] = bodyCoords[snakeLen - SEG_PLUS];
+    snake_len += SEG_PLUS; // Increase the length if you eat a fruit
+    for (int seg = snake_len; seg > snake_len - SEG_PLUS; seg--)
+        body_coords[seg] = body_coords[snake_len - SEG_PLUS];
      
 }
 
 // Information about the coordinates of the head
-Coords Snake::infoHead()
+Coords Snake::info_head()
 { 
-    return bodyCoords[0]; 
+    return body_coords[0]; 
 }   
 
 // Setting the coordinates of the snake's head
-void Snake::setHeadCoords(int x, int y)
+void Snake::set_head_coords(int x, int y)
 { 
-    bodyCoords[0].x = x; 
-    bodyCoords[0].y = y; 
+    body_coords[0].x = x; 
+    body_coords[0].y = y; 
 }
 
 // Getting the length of the snake
-int Snake::getSnakeLen()
+int Snake::get_snake_len()
 { 
-    return snakeLen; 
+    return snake_len; 
 }
 
 // Pointer to the coordinates of the snake
-Coords *Snake::getBodyCoords()
+Coords *Snake::get_body_coords()
 { 
-    return bodyCoords; 
+    return body_coords; 
 }
 
 // Get the direction of movement
-int Snake::getVector()
+int Snake::get_vector()
 { 
-    return headVector; 
+    return head_vector; 
 }

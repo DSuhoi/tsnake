@@ -6,46 +6,46 @@
 namespace fs = std::filesystem;
 
 // Writing the game result to the file
-void FileSystem::saveRecords(long *score)
+void FileSystem::save_records(long *score)
 {
-    std::string pathStr = getenv("HOME");
-    pathStr += MAIN_PATH_STR;
-    pathStr += FILE_NAME_SCORE_STR;
-    fs::path filePath(pathStr);
+    std::string path_str = getenv("HOME");
+    path_str += MAIN_PATH_STR;
+    path_str += FILE_NAME_SCORE_STR;
+    fs::path file_path(path_str);
     
-    std::ofstream fout(filePath.native(), std::ios::binary);
+    std::ofstream fout(file_path.native(), std::ios::binary);
     for (unsigned int i = 0; i < 30; ++i)                // 3 map types * 10 speed level = 30 
         fout.write((char*)&score[i], sizeof(score[i]));  // Write to the open file
     fout.close();
 }
 
 // Getting game results from the file
-long FileSystem::loadRecords(long *score, int MapSize, int level)
+long FileSystem::load_records(long *score, int map_size, int level)
 {
-    std::string pathStr = getenv("HOME");
-    pathStr += MAIN_PATH_STR;
-    pathStr += FILE_NAME_SCORE_STR;
-    fs::path filePath(pathStr);
+    std::string path_str = getenv("HOME");
+    path_str += MAIN_PATH_STR;
+    path_str += FILE_NAME_SCORE_STR;
+    fs::path file_path(path_str);
     
-    std::ifstream fin(filePath.native(), std::ios::binary);
+    std::ifstream fin(file_path.native(), std::ios::binary);
     if (!fin.is_open())
-        fs::create_directory(filePath.parent_path().native());
+        fs::create_directory(file_path.parent_path().native());
     
     for (unsigned int i = 0; i < 30; ++i)
         fin.read((char*)&score[i], sizeof(score[i]));   // Read all
     fin.close();
-    return score[10*MapSize + (level - 1)];             // Return the record of the current game
+    return score[10*map_size + (level - 1)];             // Return the record of the current game
 }
 
 // Write settings to the file
-void FileSystem::saveSettings(CONFIG &conf, int *control)
+void FileSystem::save_settings(CONFIG &conf, int *control)
 {
-    std::string pathStr = getenv("HOME");
-    pathStr += MAIN_PATH_STR;
-    pathStr += FILE_NAME_SETTINGS_STR;
-    fs::path filePath(pathStr);
+    std::string path_str = getenv("HOME");
+    path_str += MAIN_PATH_STR;
+    path_str += FILE_NAME_SETTINGS_STR;
+    fs::path file_path(path_str);
     
-    std::ofstream fout(filePath.native(), std::ios::binary);
+    std::ofstream fout(file_path.native(), std::ios::binary);
     fout.write((char*)&conf, sizeof(conf));                 // Write the bite field to the config file
     for (unsigned int i = 0; i < 4; ++i)
         fout.write((char*)&control[i], sizeof(control[i])); // Write the control settings
@@ -53,18 +53,18 @@ void FileSystem::saveSettings(CONFIG &conf, int *control)
 }
 
 // Getting settings from the file
-CONFIG FileSystem::loadSettings(int *control)
+CONFIG FileSystem::load_settings(int *control)
 {
-    std::string pathStr = getenv("HOME");
-    pathStr += MAIN_PATH_STR;
-    pathStr += FILE_NAME_SETTINGS_STR;
-    fs::path filePath(pathStr);
+    std::string path_str = getenv("HOME");
+    path_str += MAIN_PATH_STR;
+    path_str += FILE_NAME_SETTINGS_STR;
+    fs::path file_path(path_str);
     
     CONFIG conf = {5, 1, 1, 0, 0, 0};
     
-    std::ifstream fin(filePath.native(), std::ios::binary);
+    std::ifstream fin(file_path.native(), std::ios::binary);
     if (!fin.is_open()) {
-        fs::create_directory(filePath.parent_path().native());
+        fs::create_directory(file_path.parent_path().native());
         return conf;
     }
     

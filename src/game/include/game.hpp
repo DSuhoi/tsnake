@@ -29,21 +29,21 @@ enum STATUS_GAME {
 };
 
 // Class of game
-class Game {
+class Game
+{
 private: 
-    static Snake *snake;            // Pointer to the snake object
-    static time_t gameTime;         // Start time of the game
-    static long gameScore[30];      // Last records
+    static Snake *snake;             // Pointer to the snake object
+    static time_t game_time;         // Start time of the game
+    static long game_score[30];      // Last records
     
-    Game(){}                        // Constructor
-    static void startGame();        // Function for configuring the field
-    static bool checkWin();         // Check for fail
-    static int genScore(int level); // Generating the score
+    Game() = delete;                 // Constructor
+    static void start_game();        // Function for configuring the field
+    static bool check_win();         // Check for fail
+    static int gen_score(int level); // Generating the score
 public:
-    static void start();            // Function for initializing components
-    static void process();          // Game process (main logic)
-    static void endGame();          // End of the game
-    
+    static void start();             // Function for initializing components
+    static void process();           // Game process (main logic)
+    static void end_game();           // End of the game 
 };
 
 #endif

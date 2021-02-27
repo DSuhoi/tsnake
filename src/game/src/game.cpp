@@ -5,52 +5,52 @@
 
 // Defining Game class fields
 Snake *Game::snake;
-time_t Game::gameTime;
-long Game::gameScore[30];
+time_t Game::game_time;
+long Game::game_score[30];
 
 // Function for initializing components
 void Game::start()
 {
-    Periph::initPeriph();   // Configure the periphery
+    Periph::init_periph();   // Configure the periphery
     snake = nullptr;        // Null pointer
-    Display::initColor();   // Configure the colors
-    Menu::initMainMenu();   // Configure the main menu
-    Map::initMap();         // Configure the map size
+    Display::init_color();   // Configure the colors
+    Menu::init_main_menu();   // Configure the main menu
+    Map::init_map();         // Configure the map size
     Display::update();      // Update the window
 }
 
 // Function for configuring the field
-void Game::startGame()
+void Game::start_game()
 {   // Configure:
-    Map::selectSizeMap(Menu::getConfigMap().mapSize);   // Map size
+    Map::select_size_map(Menu::get_config_map().map_size);   // Map size
     // Creating player
     snake = new Snake();
     //Snake size
-    snake->initSnake(Map::getSpawnSnake(), Map::getHeight() * Map::getWidth());
+    snake->init_snake(Map::get_spawn_snake(), Map::get_height() * Map::get_width());
     // If you need borders on the map, create their
-    if (Menu::getConfigMap().border)
-        Map::initBorderCoords(snake->infoHead());
+    if (Menu::get_config_map().border)
+        Map::init_border_coords(snake->info_head());
     //Number of fruits and their coordinates
-    Map::initFruitCoords(Menu::getConfigMap().numFruits);
+    Map::init_fruit_coords(Menu::get_config_map().num_fruits);
     Display::update();      // Updating screen
-    gameTime = time(0);     // Save the new game time
+    game_time = time(0);     // Save the new game time
 }
 
 // Check for fail
-bool Game::checkWin()
+bool Game::check_win()
 {
-    Coords snakeHead = snake->infoHead(); // Head position
+    Coords snake_head = snake->info_head(); // Head position
     // If head doesn't cross the map border, your body or other border
-    if (snakeHead.x == 0 || snakeHead.x == (Map::getWidth()) || snakeHead.y == 0 || 
-    snakeHead.y == (Map::getHeight()) || Map::isSnake(snakeHead, snake->getBodyCoords(), snake->getSnakeLen())
-    || Map::isBorder(snakeHead))
+    if (snake_head.x == 0 || snake_head.x == (Map::get_width()) || snake_head.y == 0 || 
+    snake_head.y == (Map::get_height()) || Map::is_snake(snake_head, snake->get_body_coords(), snake->get_snake_len())
+    || Map::is_border(snake_head))
         return GAME_WIN;     // Then return the end game flag
     else
         return GAME_NOT_WIN; // Otherwise the game is still going on
 }
 
 // Generating the score
-int Game::genScore(int level)
+int Game::gen_score(int level)
 {
     srand(time(0));
     return level + rand()%(level + 5);
@@ -61,47 +61,47 @@ int Game::genScore(int level)
 void Game::process()
 {
     // Variable to save the game result
-    int gameResult = 0;
+    int game_result = 0;
     while (1) {
         // If you were not given the command to restart the game, go to the menu
-        if (gameResult != GAME_RESTART && Menu::mainMenuLoop() == 0)
+        if (game_result != GAME_RESTART && Menu::main_menu_loop() == 0)
             // End of the program
             return;
         // Reset the result of the previous game
-        gameResult = 0;
+        game_result = 0;
         
         // Configure the game
-        startGame();
+        start_game();
     
-        if (Menu::getConfigMap().clearScore) {
+        if (Menu::get_config_map().clear_score) {
             // If you need to erase data
             for (unsigned int i = 0; i < 30; ++i)
-                gameScore[i] = 0;
-            FileSystem::saveRecords(gameScore); 
-            Menu::getConfigMap().clearScore = false; 
+                game_score[i] = 0;
+            FileSystem::save_records(game_score); 
+            Menu::get_config_map().clear_score = false; 
         }
         
         // Reading the results of previous games
-        long resultLastGame = FileSystem::loadRecords(gameScore, Menu::getConfigMap().mapSize, Menu::getConfigMap().speed);
+        long result_last_game = FileSystem::load_records(game_score, Menu::get_config_map().map_size, Menu::get_config_map().speed);
         // Result of the current game
-        long resultThisGame = 0;
+        long result_this_game = 0;
         
         // Displays the static part of the menu
-        Map::printSubMenuStatic(resultLastGame, Menu::getConfigMap().speed);
+        Map::print_sub_menu_static(result_last_game, Menu::get_config_map().speed);
         
-        int oldSnakeLen = snake->getSnakeLen(); // Previous length of the snake
+        int old_snake_len = snake->get_snake_len(); // Previous length of the snake
         // Game Loop
         do {
             // Processing buttons using a custom template
-            int currentButton = Periph::getButton(Menu::getControl(), static_cast<float>(10/Menu::getConfigMap().speed));
+            int current_button = Periph::get_button(Menu::get_control(), static_cast<float>(10/Menu::get_config_map().speed));
         
-            switch(currentButton) {
+            switch(current_button) {
             case 'h':   // Menu launch
-                Menu::helpLoop();
+                Menu::help_loop();
                 break;  
             case 'p':   // Pause
-                gameResult = Menu::pauseLoop(); 
-                if(gameResult == GAME_END)
+                game_result = Menu::pause_loop(); 
+                if(game_result == GAME_END)
                     return;
                 break;
             case KEY_EXIT:  //  Exit the game
@@ -109,70 +109,70 @@ void Game::process()
                 break;  
             case KEY_ENTER: // If the other keys are not for control, then
             case ERR:       // Moving without turns
-                snake->move(snake->getVector()); 
+                snake->move(snake->get_vector()); 
                 break;  
             default:        // Otherwise we set a new vector for the player's movement
-                snake->move(currentButton); 
+                snake->move(current_button); 
                 break;
             };
         
             // If teleport mode is active
-            if (Menu::getConfigMap().teleport) {
-                Coords snakeHead = snake->infoHead();
-                if (snakeHead.x == 0)
-                    snake->setHeadCoords(Map::getWidth()-1, snakeHead.y);
-                else if (snakeHead.x == Map::getWidth())
-                    snake->setHeadCoords(1, snakeHead.y);
-                else if (snakeHead.y == 0)
-                    snake->setHeadCoords(snakeHead.x, Map::getHeight()-1);
-                else if (snakeHead.y == Map::getHeight())
-                    snake->setHeadCoords(snakeHead.x, 1);
+            if (Menu::get_config_map().teleport) {
+                Coords snake_head = snake->info_head();
+                if (snake_head.x == 0)
+                    snake->set_head_coords(Map::get_width()-1, snake_head.y);
+                else if (snake_head.x == Map::get_width())
+                    snake->set_head_coords(1, snake_head.y);
+                else if (snake_head.y == 0)
+                    snake->set_head_coords(snake_head.x, Map::get_height()-1);
+                else if (snake_head.y == Map::get_height())
+                    snake->set_head_coords(snake_head.x, 1);
             }
             // If the snake ate the fruit, then increase its length
-            if (Map::isFruit(snake->infoHead())) {
-                snake->incSnakeLen();
-                Map::setFruitOnMap(snake->infoHead(), snake->getBodyCoords(), snake->getSnakeLen());
+            if (Map::is_fruit(snake->info_head())) {
+snake->inc_snake_len();
+                Map::set_fruit_on_map(snake->info_head(), snake->get_body_coords(), snake->get_snake_len());
             }
             
-            Map::updateMap(snake->getBodyCoords(), snake->getSnakeLen());   // Update the map
+            Map::update_map(snake->get_body_coords(), snake->get_snake_len());   // Update the map
         
-            if (snake->getSnakeLen()>oldSnakeLen) {
-                oldSnakeLen = snake->getSnakeLen();
-                resultThisGame += genScore(Menu::getConfigMap().speed);
+            if (snake->get_snake_len()>old_snake_len) {
+                old_snake_len = snake->get_snake_len();
+                result_this_game += gen_score(Menu::get_config_map().speed);
             }
             // Output the current values of the game score, speed level, and time
-            Map::printSubMenuActive(resultThisGame, gameTime);
+            Map::print_sub_menu_active(result_this_game, game_time);
         
         // We check the game based on the pause menu selection
-        } while(checkWin() == GAME_NOT_WIN && gameResult != RETURN_MENU && gameResult != GAME_RESTART);
+        } while(check_win() == GAME_NOT_WIN && game_result != RETURN_MENU && game_result != GAME_RESTART);
     
         // Kill the snake
-        Map::setMap(snake->infoHead().x, snake->infoHead().y, KILL);
+        Map::set_map(snake->info_head().x, snake->info_head().y, KILL);
     
-        Periph::gameDelay(20);  // Pause in 200ms
+        Periph::game_delay(20);  // Pause in 200ms
     
-        if (resultLastGame < resultThisGame) {    // Save the game result
-            gameScore[Menu::getConfigMap().mapSize*10 + (Menu::getConfigMap().speed - 1)] = resultThisGame;
-            FileSystem::saveRecords(gameScore);
+        if (result_last_game < result_this_game) {    // Save the game result
+            game_score[Menu::get_config_map().map_size*10 + (Menu::get_config_map().speed - 1)] = result_this_game;
+            FileSystem::save_records(game_score);
         }
 
         // If you didn't plan to quit the game (Giving the user a choice)
-        if (gameResult < GAME_RESTART && 
-            Menu::printInfo(INFO_WIDTH, INFO_HEIGHT,(char*)"  Restart Game ?", true))
-            gameResult = GAME_RESTART;  // If reloading the map is selected
+        if (game_result < GAME_RESTART && 
+            Menu::print_info(INFO_WIDTH, INFO_HEIGHT,(char*)"  Restart Game ?", true))
+            game_result = GAME_RESTART;  // If reloading the map is selected
     
         delete snake;           // Remove the snake
         snake = nullptr;
     
-        Map::eraseMap();        // Erase the map
+        Map::erase_map();        // Erase the map
         Display::update();      // Update the window
     }
 }
 
 // End of the game
-void Game::endGame()
+void Game::end_game()
 {
     if (snake != nullptr)
         delete snake;   // Remove the player object
-    Periph::erasePeriph();
+    Periph::erase_periph();
 }

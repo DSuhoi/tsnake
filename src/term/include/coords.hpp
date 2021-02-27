@@ -2,7 +2,8 @@
 #define __COORDS_HPP__
 
 // Coordinate class
-class Coords {  
+class Coords
+{  
 public:
     int x;
     int y;

@@ -5,111 +5,111 @@
 
 
 // Function-manual delay wrapper
-void Periph::gameDelay(int delayTime)
+void Periph::game_delay(int delay_time)
 { 
-    usleep(delayTime * SLEEP_TIME); 
+    usleep(delay_time * SLEEP_TIME); 
 }
 
 // Initializing the screen and key processing
-void Periph::initPeriph()
+void Periph::init_periph()
 {
     initscr();
     start_color();
     noecho();
-    nodelay(stdscr,true);
-    keypad(stdscr,true);
+    nodelay(stdscr, true);
+    keypad(stdscr, true);
     curs_set(0);
 }
 
 // End of key processing functions
-void Periph::erasePeriph()
+void Periph::erase_periph()
 {
-    keypad(stdscr,false);
+    keypad(stdscr, false);
     cbreak();
     endwin();
 }
 
 // Button processing
-int Periph::getButton()
+int Periph::get_button()
 {
     
     usleep(100000); // Delay for recieve
     int button = getch();
     flushinp();     // Clearing the keyboard buffer
-    int selectButton = ERR;
+    int select_button = ERR;
     switch (button) {
     case KEY_DOWN: 
-        selectButton = KEY_DOWN; 
+        select_button = KEY_DOWN; 
         break;
     case KEY_UP: 
-        selectButton = KEY_UP; 
+        select_button = KEY_UP; 
         break;
     case KEY_LEFT: 
-        selectButton = KEY_LEFT; 
+        select_button = KEY_LEFT; 
         break;
     case KEY_RIGHT: 
-        selectButton = KEY_RIGHT; 
+        select_button = KEY_RIGHT; 
         break;
     case 10: 
-        selectButton = KEY_ENTER; 
+        select_button = KEY_ENTER; 
         break;
     case 27: 
     case 'q': 
     case 'Q': 
-        selectButton = KEY_EXIT; 
+        select_button = KEY_EXIT; 
         break;
     case 'h': 
     case 'H': 
-        selectButton = 'h'; 
+        select_button = 'h'; 
         break;
     case 'p': 
     case 'P': 
-        selectButton = 'p'; 
+        select_button = 'p'; 
         break;
     default: 
-        selectButton = ERR; 
+        select_button = ERR; 
         break;
     };
-    return selectButton;
+    return select_button;
 }
 
 // Processing of game buttons
-int Periph::getButton(int *gameButtons, float pauseDelay)
+int Periph::get_button(int *game_buttons, float pause_delay)
 {
-    usleep(pauseDelay*30000);
+    usleep(pause_delay * 30000);
     int button = getch();
     flushinp();
-    int selectButton = ERR;
-    if (button == gameButtons[DOWN]) { 
-        selectButton = KEY_DOWN;
-    } else if (button == gameButtons[UP]) { 
-        selectButton = KEY_UP;
-    } else if (button == gameButtons[LEFT]) { 
-        selectButton = KEY_LEFT;
-    } else if (button == gameButtons[RIGHT]) { 
-        selectButton = KEY_RIGHT;
+    int select_button = ERR;
+    if (button == game_buttons[DOWN]) { 
+        select_button = KEY_DOWN;
+    } else if (button == game_buttons[UP]) { 
+        select_button = KEY_UP;
+    } else if (button == game_buttons[LEFT]) { 
+        select_button = KEY_LEFT;
+    } else if (button == game_buttons[RIGHT]) { 
+        select_button = KEY_RIGHT;
     } else { 
         switch (button) {
         case 10: 
-            selectButton = KEY_ENTER; 
+            select_button = KEY_ENTER; 
             break;
         case 27: 
         case 'q': 
         case 'Q': 
-            selectButton = KEY_EXIT; 
+            select_button = KEY_EXIT; 
             break;
         case 'h': 
         case 'H': 
-            selectButton = 'h'; 
+            select_button = 'h'; 
             break;
         case 'p': 
         case 'P': 
-            selectButton = 'p'; 
+            select_button = 'p'; 
             break;
         default: 
-            selectButton = ERR; 
+            select_button = ERR; 
             break;
         };
     }   
-    return selectButton;
+    return select_button;
 }

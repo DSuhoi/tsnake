@@ -25,19 +25,19 @@ enum COLORS {
 };
 
 // Display class
-class Display {
+class Display
+{
 private:
-    Display(){}
+    Display() = delete;
 public:
-    static void update(WINDOW *win);    // Update the window
-    static void update();               // Updating the entire screen
-    static void deleteWindow(WINDOW *win);  // Deleting the window
+    static void update(WINDOW *win);        // Update the window
+    static void update();                   // Updating the entire screen
+    static void delete_window(WINDOW *win);  // Deleting the window
     
-    static void initColor();    // Initializing primary colors
-    static void printScr(WINDOW *win, int x, int y, chtype ch); // Print the character
-    static void printScr(WINDOW *win, int x, int y, char *buff);    // Print the text
-    static void printScr(WINDOW *win, int x, int y, char *buff, int color); // Print the color text
-    
+    static void init_color();                                                // Initializing primary colors
+    static void print_scr(WINDOW *win, int x, int y, chtype ch);             // Print the character
+    static void print_scr(WINDOW *win, int x, int y, char *buff);            // Print the text
+    static void print_scr(WINDOW *win, int x, int y, char *buff, int color); // Print the color text 
 };
 
 #endif

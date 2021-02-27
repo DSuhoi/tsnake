@@ -25,16 +25,17 @@ enum CONTROL {
 };
 
 // Peripherals class
-class Periph{
+class Periph
+{
 private:
-    Periph(){}
+    Periph() = delete;
 public:
-    static void gameDelay(int delayTime);   // Function-manual delay wrapper
-    static void initPeriph();   // Initializing the screen and key processing
-    static void erasePeriph();  // End of key processing functions
+    static void game_delay(int delay_time);    // Function-manual delay wrapper
+    static void init_periph();                 // Initializing the screen and key processing
+    static void erase_periph();                // End of key processing functions
     
-    static int getButton();     // Button processing
-    static int getButton(int *gameButtons, float pauseDelay);   // Processing of game buttons
+    static int get_button();                                       // Button processing
+    static int get_button(int *game_buttons, float pause_delay);   // Processing of game buttons
 };
 
 
