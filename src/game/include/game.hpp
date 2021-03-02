@@ -32,6 +32,10 @@ enum STATUS_GAME {
 // Class of game
 class Game
 {
+public:
+    static void start();             // Function for initializing components
+    static void process();           // Game process (main logic)
+    static void end_game();          // End of the game
 private: 
     static Snake *snake;             // Pointer to the snake object
     static time_t game_time;         // Start time of the game
@@ -41,10 +45,6 @@ private:
     static void start_game();        // Function for configuring the field
     static bool check_win();         // Check for fail
     static int gen_score(int level); // Generating the score
-public:
-    static void start();             // Function for initializing components
-    static void process();           // Game process (main logic)
-    static void end_game();           // End of the game 
 };
 
 #endif

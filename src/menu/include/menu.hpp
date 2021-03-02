@@ -39,23 +39,23 @@ const int INFO_WIDTH = 20;
 // Class of menu
 class Menu
 {
+public:
+    static void init_main_menu();         // Initializing the main menu
+    static int main_menu_loop();          // Main menu loop
+    static void help_loop();              // Help loop
+    static int pause_loop();              // Pause loop
+    static bool print_info(int width, int height, char *string_with_info, bool select);    // Print information in a separate window
+    static CONFIG& get_config_map();      // Return the map settings
+    static int *get_control();            // The return of the control settings
 private:
-    static WINDOW *menu_window;       // Pointer to the main menu
-    static WINDOW *info_window;       // Pointer to the info menu
-    static int buttons[4];            // Control settings
-    static CONFIG config_map;         // <ap settings
+    static WINDOW *menu_window;           // Pointer to the main menu
+    static WINDOW *info_window;           // Pointer to the info menu
+    static int buttons[4];                // Control settings
+    static CONFIG config_map;             // Map settings
 
     Menu() = delete;                      // Constructor
     static void lvl_settings_loop();      // Settings menu of the game
     static void control_settings_loop();  // Settings menu of the control
-public:
-    static void init_main_menu(); // Initializing the main menu
-    static int main_menu_loop();  // Main menu loop
-    static void help_loop();      // Help loop
-    static int pause_loop();      // Pause loop
-    static bool print_info(int width, int height, char *string_with_info, bool select);    // Print information in a separate window
-    static CONFIG& get_config_map();      // Return the map settings
-    static int *get_control();            // The return of the control settings
 };
 
 #endif

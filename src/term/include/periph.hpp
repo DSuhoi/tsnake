@@ -28,8 +28,6 @@ enum CONTROL {
 // Peripherals class
 class Periph
 {
-private:
-    Periph() = delete;
 public:
     static void game_delay(int delay_time);    // Function-manual delay wrapper
     static void init_periph();                 // Initializing the screen and key processing
@@ -37,6 +35,8 @@ public:
     
     static int get_button();                                       // Button processing
     static int get_button(int *game_buttons, float pause_delay);   // Processing of game buttons
+private:
+    Periph() = delete;
 };
 
 
