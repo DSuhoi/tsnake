@@ -12,7 +12,6 @@
 #ifndef __MAP_HPP__
 #define __MAP_HPP__
 
-#include <ncurses.h>
 #include <ctime>
 #include "coords.hpp"
 #include "display.hpp"

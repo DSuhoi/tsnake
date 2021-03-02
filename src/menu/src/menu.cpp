@@ -1,7 +1,3 @@
-#include <iostream>
-#include <fstream>
-#include <cstring>
-#include "display.hpp"
 #include "menu.hpp"
 
 // Defining Menu class fields

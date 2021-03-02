@@ -10,6 +10,12 @@
 #ifndef __FILES_HPP__
 #define __FILES_HPP__
 
+
+#include <filesystem>
+#include <fstream>
+#include <string>
+
+
 const char MAIN_PATH_STR [] = "/.local/share/tsnake/";  // The path to the preferences directory and maps
 const char FILE_NAME_SCORE_STR [] = "score.tsn";        // Path to the file with the table of records
 const char FILE_NAME_SETTINGS_STR [] = "settings.tsn";  // Path to the settings file

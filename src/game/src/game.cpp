@@ -1,6 +1,3 @@
-#include <iostream>
-#include "periph.hpp"
-#include "files.hpp"
 #include "game.hpp"
 
 // Defining Game class fields

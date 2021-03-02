@@ -14,10 +14,11 @@
 #ifndef __GAME_HPP__
 #define __GAME_HPP__
 
-#include "snake.hpp"
+#include <iostream> // Library for working with time
 #include "map.hpp"
 #include "menu.hpp"
-#include <ctime>    // Library for working with time
+#include "snake.hpp"
+
 
 // Game status flag
 enum STATUS_GAME {

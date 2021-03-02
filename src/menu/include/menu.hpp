@@ -11,7 +11,8 @@
 #ifndef __MENU_HPP__
 #define __MENU_HPP__
 
-
+#include <cstring>
+#include "display.hpp"
 #include "periph.hpp"
 #include "files.hpp"
 
@@ -44,7 +45,7 @@ private:
     static int buttons[4];            // Control settings
     static CONFIG config_map;         // <ap settings
 
-    Menu() = delete;    // Constructor
+    Menu() = delete;                      // Constructor
     static void lvl_settings_loop();      // Settings menu of the game
     static void control_settings_loop();  // Settings menu of the control
 public:

@@ -2,9 +2,8 @@
 #define __COORDS_HPP__
 
 // Coordinate class
-class Coords
+struct Coords
 {  
-public:
     int x;
     int y;
     

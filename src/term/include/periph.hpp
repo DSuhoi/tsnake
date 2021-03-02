@@ -12,6 +12,7 @@
 
 #include <ncurses.h>
 #include <unistd.h>     // Library for usleep() function
+#include "menu.hpp"
 
 const int SLEEP_TIME = 10000;   // Minimum delay
 const int CURS_KEY_MIN = 258;   // Number (scan code) of the "down" cursor key"

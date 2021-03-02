@@ -11,7 +11,6 @@
 #ifndef __SNAKE_HPP__
 #define __SNAKE_HPP__
 
-#include <ncurses.h>
 #include "coords.hpp"
 #include "display.hpp"
 

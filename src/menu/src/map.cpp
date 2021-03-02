@@ -1,4 +1,3 @@
-#include <iostream>
 #include "map.hpp"
 
 // Defining Map class fields
