@@ -9,7 +9,7 @@ include_directories(../../menu/include)
 
 project(${PROJECT})
 
-add_library(${PROJECT} STATIC ${SOURCES})
+add_library(${PROJECT} SHARED ${SOURCES})
 
 set_target_properties(${PROJECT} PROPERTIES
     CXX_STANDARD 17

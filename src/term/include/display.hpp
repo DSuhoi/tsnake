@@ -28,8 +28,6 @@ enum COLORS {
 // Display class
 class Display
 {
-private:
-    Display() = delete;
 public:
     static void update(WINDOW *win);           // Update the window
     static void update();                      // Updating the entire screen
@@ -39,6 +37,8 @@ public:
     static void print_scr(WINDOW *win, int x, int y, chtype ch);             // Print the character
     static void print_scr(WINDOW *win, int x, int y, char *buff);            // Print the text
     static void print_scr(WINDOW *win, int x, int y, char *buff, int color); // Print the color text 
+private:
+    Display() = delete;
 };
 
 #endif
