@@ -5,7 +5,7 @@
  * implements checking of coordinates and the display of *
  * objects on it.                                        *
  *                                                       *
- * Created by DSuhoi (2020) (C++11)                      *
+ * Created by DSuhoi (2020) (C++17)                      *
  *** * * * * * * * * * * * * * * * * * * * * * * * * * ***/
 
 

@@ -2,8 +2,8 @@
  * files.h                                      *
  * The library for working with the file system *
  * (writing and reading data from files).       *
- *                                             *
- * Created by DSuhoi (2020) (C++11)            *
+ *                                              *
+ * Created by DSuhoi (2020) (C++17)             *
  *** * * * * * * * * * * * * * * * * * * * * ***/
 
 

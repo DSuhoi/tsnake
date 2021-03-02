@@ -5,7 +5,7 @@
  * responsible for the settings and information  menu. As the game *
  * progresses, this file will be updated with new elements.         *
  *                                                                 *
- * Created by DSuhoi (2020) (C++11)                                *
+ * Created by DSuhoi (2020) (C++17)                                *
  *** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * ***/
 
 #ifndef __MENU_HPP__

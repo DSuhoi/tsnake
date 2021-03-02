@@ -7,7 +7,7 @@
  * Windows. To transfer the program to Windows   *
  * or Mac, you need to edit this file.            *
  *                                               *
- * Created by DSuhoi (2020) (C++11)              *
+ * Created by DSuhoi (2020) (C++17)              *
  *** * * * * * * * * * * * * * * * * * * * * * ***/
 
 
@@ -31,9 +31,9 @@ class Display
 private:
     Display() = delete;
 public:
-    static void update(WINDOW *win);                                         // Update the window
-    static void update();                                                    // Updating the entire screen
-    static void delete_window(WINDOW *win);                                  // Deleting the window
+    static void update(WINDOW *win);           // Update the window
+    static void update();                      // Updating the entire screen
+    static void delete_window(WINDOW *win);    // Deleting the window
     
     static void init_color();                                                // Initializing primary colors
     static void print_scr(WINDOW *win, int x, int y, chtype ch);             // Print the character

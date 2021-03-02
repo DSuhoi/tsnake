@@ -3,7 +3,7 @@
  * The library with functions for initializing, disabling, *
  * and running the keyboard handler.                       *
  *                                                         *
- * Created by DSuhoi (2020) (C++11)                        *
+ * Created by DSuhoi (2020) (C++17)                        *
  *** * * * * * * * * * * * * * * * * * * * * * * * * * * ***/
 
 

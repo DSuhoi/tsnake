@@ -7,7 +7,7 @@
  * game state processing, and output *
  * of results.                       *
  *                                   *
- * Created by DSuhoi (2020) (C++11)  *
+ * Created by DSuhoi (2020) (C++17)  *
  *** * * * * * * * * * * * * * * * ***/
 
 
