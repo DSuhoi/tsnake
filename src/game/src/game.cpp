@@ -50,8 +50,7 @@ bool Game::check_win()
 int Game::gen_score(int level)
 {
     srand(time(0));
-    return level + rand()%(level + 5);
-    
+    return level + rand()%(level + 5);  
 }
 
 // Game process (main logic)
@@ -127,7 +126,7 @@ void Game::process()
             }
             // If the snake ate the fruit, then increase its length
             if (Map::is_fruit(snake->info_head())) {
-snake->inc_snake_len();
+                snake->inc_snake_len();
                 Map::set_fruit_on_map(snake->info_head(), snake->get_body_coords(), snake->get_snake_len());
             }
             
