@@ -33,6 +33,7 @@ enum STATUS_GAME {
 class Game
 {
 public:
+    Game() = delete;                 // Constructor
     static void start();             // Function for initializing components
     static void process();           // Game process (main logic)
     static void end_game();          // End of the game
@@ -41,7 +42,6 @@ private:
     static time_t game_time;         // Start time of the game
     static long game_score[30];      // Last records
     
-    Game() = delete;                 // Constructor
     static void start_game();        // Function for configuring the field
     static bool check_win();         // Check for fail
     static int gen_score(int level); // Generating the score

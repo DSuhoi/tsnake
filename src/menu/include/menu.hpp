@@ -40,6 +40,7 @@ const int INFO_WIDTH = 20;
 class Menu
 {
 public:
+    Menu() = delete;                      // Constructor
     static void init_main_menu();         // Initializing the main menu
     static int main_menu_loop();          // Main menu loop
     static void help_loop();              // Help loop
@@ -53,7 +54,6 @@ private:
     static int buttons[4];                // Control settings
     static CONFIG config_map;             // Map settings
 
-    Menu() = delete;                      // Constructor
     static void lvl_settings_loop();      // Settings menu of the game
     static void control_settings_loop();  // Settings menu of the control
 };

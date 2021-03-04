@@ -52,9 +52,9 @@ private:
     static unsigned int num_fruits;  // number of fruits
     static unsigned int num_border;  // number of borders
     
-    Map() = delete;                  // Constructor
     static void border_map();        // Printing borders
 public:
+    Map() = delete;                                        // Constructor
     static void init_map();                                // Configure the map
     static void erase_map();                               // Erase the map parametrs
     static void select_size_map(int select);               // Selecting the map size

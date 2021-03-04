@@ -32,15 +32,13 @@ struct CONFIG
 };
 
 // File System class
-class FileSystem
+struct FileSystem
 {
-public:
+    FileSystem() = delete;
     static void save_records(long *score);                            // Writing the game result to the file
     static void save_settings(CONFIG &conf, int *control);            // Write settings to the file
     static long load_records(long *score, int map_size, int level);   // Getting game results from the file
     static CONFIG load_settings(int *control);                        // Getting settings from the file
-private:
-    FileSystem() = delete;
 };
 
 #endif
