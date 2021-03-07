@@ -12,6 +12,7 @@
 #ifndef __MAP_HPP__
 #define __MAP_HPP__
 
+#include <list>
 #include <ctime>
 #include "coords.hpp"
 #include "display.hpp"
@@ -60,8 +61,8 @@ public:
     static void select_size_map(int select);               // Selecting the map size
     static void init_border_coords(Coords snake_coords);   // Setting the borders
     static void init_fruit_coords(int number);             // Setting the number of fruits
-    static void set_fruit_on_map(Coords fruit_coords, Coords *snake_coords, int snake_len);      // Creating fruits on the map
-    static void update_map(Coords *snake, int snake_len);  // Update the images of all objects on the map
+    static void set_fruit_on_map(Coords fruit_coords, std::list<Coords> &snake_coords, int snake_len);      // Creating fruits on the map
+    static void update_map(std::list<Coords> &snake, int snake_len);  // Update the images of all objects on the map
 
     static void set_map(int x, int y, chtype color);       // Set character on the map
     static void print_sub_menu_static(const long last_score, const int level);                   // Print the static part of the submenu
@@ -71,7 +72,7 @@ public:
     static int get_width();                  // Return the map width
 
     static Coords get_spawn_snake();         // Get the coordinates of the snake spawn
-    static bool is_snake(Coords coords, Coords *snake_coords, int snake_len);                    // Checking the player's coordinates
+    static bool is_snake(Coords coords, std::list<Coords> &snake_coords, int snake_len);                    // Checking the player's coordinates
     static bool is_fruit(Coords coords);     // Check the coordinates of the fruits
     static bool is_border(Coords coords);    // Check the coordinates of the borders
 };

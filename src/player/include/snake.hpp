@@ -11,31 +11,30 @@
 #ifndef __SNAKE_HPP__
 #define __SNAKE_HPP__
 
+#include <list>
 #include "coords.hpp"
 #include "display.hpp"
 
 
-const int START_SEG = 3;    // Start number of segments
-const int SEG_PLUS = 1;     // Increasing body elements
+int const START_SEG = 3;    // Start number of segments
+int const SEG_PLUS = 1;     // Increasing body elements
 
 // Class of player
 class Snake
 {
 public:
-    Snake();
+    Snake() = default;
+    Snake(Coords spawn_coords);
     ~Snake();
-    void init_snake(Coords spawn_coords, long max_snake_len);  // Setting the initial coordinates
-    void erase_snake();                   // Delete parameters of the snake
-    void move(const int vector);          // Function of snake movement
-    Coords *get_body_coords();            // Pointer to the coordinates of the snake
+    void move(int const vector);          // Function of snake movement
+    std::list<Coords> &get_body_coords(); // Pointer to the coordinates of the snake
     int get_vector();                     // Get the direction of movement
     int get_snake_len();                  // Getting the length of the snake
     void inc_snake_len();                 // Increase the length of the snake by a certain number of elements
     Coords info_head();                   // Information about the coordinates of the head
     void set_head_coords(int x, int y);   // Setting the coordinates of the snake's head
 private:
-    Coords *body_coords;                  // Coordinates of the snake's body
-    int snake_len;                        // Number of segments
+    std::list<Coords> body_coords;        // Coordinates of the snake's body
     int head_vector;                      // Direction of movement of the snake
 };
 

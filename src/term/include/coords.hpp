@@ -8,8 +8,8 @@ struct Coords
     int y;
     
     // Overloading comparison operators for coordinates
-    friend bool operator==(Coords &cd1, Coords &cd2);
-    friend bool operator!=(Coords &cd1, Coords &cd2);
+    friend bool operator==(const Coords &cd1, const Coords &cd2);
+    friend bool operator!=(const Coords &cd1, const Coords &cd2);
 };
 
 #endif

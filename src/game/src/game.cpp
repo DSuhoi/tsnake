@@ -21,9 +21,7 @@ void Game::start_game()
 {   // Configure:
     Map::select_size_map(Menu::get_config_map().map_size);   // Map size
     // Creating player
-    snake = new Snake();
-    //Snake size
-    snake->init_snake(Map::get_spawn_snake(), Map::get_height() * Map::get_width());
+    snake = new Snake(Map::get_spawn_snake());
     // If you need borders on the map, create their
     if (Menu::get_config_map().border)
         Map::init_border_coords(snake->info_head());
@@ -132,7 +130,7 @@ void Game::process()
             
             Map::update_map(snake->get_body_coords(), snake->get_snake_len());   // Update the map
         
-            if (snake->get_snake_len()>old_snake_len) {
+            if (snake->get_snake_len() > old_snake_len) {
                 old_snake_len = snake->get_snake_len();
                 result_this_game += gen_score(Menu::get_config_map().speed);
             }

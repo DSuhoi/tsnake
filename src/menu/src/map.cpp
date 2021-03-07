@@ -1,4 +1,6 @@
 #include "map.hpp"
+#include <iostream>
+#include <iterator>
 
 // Defining Map class fields
 int Map::height = 0;        
@@ -111,7 +113,7 @@ void Map::init_border_coords(Coords snake_coords)
 }
 
 // Creating fruits on the map
-void Map::set_fruit_on_map(Coords fruit_coords, Coords *snake_coords, int snake_len)
+void Map::set_fruit_on_map(Coords fruit_coords, std::list<Coords> &snake_coords, int snake_len)
 {   
     std::srand(unsigned(std::time(0))); // Generate numbers at a time
     int error_counter = 0;   // Repeat count
@@ -145,48 +147,49 @@ void Map::border_coords_cpy(Coords *border_coords, int num_coords, Coords spawn_
 }
 
 // Update the images of all objects on the map
-void Map::update_map(Coords *snake_coords, int snake_len)
+void Map::update_map(std::list<Coords> &snake_coords, int snake_len)
 {
     // Updating map borders
-    for (int i = 0; i <= width; ++i) {
+    for (auto i = 0; i <= width; ++i) {
         set_map(i, 0, BORDERCHR);
         set_map(i, height, BORDERCHR); 
     }
     
-    for (int i = 0; i <= height; ++i){
+    for (auto i = 0; i <= height; ++i) {
         set_map(0, i, BORDERCHR);
         set_map(width, i, BORDERCHR); 
     }
+
     // Updating other borders
-    for (unsigned int i = 0; i < num_border; ++i) {
+    for (auto i = 0; i < num_border; ++i)
         set_map(borders[i].x, borders[i].y, BORDERCHR);
-    }
+
     // Updating fruits
-    for (unsigned int i = 0; i < num_fruits; ++i) {
+    for (auto i = 0; i < num_fruits; ++i)
         set_map(fruits[i].x, fruits[i].y, FRUITCHR);
-    }
+
     // Cleaning the snake's tail
-    set_map(snake_coords[snake_len].x, snake_coords[snake_len].y, EMPTYCHR);
+    set_map(snake_coords.back().x, snake_coords.back().y, EMPTYCHR);
     // Updating snake body
-    for (unsigned int i = snake_len; i > 0; --i)
-        set_map(snake_coords[i-1].x, snake_coords[i-1].y, BODYCHR);
+    for (auto it = (++snake_coords.crbegin()); it != (--snake_coords.crend()); ++it)
+        set_map(it->x, it->y, BODYCHR);
     // Put the character of the head
-    set_map(snake_coords[0].x, snake_coords[0].y, HEAD);
+    set_map(snake_coords.front().x, snake_coords.front().y, HEAD);
 }
 
 // Checking the player's coordinates
-bool Map::is_snake(Coords coords, Coords *snake_coords, int snake_len)
+bool Map::is_snake(Coords coords, std::list<Coords> &snake_coords, int snake_len)
 {
-    for (unsigned int i = snake_len; i > 0; --i)
-        if (coords == snake_coords[i])
-            return true;  
+    for (auto it = (++snake_coords.cbegin()); it != snake_coords.cend(); ++it)
+        if (coords == *it)
+            return true;
     return false;
 }
 
 // Check the coordinates of the fruits
 bool Map::is_fruit(Coords coords)
 {
-    for (unsigned int i = 0; i < num_fruits; ++i)
+    for (auto i = 0; i < num_fruits; ++i)
         if (coords == fruits[i])
             return true;
     return false;
