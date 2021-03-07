@@ -1,13 +1,12 @@
 #include "map.hpp"
-#include <iostream>
 #include <iterator>
 
 // Defining Map class fields
 int Map::height = 0;        
 int Map::width = 0;
 WINDOW *Map::map = nullptr;
-Coords *Map::borders = nullptr;
-Coords *Map::fruits = nullptr;
+std::list<Coords> Map::borders;
+std::list<Coords> Map::fruits;
 Coords Map::spawn_snake = {3, 3};
 unsigned int Map::num_fruits = 0;
 unsigned int Map::num_border = 0;
@@ -26,7 +25,7 @@ void Map::init_map()
 void Map::select_size_map(int select)
 {
     Display::update(map);       // Update the map window
-    switch (select) {            // Selecting the map size
+    switch (select) {           // Selecting the map size
     case 0: 
         width = SMALL_WIDTH; 
         height = SMALL_HEIGHT; 
@@ -50,15 +49,8 @@ void Map::select_size_map(int select)
 void Map::erase_map()
 {
     // Checking pointers and freeing up memory
-    if (fruits != nullptr) { 
-        delete [] fruits; 
-        fruits = nullptr; 
-    }
-    
-    if (borders != nullptr) { 
-        delete [] borders; 
-        borders = nullptr; 
-    }
+    fruits.clear();
+    borders.clear(); 
     
     width = 0;  // Resetting the width and height of the field
     height = 0;
@@ -78,17 +70,14 @@ void Map::init_fruit_coords(int number)
     else
         num_fruits = 1;
     
-    fruits = new Coords[num_fruits]; // Allocate memory for the coordinates of the fruit
-    std::srand(unsigned(std::time(0))); // Generating numbers from the date
-    Coords random_coords;    // Coordinates of the fruit
-    for (unsigned int i = 0; i < num_fruits; ++i) {
+    for (auto i = 0; i < num_fruits; ++i) {
+        Coords random_coords;    // Coordinates of the fruit
         do {     
-            random_coords.x = std::rand()% width;    // Random coordinates
-            random_coords.y = std::rand()% height;
-        } while (random_coords.x < 1 || random_coords.y < 1 ||
-            is_fruit(random_coords) || is_border(random_coords));
-        fruits[i] = random_coords;   // Checking and assigning coordinates
-        set_map(fruits[i].x,fruits[i].y,FRUITCHR);   // Setting the fruit on the map
+            random_coords.x = 1 + std::rand() % (width - 1);    // Random coordinates
+            random_coords.y = 1 + std::rand() % (height - 1);
+        } while (is_fruit(random_coords) || is_border(random_coords));
+        fruits.push_back(random_coords);   // Checking and assigning coordinates
+        set_map(random_coords.x, random_coords.y, FRUITCHR);   // Setting the fruit on the map
     }
 }
 
@@ -97,53 +86,39 @@ void Map::init_border_coords(Coords snake_coords)
 {
     num_border = (height * width)/20;    // Number of borders
     
-    borders = new Coords[num_border];    // Allocating memory for the coordinates of obstacles
-    
-    std::srand(unsigned(std::time(0))); // Generating numbers from the date
-    Coords random_coords;
-    for (unsigned int i = 0; i < num_border; ++i) { 
+    for (unsigned int i = 0; i < num_border; ++i) {
+        Coords random_coords;
         do {
-            random_coords.x = std::rand()% width;    // Generate and check the coordinates
-            random_coords.y = std::rand()% height;   // No closer than 5 blocks to the initial position of the snake
-        } while (is_border(random_coords) || random_coords.x < 1 || random_coords.y < 1 ||
-          ((snake_coords.x - 3) < random_coords.x  && random_coords.x < (snake_coords.x + 5) && 
-            random_coords.y == snake_coords.y ));
-        borders[i] = random_coords;  // Assigning and displaying obstacles by coordinates
+            random_coords.x = 1 + std::rand() % (width - 1);    // Generate and check the coordinates
+            random_coords.y = 1 + std::rand() % (height - 1);   // No closer than 5 blocks to the initial position of the snake
+        } while (is_border(random_coords) ||
+               ((snake_coords.x - 3) < random_coords.x  && random_coords.x < (snake_coords.x + 5) && 
+                 random_coords.y == snake_coords.y ));
+        borders.push_back(random_coords);  // Assigning and displaying obstacles by coordinates
     }
 }
 
 // Creating fruits on the map
 void Map::set_fruit_on_map(Coords fruit_coords, std::list<Coords> &snake_coords, int snake_len)
 {   
-    std::srand(unsigned(std::time(0))); // Generate numbers at a time
     int error_counter = 0;   // Repeat count
-    Coords random_coords;
-    for (unsigned int set = 0; set < num_fruits; ++set)
-        if (fruit_coords == fruits[set]) {
+    
+    for (auto it = fruits.begin(); it != fruits.end(); ++it) {
+        Coords random_coords;
+        if (fruit_coords == *it) {
             do { 
-                if (error_counter++ > 1000) return; // If more than 1000 repetitions have passed, we exit the loop
-                random_coords.x = std::rand()% width;    // Random coordinates
-                random_coords.y = std::rand()% height;
+                // If more than 1000 repetitions have passed, we exit the loop
+                if (error_counter++ > 1000) 
+                    return; 
+                random_coords.x = 1 + std::rand() % (width - 1);    // Random coordinates
+                random_coords.y = 1 + std::rand() % (height - 1);
                 // Check the coordinates
             } while (is_snake(random_coords, snake_coords, snake_len) || 
-                    random_coords.x < 1 || random_coords.y < 1 || 
-                    is_fruit(random_coords) || is_border(random_coords));
-            fruits[set] = random_coords; // Assigning the correct coordinates
-            set_map(fruits[set].x,fruits[set].y,FRUITCHR);   // and fruit output
-        }
-}
-
-// Copy the coordinates
-void Map::border_coords_cpy(Coords *border_coords, int num_coords, Coords spawn_coords)
-{
-    num_border = num_coords;  // If the number of coordinates is greater than the length of the array
-    if (borders == nullptr)
-        borders = new Coords[num_border];
-    
-    for (unsigned int i = 0; i < num_border; ++i)
-        borders[i] = border_coords[i];
-    
-    spawn_snake = spawn_coords;
+                     is_fruit(random_coords) || is_border(random_coords));
+            *it = random_coords; // Assigning the correct coordinates
+            set_map(it->x, it->y, FRUITCHR);   // and fruit output
+        } 
+    }
 }
 
 // Update the images of all objects on the map
@@ -161,12 +136,12 @@ void Map::update_map(std::list<Coords> &snake_coords, int snake_len)
     }
 
     // Updating other borders
-    for (auto i = 0; i < num_border; ++i)
-        set_map(borders[i].x, borders[i].y, BORDERCHR);
+    for (auto it = borders.cbegin(); it != borders.cend(); ++it)
+        set_map(it->x, it->y, BORDERCHR);
 
     // Updating fruits
-    for (auto i = 0; i < num_fruits; ++i)
-        set_map(fruits[i].x, fruits[i].y, FRUITCHR);
+    for (auto it = fruits.cbegin(); it != fruits.cend(); ++it)
+        set_map(it->x, it->y, FRUITCHR);
 
     // Cleaning the snake's tail
     set_map(snake_coords.back().x, snake_coords.back().y, EMPTYCHR);
@@ -189,8 +164,8 @@ bool Map::is_snake(Coords coords, std::list<Coords> &snake_coords, int snake_len
 // Check the coordinates of the fruits
 bool Map::is_fruit(Coords coords)
 {
-    for (auto i = 0; i < num_fruits; ++i)
-        if (coords == fruits[i])
+    for (auto it = fruits.cbegin(); it != fruits.cend(); ++it)
+        if (coords == *it)
             return true;
     return false;
 }
@@ -198,12 +173,8 @@ bool Map::is_fruit(Coords coords)
 // Check the coordinates of the borders
 bool Map::is_border(Coords coords)
 {
-    // Checking the pointer
-    if (borders == nullptr)
-        return false;
-    
-    for (unsigned int i = 0; i < num_border; ++i)
-        if (coords == borders[i])
+    for (auto it = borders.cbegin(); it != borders.cend(); ++it)
+        if (coords == *it)
             return true;
     return false;
 }

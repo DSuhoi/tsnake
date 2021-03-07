@@ -45,6 +45,7 @@ class Map
 {
 public:
     Map() = delete;                                        // Constructor
+    ~Map() = delete;                                       // Destructor
     static void init_map();                                // Configure the map
     static void erase_map();                               // Erase the map parametrs
     static void select_size_map(int select);               // Selecting the map size
@@ -56,7 +57,6 @@ public:
     static void set_map(int x, int y, chtype color);       // Set character on the map
     static void print_sub_menu_static(const long last_score, const int level);                   // Print the static part of the submenu
     static void print_sub_menu_active(const long score, time_t &first_time);                     // Print the dynamic part of the submenu
-    static void border_coords_cpy(Coords *border_coords, int num_coords, Coords spawn_coords);   // Copy the coordinates
     static int get_height();                 // Return the map height
     static int get_width();                  // Return the map width
 
@@ -68,8 +68,8 @@ private:
     static int height;               // Width of the map
     static int width;                // Height of the map
     static WINDOW *map;              // Map window
-    static Coords *borders;          // Pointer to the coordinates of the borders
-    static Coords *fruits;           // Pointer to the coordinates of the fruits
+    static std::list<Coords> borders;          // Pointer to the coordinates of the borders
+    static std::list<Coords> fruits;           // Pointer to the coordinates of the fruits
     static Coords spawn_snake;       // Coordinates of the snake spawn
     static unsigned int num_fruits;  // number of fruits
     static unsigned int num_border;  // number of borders

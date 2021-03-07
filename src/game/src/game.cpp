@@ -69,7 +69,7 @@ void Game::process()
     
         if (Menu::get_config_map().clear_score) {
             // If you need to erase data
-            for (unsigned int i = 0; i < 30; ++i)
+            for (auto i = 0; i < 30; ++i)
                 game_score[i] = 0;
             FileSystem::save_records(game_score); 
             Menu::get_config_map().clear_score = false; 
@@ -114,11 +114,11 @@ void Game::process()
             if (Menu::get_config_map().teleport) {
                 Coords snake_head = snake->info_head();
                 if (snake_head.x == 0)
-                    snake->set_head_coords(Map::get_width()-1, snake_head.y);
+                    snake->set_head_coords(Map::get_width() - 1, snake_head.y);
                 else if (snake_head.x == Map::get_width())
                     snake->set_head_coords(1, snake_head.y);
                 else if (snake_head.y == 0)
-                    snake->set_head_coords(snake_head.x, Map::get_height()-1);
+                    snake->set_head_coords(snake_head.x, Map::get_height() - 1);
                 else if (snake_head.y == Map::get_height())
                     snake->set_head_coords(snake_head.x, 1);
             }
