@@ -39,6 +39,7 @@ public:
     static void end_game();          // End of the game
 private: 
     static Snake *snake;             // Pointer to the snake object
+    static Map *map;
     static time_t game_time;         // Start time of the game
     static long game_score[30];      // Last records
     

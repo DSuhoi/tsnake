@@ -44,35 +44,33 @@ const int HEIGHT = 22;
 class Map
 {
 public:
-    Map() = delete;                                        // Constructor
-    ~Map() = delete;                                       // Destructor
-    static void init_map();                                // Configure the map
-    static void erase_map();                               // Erase the map parametrs
-    static void select_size_map(int select);               // Selecting the map size
-    static void init_border_coords(Coords snake_coords);   // Setting the borders
-    static void init_fruit_coords(int number);             // Setting the number of fruits
-    static void set_fruit_on_map(Coords fruit_coords, std::list<Coords> &snake_coords);      // Creating fruits on the map
-    static void update_map(std::list<Coords> &snake);  // Update the images of all objects on the map
+    Map();                                        // Constructor
+    ~Map();                                       // Destructor
+    void select_size_map(int select);               // Selecting the map size
+    void init_border_coords(Coords snake_coords);   // Setting the borders
+    void init_fruit_coords(int number);             // Setting the number of fruits
+    void set_fruit_on_map(Coords fruit_coords, std::list<Coords> &snake_coords);      // Creating fruits on the map
+    void update_map(std::list<Coords> &snake);  // Update the images of all objects on the map
 
-    static void set_map(int x, int y, chtype color);       // Set character on the map
-    static void print_sub_menu_static(const long last_score, const int level);                   // Print the static part of the submenu
-    static void print_sub_menu_active(const long score, time_t &first_time);                     // Print the dynamic part of the submenu
-    static int get_height();                 // Return the map height
-    static int get_width();                  // Return the map width
+    void set_map(int x, int y, chtype color);       // Set character on the map
+    void print_sub_menu_static(const long last_score, const int level);                   // Print the static part of the submenu
+    void print_sub_menu_active(const long score, time_t &first_time);                     // Print the dynamic part of the submenu
+    int get_height();                 // Return the map height
+    int get_width();                  // Return the map width
 
-    static Coords get_spawn_snake();         // Get the coordinates of the snake spawn
-    static bool is_snake_tail(Coords coords, std::list<Coords> &snake_coords);                    // Checking the player's coordinates
-    static bool is_fruit(Coords coords);     // Check the coordinates of the fruits
-    static bool is_border(Coords coords);    // Check the coordinates of the borders
+    Coords get_spawn_snake();         // Get the coordinates of the snake spawn
+    bool is_snake_tail(Coords coords, std::list<Coords> &snake_coords);                    // Checking the player's coordinates
+    bool is_fruit(Coords coords);     // Check the coordinates of the fruits
+    bool is_border(Coords coords);    // Check the coordinates of the borders
 private:
-    static int height;               // Width of the map
-    static int width;                // Height of the map
-    static WINDOW *map;              // Map window
-    static std::list<Coords> borders;          // Pointer to the coordinates of the borders
-    static std::list<Coords> fruits;           // Pointer to the coordinates of the fruits
-    static Coords spawn_snake;       // Coordinates of the snake spawn
+    int height;               // Width of the map
+    int width;                // Height of the map
+    WINDOW *map;              // Map window
+    std::list<Coords> borders;          // Pointer to the coordinates of the borders
+    std::list<Coords> fruits;           // Pointer to the coordinates of the fruits
+    Coords spawn_snake;       // Coordinates of the snake spawn
     
-    static void border_map();        // Printing borders
+    void border_map();        // Printing borders
 };
 
 #endif

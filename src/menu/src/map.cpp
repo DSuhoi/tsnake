@@ -1,21 +1,28 @@
 #include "map.hpp"
 #include <iterator>
 
-// Defining Map class fields
-int Map::height = 0;        
-int Map::width = 0;
-WINDOW *Map::map = nullptr;
-std::list<Coords> Map::borders;
-std::list<Coords> Map::fruits;
-Coords Map::spawn_snake = {3, 3};
 
-// Configure the map
-void Map::init_map()
+Map::Map()
 {
     int screen_width, screen_height;
     getmaxyx(stdscr, screen_height, screen_width);        
     // Creating a map window
     map = newwin(HEIGHT + 2, WIDTH, (screen_height - (HEIGHT + 2))/2, (screen_width - WIDTH)/2);
+    spawn_snake = {3, 3};
+}
+
+Map::~Map()
+{
+    // Checking pointers and freeing up memory
+    fruits.clear();
+    borders.clear(); 
+    
+    width = 0;  // Resetting the width and height of the field
+    height = 0;
+    spawn_snake = {3, 3};
+    // Update the map window
+    Display::update(map);
+
 }
 
 // Selecting the map size
@@ -38,21 +45,7 @@ void Map::select_size_map(int select)
     };
     
     // Print the title
-    Display::print_scr(map,WIDTH - 9, 0,(char*)"TSNAKE", BLUE);
-}
-
-// Erase the map parametrs
-void Map::erase_map()
-{
-    // Checking pointers and freeing up memory
-    fruits.clear();
-    borders.clear(); 
-    
-    width = 0;  // Resetting the width and height of the field
-    height = 0;
-    spawn_snake = {3, 3};
-    // Update the map window
-    Display::update(map);
+    Display::print_scr(map,WIDTH - 9, 0, (char*)"TSNAKE", BLUE);
 }
 
 // Setting the number of fruits
@@ -185,7 +178,7 @@ void Map::print_sub_menu_static(const long last_score, const int level)
 // Print the dynamic part of the submenu
 void Map::print_sub_menu_active(const long score, time_t &first_time)
 {
-    int all_time = time(0) - first_time;     // All the time since the game started
+    int all_time = time(0) - first_time;    // All the time since the game started
     unsigned int sec = all_time % 60;       // Seconds
     unsigned int min = all_time / 60;       // Minuts
     char buff_score[14];                    // Array for the score

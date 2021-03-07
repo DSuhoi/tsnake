@@ -2,6 +2,7 @@
 
 // Defining Game class fields
 Snake *Game::snake;
+Map *Game::map;
 time_t Game::game_time;
 long Game::game_score[30];
 
@@ -12,21 +13,22 @@ void Game::start()
     snake = nullptr;        // Null pointer
     Display::init_color();  // Configure the colors
     Menu::init_main_menu(); // Configure the main menu
-    Map::init_map();        // Configure the map size
+    map = nullptr;          // Configure the map size
     Display::update();      // Update the window
 }
 
 // Function for configuring the field
 void Game::start_game()
 {   // Configure:
-    Map::select_size_map(Menu::get_config_map().map_size);   // Map size
+    map = new Map();
+    map->select_size_map(Menu::get_config_map().map_size);   // Map size
     // Creating player
-    snake = new Snake(Map::get_spawn_snake());
+    snake = new Snake(map->get_spawn_snake());
     // If you need borders on the map, create their
     if (Menu::get_config_map().border)
-        Map::init_border_coords(snake->info_head());
+        map->init_border_coords(snake->info_head());
     //Number of fruits and their coordinates
-    Map::init_fruit_coords(Menu::get_config_map().num_fruits);
+    map->init_fruit_coords(Menu::get_config_map().num_fruits);
     Display::update();      // Updating screen
     game_time = time(0);     // Save the new game time
 }
@@ -36,9 +38,9 @@ bool Game::check_win()
 {
     Coords snake_head = snake->info_head(); // Head position
     // If head doesn't cross the map border, your body or other border
-    if (snake_head.x == 0 || snake_head.x == (Map::get_width()) || snake_head.y == 0 || 
-        snake_head.y == (Map::get_height()) || Map::is_snake_tail(snake_head, snake->get_body_coords()) || 
-        Map::is_border(snake_head))
+    if (snake_head.x == 0 || snake_head.x == (map->get_width()) || snake_head.y == 0 || 
+        snake_head.y == (map->get_height()) || map->is_snake_tail(snake_head, snake->get_body_coords()) || 
+        map->is_border(snake_head))
         return GAME_WIN;     // Then return the end game flag
     else
         return GAME_NOT_WIN; // Otherwise the game is still going on
@@ -80,7 +82,7 @@ void Game::process()
         long result_this_game = 0;
         
         // Displays the static part of the menu
-        Map::print_sub_menu_static(result_last_game, Menu::get_config_map().speed);
+        map->print_sub_menu_static(result_last_game, Menu::get_config_map().speed);
         
         int old_snake_len = snake->get_snake_len(); // Previous length of the snake
         // Game Loop
@@ -113,34 +115,34 @@ void Game::process()
             if (Menu::get_config_map().teleport) {
                 Coords snake_head = snake->info_head();
                 if (snake_head.x == 0)
-                    snake->set_head_coords(Map::get_width() - 1, snake_head.y);
-                else if (snake_head.x == Map::get_width())
+                    snake->set_head_coords(map->get_width() - 1, snake_head.y);
+                else if (snake_head.x == map->get_width())
                     snake->set_head_coords(1, snake_head.y);
                 else if (snake_head.y == 0)
-                    snake->set_head_coords(snake_head.x, Map::get_height() - 1);
-                else if (snake_head.y == Map::get_height())
+                    snake->set_head_coords(snake_head.x, map->get_height() - 1);
+                else if (snake_head.y == map->get_height())
                     snake->set_head_coords(snake_head.x, 1);
             }
             // If the snake ate the fruit, then increase its length
-            if (Map::is_fruit(snake->info_head())) {
+            if (map->is_fruit(snake->info_head())) {
                 snake->inc_snake_len();
-                Map::set_fruit_on_map(snake->info_head(), snake->get_body_coords());
+                map->set_fruit_on_map(snake->info_head(), snake->get_body_coords());
             }
             
-            Map::update_map(snake->get_body_coords());   // Update the map
+            map->update_map(snake->get_body_coords());   // Update the map
         
             if (snake->get_snake_len() > old_snake_len) {
                 old_snake_len = snake->get_snake_len();
                 result_this_game += gen_score(Menu::get_config_map().speed);
             }
             // Output the current values of the game score, speed level, and time
-            Map::print_sub_menu_active(result_this_game, game_time);
+            map->print_sub_menu_active(result_this_game, game_time);
         
         // We check the game based on the pause menu selection
         } while(check_win() == GAME_NOT_WIN && game_result != RETURN_MENU && game_result != GAME_RESTART);
     
         // Kill the snake
-        Map::set_map(snake->info_head().x, snake->info_head().y, KILL);
+        map->set_map(snake->info_head().x, snake->info_head().y, KILL);
     
         Periph::game_delay(20);  // Pause in 200ms
     
@@ -157,7 +159,7 @@ void Game::process()
         delete snake;           // Remove the snake
         snake = nullptr;
     
-        Map::erase_map();        // Erase the map
+        delete map;        // Erase the map
         Display::update();      // Update the window
     }
 }
