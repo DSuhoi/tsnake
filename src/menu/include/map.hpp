@@ -43,17 +43,6 @@ const int HEIGHT = 22;
 // Class of map
 class Map
 {
-private:
-    static int height;               // Width of the map
-    static int width;                // Height of the map
-    static WINDOW *map;              // Map window
-    static Coords *borders;          // Pointer to the coordinates of the borders
-    static Coords *fruits;           // Pointer to the coordinates of the fruits
-    static Coords spawn_snake;       // Coordinates of the snake spawn
-    static unsigned int num_fruits;  // number of fruits
-    static unsigned int num_border;  // number of borders
-    
-    static void border_map();        // Printing borders
 public:
     Map() = delete;                                        // Constructor
     static void init_map();                                // Configure the map
@@ -75,6 +64,17 @@ public:
     static bool is_snake(Coords coords, std::list<Coords> &snake_coords, int snake_len);                    // Checking the player's coordinates
     static bool is_fruit(Coords coords);     // Check the coordinates of the fruits
     static bool is_border(Coords coords);    // Check the coordinates of the borders
+private:
+    static int height;               // Width of the map
+    static int width;                // Height of the map
+    static WINDOW *map;              // Map window
+    static Coords *borders;          // Pointer to the coordinates of the borders
+    static Coords *fruits;           // Pointer to the coordinates of the fruits
+    static Coords spawn_snake;       // Coordinates of the snake spawn
+    static unsigned int num_fruits;  // number of fruits
+    static unsigned int num_border;  // number of borders
+    
+    static void border_map();        // Printing borders
 };
 
 #endif
