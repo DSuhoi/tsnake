@@ -8,9 +8,6 @@ WINDOW *Map::map = nullptr;
 std::list<Coords> Map::borders;
 std::list<Coords> Map::fruits;
 Coords Map::spawn_snake = {3, 3};
-unsigned int Map::num_fruits = 0;
-unsigned int Map::num_border = 0;
-
 
 // Configure the map
 void Map::init_map()
@@ -33,8 +30,7 @@ void Map::select_size_map(int select)
     case 2: 
         width = BIG_WIDTH; 
         height = BIG_HEIGHT; 
-        break;
-    case 1: 
+        break; 
     default: 
         width = MEDIUM_WIDTH; 
         height = MEDIUM_HEIGHT; 
@@ -55,22 +51,18 @@ void Map::erase_map()
     width = 0;  // Resetting the width and height of the field
     height = 0;
     spawn_snake = {3, 3};
-    num_fruits = 0; // Reset the number of fruits and obstacles
-    num_border = 0;
     // Update the map window
     Display::update(map);
 }
 
 // Setting the number of fruits
-void Map::init_fruit_coords(int number)
+void Map::init_fruit_coords(int number_fruits)
 {
     // Checking number of fruits
-    if (0 < number && number < 100)
-        num_fruits = number; 
-    else
-        num_fruits = 1;
+    if (number_fruits < 1 ||  99 < number_fruits)
+        number_fruits = 1;
     
-    for (auto i = 0; i < num_fruits; ++i) {
+    for (auto i = 0; i < number_fruits; ++i) {
         Coords random_coords;    // Coordinates of the fruit
         do {     
             random_coords.x = 1 + std::rand() % (width - 1);    // Random coordinates
@@ -84,9 +76,9 @@ void Map::init_fruit_coords(int number)
 // Setting the borders
 void Map::init_border_coords(Coords snake_coords)
 {
-    num_border = (height * width)/20;    // Number of borders
+    auto number_borders = (height * width)/20;    // Number of borders
     
-    for (unsigned int i = 0; i < num_border; ++i) {
+    for (unsigned int i = 0; i < number_borders; ++i) {
         Coords random_coords;
         do {
             random_coords.x = 1 + std::rand() % (width - 1);    // Generate and check the coordinates
@@ -99,7 +91,7 @@ void Map::init_border_coords(Coords snake_coords)
 }
 
 // Creating fruits on the map
-void Map::set_fruit_on_map(Coords fruit_coords, std::list<Coords> &snake_coords, int snake_len)
+void Map::set_fruit_on_map(Coords fruit_coords, std::list<Coords> &snake_coords)
 {   
     int error_counter = 0;   // Repeat count
     
@@ -113,7 +105,7 @@ void Map::set_fruit_on_map(Coords fruit_coords, std::list<Coords> &snake_coords,
                 random_coords.x = 1 + std::rand() % (width - 1);    // Random coordinates
                 random_coords.y = 1 + std::rand() % (height - 1);
                 // Check the coordinates
-            } while (is_snake(random_coords, snake_coords, snake_len) || 
+            } while (is_snake_tail(random_coords, snake_coords) || 
                      is_fruit(random_coords) || is_border(random_coords));
             *it = random_coords; // Assigning the correct coordinates
             set_map(it->x, it->y, FRUITCHR);   // and fruit output
@@ -122,7 +114,7 @@ void Map::set_fruit_on_map(Coords fruit_coords, std::list<Coords> &snake_coords,
 }
 
 // Update the images of all objects on the map
-void Map::update_map(std::list<Coords> &snake_coords, int snake_len)
+void Map::update_map(std::list<Coords> &snake_coords)
 {
     // Updating map borders
     for (auto i = 0; i <= width; ++i) {
@@ -153,7 +145,7 @@ void Map::update_map(std::list<Coords> &snake_coords, int snake_len)
 }
 
 // Checking the player's coordinates
-bool Map::is_snake(Coords coords, std::list<Coords> &snake_coords, int snake_len)
+bool Map::is_snake_tail(Coords coords, std::list<Coords> &snake_coords)
 {
     for (auto it = (++snake_coords.cbegin()); it != snake_coords.cend(); ++it)
         if (coords == *it)
@@ -164,8 +156,8 @@ bool Map::is_snake(Coords coords, std::list<Coords> &snake_coords, int snake_len
 // Check the coordinates of the fruits
 bool Map::is_fruit(Coords coords)
 {
-    for (auto it = fruits.cbegin(); it != fruits.cend(); ++it)
-        if (coords == *it)
+    for (auto fruit : fruits)
+        if (coords == fruit)
             return true;
     return false;
 }
@@ -173,8 +165,8 @@ bool Map::is_fruit(Coords coords)
 // Check the coordinates of the borders
 bool Map::is_border(Coords coords)
 {
-    for (auto it = borders.cbegin(); it != borders.cend(); ++it)
-        if (coords == *it)
+    for (auto border : borders)
+        if (coords == border)
             return true;
     return false;
 }

@@ -8,11 +8,11 @@ long Game::game_score[30];
 // Function for initializing components
 void Game::start()
 {
-    Periph::init_periph();   // Configure the periphery
+    Periph::init_periph();  // Configure the periphery
     snake = nullptr;        // Null pointer
-    Display::init_color();   // Configure the colors
-    Menu::init_main_menu();   // Configure the main menu
-    Map::init_map();         // Configure the map size
+    Display::init_color();  // Configure the colors
+    Menu::init_main_menu(); // Configure the main menu
+    Map::init_map();        // Configure the map size
     Display::update();      // Update the window
 }
 
@@ -37,8 +37,8 @@ bool Game::check_win()
     Coords snake_head = snake->info_head(); // Head position
     // If head doesn't cross the map border, your body or other border
     if (snake_head.x == 0 || snake_head.x == (Map::get_width()) || snake_head.y == 0 || 
-    snake_head.y == (Map::get_height()) || Map::is_snake(snake_head, snake->get_body_coords(), snake->get_snake_len())
-    || Map::is_border(snake_head))
+        snake_head.y == (Map::get_height()) || Map::is_snake_tail(snake_head, snake->get_body_coords()) || 
+        Map::is_border(snake_head))
         return GAME_WIN;     // Then return the end game flag
     else
         return GAME_NOT_WIN; // Otherwise the game is still going on
@@ -47,8 +47,7 @@ bool Game::check_win()
 // Generating the score
 int Game::gen_score(int level)
 {
-    srand(time(0));
-    return level + rand()%(level + 5);  
+    return level + rand() % (level + 5);  
 }
 
 // Game process (main logic)
@@ -125,10 +124,10 @@ void Game::process()
             // If the snake ate the fruit, then increase its length
             if (Map::is_fruit(snake->info_head())) {
                 snake->inc_snake_len();
-                Map::set_fruit_on_map(snake->info_head(), snake->get_body_coords(), snake->get_snake_len());
+                Map::set_fruit_on_map(snake->info_head(), snake->get_body_coords());
             }
             
-            Map::update_map(snake->get_body_coords(), snake->get_snake_len());   // Update the map
+            Map::update_map(snake->get_body_coords());   // Update the map
         
             if (snake->get_snake_len() > old_snake_len) {
                 old_snake_len = snake->get_snake_len();
