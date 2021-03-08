@@ -15,7 +15,7 @@
 #include <list>
 #include <ctime>
 #include "coords.hpp"
-#include "display.hpp"
+#include "term_window.hpp"
 
 // Map and fruit characters
 chtype const BORDERCHR = '#';
@@ -41,31 +41,28 @@ int const WIDTH = 80;
 int const HEIGHT = 22;
 
 // Class of map
-class Map
+class Map : public Term_window
 {
 public:
-    Map();                                        // Constructor
-    ~Map();                                       // Destructor
+    Map();      // Constructor
+    ~Map();     // Destructor
+
+    void update(std::list<Coords> &snake);  // Update the images of all objects on the map
+
     void select_size_map(int select);               // Selecting the map size
     void init_border_coords(Coords snake_coords);   // Setting the borders
     void init_fruit_coords(int number);             // Setting the number of fruits
     void set_fruit_on_map(Coords fruit_coords, std::list<Coords> &snake_coords);      // Creating fruits on the map
-    void update_map(std::list<Coords> &snake);  // Update the images of all objects on the map
 
     void set_map(int x, int y, chtype color);       // Set character on the map
     void print_sub_menu_static(const long last_score, const int level);                   // Print the static part of the submenu
     void print_sub_menu_active(const long score, time_t &first_time);                     // Print the dynamic part of the submenu
-    int get_height();                 // Return the map height
-    int get_width();                  // Return the map width
 
     Coords get_spawn_snake();         // Get the coordinates of the snake spawn
     bool is_snake_tail(Coords coords, std::list<Coords> &snake_coords);                    // Checking the player's coordinates
     bool is_fruit(Coords coords);     // Check the coordinates of the fruits
     bool is_border(Coords coords);    // Check the coordinates of the borders
 private:
-    int height;               // Width of the map
-    int width;                // Height of the map
-    WINDOW *map;              // Map window
     std::list<Coords> borders;          // Pointer to the coordinates of the borders
     std::list<Coords> fruits;           // Pointer to the coordinates of the fruits
     Coords spawn_snake;       // Coordinates of the snake spawn
