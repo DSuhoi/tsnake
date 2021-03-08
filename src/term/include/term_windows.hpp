@@ -10,9 +10,13 @@ class Term_zone
 {
 public:
     // Default constructor
-    Term_zone() = default;
-    // Delete copy constructor
-    Term_zone(Term_zone const &) = default;
+    Term_zone();
+    // Delete copy constructor and operator
+    Term_zone(Term_zone const &zone) = delete;
+    Term_zone &operator=(Term_zone const &) = delete;
+    // Move constructor and operator
+    Term_zone(Term_zone &&zone);
+    Term_zone &operator=(Term_zone &&zone);
     // Basic constructor
     Term_zone(int height, int width, int pos_y, int pos_x);
     // Constructor with color
@@ -20,18 +24,18 @@ public:
     // Subwindow constructor
     Term_zone(Term_zone const &zone, int height, int width, int pos_y, int pos_x);
     // Destructor
-    ~Term_zone();
+    virtual ~Term_zone();
 
     // Function for adding a color scheme
     void set_colors(chtype colors) const;
     // This function is an analog refresh() for zone
     virtual void update() const;
     // Clear the text in the zone
-    virtual void clear();
+    virtual void clear() const;
     // Print the symbol in the main subwindow
     virtual void print(int x, int y, chtype ch) const;
     // Print the text in the main subwindow (mvwprintw)
-    virtual void print(int x, int y, std::string const &text) const;
+    virtual void print(int x, int y, std::string &text) const;
     // This function is an analog box() for zone
     void set_box(chtype border_chr) const;
     // Get the main subwindow width
@@ -49,7 +53,8 @@ public:
     // Default constructor
     Term_window() = default;
     // Delete copy constructor
-    Term_window(Term_window const &) = default;
+    Term_window(Term_window const &) = delete;
+    Term_window &operator=(Term_window const &) = delete;
     // Basic constructor
     Term_window(int height, int width, int pos_y, int pos_x, chtype border_chr = 0);
     // Constructor with color
@@ -58,23 +63,24 @@ public:
     Term_window(const Term_window &win, int height, int width, int pos_y, int pos_x, chtype border_chr = 0);
     // Virtual destructor
     virtual ~Term_window();
+
     // Function for adding a color scheme
-    void set_colors(chtype colors);
+    void set_colors(chtype colors) const;
     // This function is an analog refresh() for two windows (main and background)
-    virtual void update();
+    virtual void update() const;
     // Clear the text in the main subwindow (wclear)
-    virtual void clear();
+    virtual void clear() const;
     // Print the symbol in the main subwindow
-    virtual void print(int x, int y, chtype ch);
+    virtual void print(int x, int y, chtype ch) const;
     // Print the text in the main subwindow (mvwprintw)
-    virtual void print(int x, int y, std::string const &text);
+    virtual void print(int x, int y, std::string &text) const;
     // Get the main subwindow width
-    int get_width();
+    int get_width() const;
     // Get the main subwindow height
-    int get_height();
+    int get_height() const;
 private:
-    Term_zone _main;       // This is the main subwindow
-    Term_zone _background; // and its background window
+    Term_zone _main;
+    Term_zone _background;
 };
 
 #endif

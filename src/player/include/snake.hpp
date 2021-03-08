@@ -34,8 +34,8 @@ public:
     Coords info_head();                   // Information about the coordinates of the head
     void set_head_coords(int x, int y);   // Setting the coordinates of the snake's head
 private:
-    std::list<Coords> body_coords;        // Coordinates of the snake's body
-    int head_vector;                      // Direction of movement of the snake
+    std::list<Coords> _body_coords;        // Coordinates of the snake's body
+    int _head_vector;                      // Direction of movement of the snake
 };
 
 #endif

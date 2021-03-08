@@ -1,5 +1,21 @@
 #include "term_windows.hpp"
 
+// Default constructor
+Term_zone::Term_zone() : _zone(nullptr) {}
+
+Term_zone::Term_zone(Term_zone &&zone) : _zone(zone._zone)
+{
+    zone._zone = nullptr;
+}
+
+Term_zone &Term_zone::operator=(Term_zone &&zone)
+{
+    delete _zone;
+    _zone = zone._zone;
+    zone._zone = nullptr;
+    return *this;
+}
+
 // Basic constructor
 Term_zone::Term_zone(int height, int width, int pos_y, int pos_x)
 {
@@ -42,7 +58,7 @@ void Term_zone::update() const
 }
 
 // Clear the text in the zone
-void Term_zone::clear()
+void Term_zone::clear() const
 {
     wclear(_zone);
     update();
@@ -57,7 +73,7 @@ void Term_zone::print(int x, int y, chtype ch) const
 }
 
 // Print the text in the main subwindow (mvwprintw)
-void Term_zone::print(int x, int y, std::string const &text) const
+void Term_zone::print(int x, int y, std::string &text) const
 {
     mvwprintw(_zone, y, x, text.c_str());
 }
@@ -124,40 +140,40 @@ Term_window::~Term_window()
 {}
 
 // Function for adding a color scheme
-void Term_window::set_colors(chtype colors)
+void Term_window::set_colors(chtype colors) const
 {
     _background.set_colors(colors);
     _main.set_colors(colors);
 }
 
 // This function is an analog refresh() for two windows (main and background)
-void Term_window::update()
+void Term_window::update() const
 {
     _background.update();
     _main.update();
 }
 
 // Clear the text in the main subwindow (wclear)
-void Term_window::clear()
+void Term_window::clear() const
 {
     _main.clear();
     update();
 }
 
 // Print the text in the main subwindow (mvwprintw)
-void Term_window::print(int x, int y, std::string const &text)
+void Term_window::print(int x, int y, std::string &text) const
 {
     _main.print(x, y, text);    
 }
     
 // Get the main subwindow width
-int Term_window::get_width()
+int Term_window::get_width() const
 {
     return _main.get_width();
 }
 
 // Get the main subwindow height
-int Term_window::get_height()
+int Term_window::get_height() const
 {
     return _main.get_height();
 }
