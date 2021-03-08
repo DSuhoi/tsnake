@@ -1,7 +1,6 @@
 #ifndef __TERM_WINDOWS_H__
 #define __TERM_WINDOWS_H__
 
-#include <memory>
 #include <string>
 #include <ncurses.h>
 
@@ -32,15 +31,17 @@ public:
     virtual void update() const;
     // Clear the text in the zone
     virtual void clear() const;
-    // Print the symbol in the main subwindow
-    virtual void print(int x, int y, chtype ch) const;
-    // Print the text in the main subwindow (mvwprintw)
-    virtual void print(int x, int y, std::string &text) const;
+    // Print the symbol in the zone
+    virtual void print(int y, int x, chtype ch) const;
+    // Print the text in the zone
+    virtual void print(int y, int x, std::string &text) const;
+    // Print the label in the zone
+    virtual void print(int y, int x, std::string &text, int color) const;
     // This function is an analog box() for zone
     void set_box(chtype border_chr) const;
-    // Get the main subwindow width
+    // Get the zone width
     int get_width() const;
-    // Get the main subwindow height
+    // Get the zone height
     int get_height() const;
 private:
     WINDOW *_zone;
@@ -71,9 +72,13 @@ public:
     // Clear the text in the main subwindow (wclear)
     virtual void clear() const;
     // Print the symbol in the main subwindow
-    virtual void print(int x, int y, chtype ch) const;
+    virtual void print(int y, int x, chtype chr) const;
     // Print the text in the main subwindow (mvwprintw)
-    virtual void print(int x, int y, std::string &text) const;
+    virtual void print(int y, int x, std::string &text) const;
+    // Print the text in the main subwindow (mvwprintw)
+    virtual void print(int y, int x, std::string &text, int color) const;
+    // Print the label in the window
+    void print_label(int x, std::string &text, int color) const;
     // Get the main subwindow width
     int get_width() const;
     // Get the main subwindow height

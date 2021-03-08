@@ -17,14 +17,14 @@ Term_zone &Term_zone::operator=(Term_zone &&zone)
 }
 
 // Basic constructor
-Term_zone::Term_zone(int height, int width, int pos_y, int pos_x)
+Term_zone::Term_zone(int width, int height, int pos_x, int pos_y)
 {
    _zone = newwin(height, width, pos_y, pos_x);
    update();
 }
 
 // Constructor with color
-Term_zone::Term_zone(int height, int width, int pos_y, int pos_x, chtype colors)
+Term_zone::Term_zone(int width, int height, int pos_x, int pos_y, chtype colors)
 {
    _zone = newwin(height, width, pos_y, pos_x);
    set_colors(colors);
@@ -32,7 +32,7 @@ Term_zone::Term_zone(int height, int width, int pos_y, int pos_x, chtype colors)
 }
 
 // Subwindow constructor
-Term_zone::Term_zone(Term_zone const &zone, int height, int width, int pos_y, int pos_x)
+Term_zone::Term_zone(Term_zone const &zone, int width, int height, int pos_x, int pos_y)
 {
     _zone = derwin(zone._zone, height, width, pos_y, pos_x);
     update();
@@ -65,7 +65,7 @@ void Term_zone::clear() const
 }
 
 // Print the symbol in the main subwindow
-void Term_zone::print(int x, int y, chtype ch) const
+void Term_zone::print(int y, int x, chtype ch) const
 {
     wmove(_zone, y, x); // Putting the cursor on the position
     wdelch(_zone);      // Deleting the symbol
@@ -73,9 +73,17 @@ void Term_zone::print(int x, int y, chtype ch) const
 }
 
 // Print the text in the main subwindow (mvwprintw)
-void Term_zone::print(int x, int y, std::string &text) const
+void Term_zone::print(int y, int x, std::string &text) const
 {
     mvwprintw(_zone, y, x, text.c_str());
+}
+
+// Print the text in the main subwindow (mvwprintw)
+void Term_zone::print(int y, int x, std::string &text, int color) const
+{
+    wattron(_zone, COLOR_PAIR(color));   // Setting the color
+    print(y, x, text);
+    wattroff(_zone, COLOR_PAIR(color));
 }
 
 // This function is an analog box() for zone
@@ -103,7 +111,7 @@ int Term_zone::get_height() const
 //////////////////////////////////////////////////////////////////////////////////////////
 
 // Basic constructor
-Term_window::Term_window(int height, int width, int pos_y, int pos_x, chtype border_chr)
+Term_window::Term_window(int width, int height, int pos_x, int pos_y, chtype border_chr)
 {
     // Create the background window
     _background = Term_zone(height, width, pos_y, pos_x);
@@ -116,7 +124,7 @@ Term_window::Term_window(int height, int width, int pos_y, int pos_x, chtype bor
 }
 
 // Constructor with color
-Term_window::Term_window(int height, int width, int pos_y, int pos_x, chtype colors, chtype border_chr)
+Term_window::Term_window(int width, int height, int pos_x, int pos_y, chtype colors, chtype border_chr)
 {
     _background = Term_zone(height, width, pos_y, pos_x);
     _main = Term_zone(_background, height - 2, width - 2, 1, 1);
@@ -127,7 +135,7 @@ Term_window::Term_window(int height, int width, int pos_y, int pos_x, chtype col
 }
 
 // Subwindow constructor
-Term_window::Term_window(Term_window const &win, int height, int width, int pos_y, int pos_x, chtype border_chr)
+Term_window::Term_window(Term_window const &win, int width, int height, int pos_x, int pos_y, chtype border_chr)
 {
     _background = Term_zone(win._main, height, width, pos_y, pos_x);
     _main = Term_zone(_background, height - 2, width - 2, 1, 1);
@@ -160,12 +168,24 @@ void Term_window::clear() const
     update();
 }
 
-// Print the text in the main subwindow (mvwprintw)
-void Term_window::print(int x, int y, std::string &text) const
+// Print the symbol in the main subwindow
+void Term_window::print(int y, int x, chtype chr) const
 {
-    _main.print(x, y, text);    
+    _main.print(y, x, chr);
 }
-    
+
+// Print the text in the main subwindow (mvwprintw)
+void Term_window::print(int y, int x, std::string &text) const
+{
+    _main.print(y, x, text);    
+}
+
+// Print the label in the window
+void Term_window::print_label(int x, std::string &text, int color) const
+{
+    _background.print(0, x, text, color);
+}
+   
 // Get the main subwindow width
 int Term_window::get_width() const
 {
