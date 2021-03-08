@@ -18,27 +18,27 @@
 #include "display.hpp"
 
 // Map and fruit characters
-const char BORDERCHR = '#';
-const chtype FRUITCHR = '$' | COLOR_PAIR(YELLOW);
-const chtype EMPTYCHR = ' ';
+chtype const BORDERCHR = '#';
+chtype const FRUITCHR = '$' | COLOR_PAIR(YELLOW);
+chtype const EMPTYCHR = ' ';
 // Snake characters
-const chtype BODYCHR = 'o' | COLOR_PAIR(GREEN);
-const chtype HEAD = '@' | COLOR_PAIR(GREEN);
-const chtype KILL = 'X' | COLOR_PAIR(RED);
+chtype const BODYCHR = 'o' | COLOR_PAIR(GREEN);
+chtype const HEAD = '@' | COLOR_PAIR(GREEN);
+chtype const KILL = 'X' | COLOR_PAIR(RED);
 
 // Width and height of different maps
-const int SMALL_WIDTH = 37;
-const int SMALL_HEIGHT = 9;
+int const SMALL_WIDTH = 37;
+int const SMALL_HEIGHT = 9;
 
-const int MEDIUM_WIDTH = 55;
-const int MEDIUM_HEIGHT = 14;
+int const MEDIUM_WIDTH = 55;
+int const MEDIUM_HEIGHT = 14;
 
-const int BIG_WIDTH = 77;
-const int BIG_HEIGHT = 20;
+int const BIG_WIDTH = 77;
+int const BIG_HEIGHT = 20;
 
 // Width and height of the map window
-const int WIDTH = 80;
-const int HEIGHT = 22;
+int const WIDTH = 80;
+int const HEIGHT = 22;
 
 // Class of map
 class Map

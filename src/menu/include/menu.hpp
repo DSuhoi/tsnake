@@ -19,22 +19,22 @@
 // Dimensions:
 
 // Main menu
-const int MENU_HEIGHT = 12;
-const int MENU_WIDTH = 20;
+int const MENU_HEIGHT = 12;
+int const MENU_WIDTH = 20;
 
 // Help menu
-const int HELP_HEIGHT = 10;
-const int HELP_WIDTH = 35;
+int const HELP_HEIGHT = 10;
+int const HELP_WIDTH = 35;
 // Shift in this menu to set items on the right side
-const int Help_WIDTH_RIGHT = 22;
+int const Help_WIDTH_RIGHT = 22;
 
 // Pause menu
-const int PAUSE_HEIGHT = 6;
-const int PAUSE_WIDTH = 18;
+int const PAUSE_HEIGHT = 6;
+int const PAUSE_WIDTH = 18;
 
 // Info menu
-const int INFO_HEIGHT = 4;
-const int INFO_WIDTH = 20;
+int const INFO_HEIGHT = 4;
+int const INFO_WIDTH = 20;
 
 // Class of menu
 class Menu
