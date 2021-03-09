@@ -135,7 +135,7 @@ Term_window::Term_window(int width, int height, int pos_x, int pos_y, chtype col
 }
 
 // Subwindow constructor
-Term_window::Term_window(Term_window const &win, int width, int height, int pos_x, int pos_y, chtype border_chr)
+Term_window::Term_window(const Term_window &win, int width, int height, int pos_x, int pos_y, chtype border_chr)
 {
     _background = Term_zone(win._main, height, width, pos_y, pos_x);
     _main = Term_zone(_background, height - 2, width - 2, 1, 1);

@@ -11,7 +11,7 @@ public:
     // Default constructor
     Term_zone();
     // Delete copy constructor and operator
-    Term_zone(Term_zone const &zone) = delete;
+    Term_zone(const Term_zone &) = delete;
     Term_zone &operator=(Term_zone const &) = delete;
     // Move constructor and operator
     Term_zone(Term_zone &&zone);
@@ -21,7 +21,7 @@ public:
     // Constructor with color
     Term_zone(int height, int width, int pos_y, int pos_x, chtype colors);
     // Subwindow constructor
-    Term_zone(Term_zone const &zone, int height, int width, int pos_y, int pos_x);
+    Term_zone(const Term_zone &zone, int height, int width, int pos_y, int pos_x);
     // Destructor
     virtual ~Term_zone();
 
@@ -54,7 +54,7 @@ public:
     // Default constructor
     Term_window() = default;
     // Delete copy constructor
-    Term_window(Term_window const &) = delete;
+    Term_window(const Term_window &) = delete;
     Term_window &operator=(Term_window const &) = delete;
     // Basic constructor
     Term_window(int height, int width, int pos_y, int pos_x, chtype border_chr = 0);

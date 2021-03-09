@@ -19,35 +19,35 @@
 #include "term_windows.hpp"
 
 // Map and fruit characters
-chtype const BORDERCHR = '#';
-chtype const FRUITCHR = '$' | COLOR_PAIR(YELLOW);
-chtype const EMPTYCHR = ' ';
+const chtype BORDERCHR = '#';
+const chtype FRUITCHR = '$' | COLOR_PAIR(YELLOW);
+const chtype EMPTYCHR = ' ';
 // Snake characters
-chtype const BODYCHR = 'o' | COLOR_PAIR(GREEN);
-chtype const HEAD = '@' | COLOR_PAIR(GREEN);
-chtype const KILL = 'X' | COLOR_PAIR(RED);
+const chtype BODYCHR = 'o' | COLOR_PAIR(GREEN);
+const chtype HEAD = '@' | COLOR_PAIR(GREEN);
+const chtype KILL = 'X' | COLOR_PAIR(RED);
 
 // Width and height of different maps
-int const SMALL_WIDTH = 37;
-int const SMALL_HEIGHT = 9;
+const int SMALL_WIDTH = 37;
+const int SMALL_HEIGHT = 9;
 
-int const MEDIUM_WIDTH = 55;
-int const MEDIUM_HEIGHT = 14;
+const int MEDIUM_WIDTH = 55;
+const int MEDIUM_HEIGHT = 14;
 
-int const BIG_WIDTH = 77;
-int const BIG_HEIGHT = 20;
+const int BIG_WIDTH = 77;
+const int BIG_HEIGHT = 20;
 
 // Width and height of the map window
-int const WIDTH = 80;
-int const HEIGHT = 22;
+const int WIDTH = 80;
+const int HEIGHT = 22;
 
-auto const SCREEN_WIDTH = [] {
+const auto SCREEN_WIDTH = [] {
     int width, height;
     getmaxyx(stdscr, height, width);
     return width;
 } ();
 
-auto const SCREEN_HEIGHT = [] {
+const auto SCREEN_HEIGHT = [] {
     int width, height;
     getmaxyx(stdscr, height, width);
     return height;
