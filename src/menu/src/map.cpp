@@ -62,7 +62,7 @@ void Map::init_border_coords(Coords snake_coords)
 {
     auto number_borders = (height * width)/20;    // Number of borders
     
-    for (unsigned int i = 0; i < number_borders; ++i) {
+    for (auto i = 0; i < number_borders; ++i) {
         Coords random_coords;
         do {
             random_coords.x = 1 + std::rand() % (width - 1);    // Generate and check the coordinates
@@ -102,30 +102,30 @@ void Map::update_map(std::list<Coords> &snake_coords)
 {
     // Updating map borders
     for (auto i = 0; i <= width; ++i) {
-        set_map(0, i, BORDERCHR);
-        set_map(height, i, BORDERCHR); 
+        map.print(0, i, BORDERCHR);
+        map.print(height, i, BORDERCHR); 
     }
     
     for (auto i = 0; i <= height; ++i) {
-        set_map(i, 0, BORDERCHR);
-        set_map(i, width, BORDERCHR); 
+        map.print(i, 0, BORDERCHR);
+        map.print(i, width, BORDERCHR); 
     }
 
     // Updating other borders
     for (auto it = borders.cbegin(); it != borders.cend(); ++it)
-        set_map(it->y, it->x, BORDERCHR);
+        map.print(it->y, it->x, BORDERCHR);
 
     // Updating fruits
     for (auto fruit : fruits)
-        set_map(fruit.y, fruit.x, FRUITCHR);
+        map.print(fruit.y, fruit.x, FRUITCHR);
 
     // Cleaning the snake's tail
-    set_map(snake_coords.back().y, snake_coords.back().x, EMPTYCHR);
+    map.print(snake_coords.back().y, snake_coords.back().x, EMPTYCHR);
     // Updating snake body
     for (auto it = (++snake_coords.crbegin()); it != (--snake_coords.crend()); ++it)
-        set_map(it->y, it->x, BODYCHR);
+        map.print(it->y, it->x, BODYCHR);
     // Put the character of the head
-    set_map(snake_coords.front().y, snake_coords.front().x, HEAD);
+    map.print(snake_coords.front().y, snake_coords.front().x, HEAD);
 }
 
 // Checking the player's coordinates
