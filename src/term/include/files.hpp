@@ -16,9 +16,9 @@
 #include <string>
 
 
-const char MAIN_PATH_STR [] = "/.local/share/tsnake/";  // The path to the preferences directory and maps
-const char FILE_NAME_SCORE_STR [] = "score.tsn";        // Path to the file with the table of records
-const char FILE_NAME_SETTINGS_STR [] = "settings.tsn";  // Path to the settings file
+constexpr const char MAIN_PATH_STR [] = "/.local/share/tsnake/";  // The path to the preferences directory and maps
+constexpr const char FILE_NAME_SCORE_STR [] = "score.tsn";        // Path to the file with the table of records
+constexpr const char FILE_NAME_SETTINGS_STR [] = "settings.tsn";  // Path to the settings file
 
 // Bit field settings of the card
 struct CONFIG
