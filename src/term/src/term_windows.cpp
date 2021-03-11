@@ -73,13 +73,13 @@ void Term_zone::print(int y, int x, chtype ch) const
 }
 
 // Print the text in the main subwindow (mvwprintw)
-void Term_zone::print(int y, int x, const std::string &text) const
+void Term_zone::print(int y, int x, std::string_view text) const
 {
-    mvwprintw(_zone, y, x, text.c_str());
+    mvwprintw(_zone, y, x, static_cast<std::string>(text).c_str());
 }
 
 // Print the text in the main subwindow (mvwprintw)
-void Term_zone::print(int y, int x, const std::string &text, int color) const
+void Term_zone::print(int y, int x, std::string_view text, int color) const
 {
     wattron(_zone, COLOR_PAIR(color));   // Setting the color
     print(y, x, text);
@@ -175,19 +175,19 @@ void Term_window::print(int y, int x, chtype chr) const
 }
 
 // Print the text in the main subwindow
-void Term_window::print(int y, int x, const std::string &text) const
+void Term_window::print(int y, int x, std::string_view text) const
 {
     _main.print(y, x, text);    
 }
 
 // Print the text in the main subwindow (mvwprintw)
-void Term_window::print(int y, int x, const std::string &text, int color) const
+void Term_window::print(int y, int x, std::string_view text, int color) const
 {
     _main.print(y, x, text, color);    
 }
 
 // Print the label in the window
-void Term_window::print_label(int x, const std::string &text, int color) const
+void Term_window::print_label(int x, std::string_view text, int color) const
 {
     _background.print(0, x, text, color);
 }
