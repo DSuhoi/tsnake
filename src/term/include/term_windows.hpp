@@ -34,9 +34,9 @@ public:
     // Print the symbol in the zone
     virtual void print(int y, int x, chtype ch) const;
     // Print the text in the zone
-    virtual void print(int y, int x, std::string &text) const;
+    virtual void print(int y, int x, const std::string &text) const;
     // Print the label in the zone
-    virtual void print(int y, int x, std::string &text, int color) const;
+    virtual void print(int y, int x, const std::string &text, int color) const;
     // This function is an analog box() for zone
     void set_box(chtype border_chr) const;
     // Get the zone width
@@ -74,11 +74,11 @@ public:
     // Print the symbol in the main subwindow
     virtual void print(int y, int x, chtype chr) const;
     // Print the text in the main subwindow (mvwprintw)
-    virtual void print(int y, int x, std::string &text) const;
+    virtual void print(int y, int x, const std::string &text) const;
     // Print the text in the main subwindow (mvwprintw)
-    virtual void print(int y, int x, std::string &text, int color) const;
+    virtual void print(int y, int x, const std::string &text, int color) const;
     // Print the label in the window
-    void print_label(int x, std::string &text, int color) const;
+    void print_label(int x, const std::string &text, int color) const;
     // Get the main subwindow width
     int get_width() const;
     // Get the main subwindow height
