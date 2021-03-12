@@ -2,7 +2,7 @@
 
 // Defining Game class fields
 Snake *Game::snake;
-Map *Game::map;
+Map_window *Game::map;
 time_t Game::game_time;
 long Game::game_score[30];
 
@@ -20,8 +20,8 @@ void Game::start()
 // Function for configuring the field
 void Game::start_game()
 {   // Configure:
-    map = new Map();
-    map->select_size_map(Menu::get_config_map().map_size);   // Map size
+    map = new Map_window();
+    map->select_size_map(Menu::get_config_map().map_size);   // Map_window size
     // Creating player
     snake = new Snake(map->get_spawn_snake());
     // If you need borders on the map, create their

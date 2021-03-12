@@ -14,6 +14,7 @@
 
 #include <list>
 #include <ctime>
+#include <optional>
 #include "display.hpp"
 #include "coords.hpp"
 #include "term_windows.hpp"
@@ -53,21 +54,34 @@ const auto SCREEN_HEIGHT = [] {
     return height;
 } ();
 
-
-// Class of map
-class Map : public Term_window
+class Map_zone : public Term_zone
 {
 public:
-    Map() = default;      // Constructor
-    Map(int select_map_size, int number_fruits);
-    ~Map();     // Destructor
+    Map_zone(int height, int width, int pos_y, int pos_x);
+    ~Map_zone() = default;
+
+    void init_border_coords(Coords snake_coords);   // Setting the borders
+    void init_fruit_coords(int number);             // Setting the number of fruits
+
+    void set_fruit_on_map(Coords fruit_coords, std::list<Coords> &snake_coords);      // Creating fruits on the map
+private:
+    std::optional<std::list<Coords>> borders;        // Pointer to the coordinates of the borders
+    std::list<Coords> fruits;         // Pointer to the coordinates of the fruits
+
+    void border_map();        // Printing borders
+};
+
+// Class of map
+class Map_window : public Term_window
+{
+public:
+    Map_window() = default;      // Constructor
+    Map_window(int select_map_size, int number_fruits);
+    ~Map_window();     // Destructor
 
     void update(std::list<Coords> &snake);  // Update the images of all objects on the map
 
-    void select_size_map(int select);               // Selecting the map size
-    void init_border_coords(Coords snake_coords);   // Setting the borders
-    void init_fruit_coords(int number);             // Setting the number of fruits
-    void set_fruit_on_map(Coords fruit_coords, std::list<Coords> &snake_coords);      // Creating fruits on the map
+    void select_size_map(int select);      // Selecting the map size
 
     void print_sub_menu_static(const long last_score, const int level);               // Print the static part of the submenu
     void print_sub_menu_active(const long score, time_t &first_time);                 // Print the dynamic part of the submenu
@@ -77,13 +91,9 @@ public:
     bool is_fruit(Coords coords);     // Check the coordinates of the fruits
     bool is_border(Coords coords);    // Check the coordinates of the borders
 private:
-    Term_zone game_map;
+    Map_zone game_map;
     Term_zone status_zone;
-    std::list<Coords> borders;        // Pointer to the coordinates of the borders
-    std::list<Coords> fruits;         // Pointer to the coordinates of the fruits
     Coords spawn_snake;               // Coordinates of the snake spawn
-    
-    void border_map();        // Printing borders
 };
 
 #endif

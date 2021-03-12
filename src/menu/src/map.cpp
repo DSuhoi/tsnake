@@ -2,7 +2,7 @@
 #include <iterator>
 
 
-Map::Map(int select_map_size, int number_fruits) : 
+Map_window::Map_window(int select_map_size, int number_fruits) : 
     Term_window(HEIGHT, WIDTH, (SCREEN_HEIGHT - HEIGHT)/2, (SCREEN_WIDTH - WIDTH)/2) 
 {
     spawn_snake = {3, 3};
@@ -10,14 +10,14 @@ Map::Map(int select_map_size, int number_fruits) :
     init_fruit_coords(number_fruits);
 }
 
-Map::~Map()
+Map_window::~Map_window()
 {
     fruits.clear();
     borders.clear(); 
 }
 
 // Selecting the map size
-void Map::select_size_map(int select)
+void Map_window::select_size_map(int select)
 {
     Display::update(map);       // Update the map window
     switch (select) {           // Selecting the map size
@@ -40,7 +40,7 @@ void Map::select_size_map(int select)
 }
 
 // Setting the number of fruits
-void Map::init_fruit_coords(int number_fruits)
+void Map_window::init_fruit_coords(int number_fruits)
 {
     // Checking number of fruits
     if (number_fruits < 1 ||  99 < number_fruits)
@@ -58,7 +58,7 @@ void Map::init_fruit_coords(int number_fruits)
 }
 
 // Setting the borders
-void Map::init_border_coords(Coords snake_coords)
+void Map_zone::init_border_coords(Coords snake_coords)
 {
     auto number_borders = (height * width)/20;    // Number of borders
     
@@ -75,7 +75,7 @@ void Map::init_border_coords(Coords snake_coords)
 }
 
 // Creating fruits on the map
-void Map::set_fruit_on_map(Coords fruit_coords, std::list<Coords> &snake_coords)
+void Map_zone::set_fruit_on_map(Coords fruit_coords, std::list<Coords> &snake_coords)
 {   
     int error_counter = 0;   // Repeat count
     
@@ -98,38 +98,38 @@ void Map::set_fruit_on_map(Coords fruit_coords, std::list<Coords> &snake_coords)
 }
 
 // Update the images of all objects on the map
-void Map::update_map(std::list<Coords> &snake_coords)
+void Map_zone::update_map(std::list<Coords> &snake_coords)
 {
     // Updating map borders
     for (auto i = 0; i <= width; ++i) {
-        map.print(0, i, BORDERCHR);
-        map.print(height, i, BORDERCHR); 
+        print(0, i, BORDERCHR);
+        print(height, i, BORDERCHR); 
     }
     
     for (auto i = 0; i <= height; ++i) {
-        map.print(i, 0, BORDERCHR);
-        map.print(i, width, BORDERCHR); 
+        print(i, 0, BORDERCHR);
+        print(i, width, BORDERCHR); 
     }
 
     // Updating other borders
     for (auto it = borders.cbegin(); it != borders.cend(); ++it)
-        map.print(it->y, it->x, BORDERCHR);
+        print(it->y, it->x, BORDERCHR);
 
     // Updating fruits
     for (auto fruit : fruits)
-        map.print(fruit.y, fruit.x, FRUITCHR);
+        print(fruit.y, fruit.x, FRUITCHR);
 
     // Cleaning the snake's tail
-    map.print(snake_coords.back().y, snake_coords.back().x, EMPTYCHR);
+    print(snake_coords.back().y, snake_coords.back().x, EMPTYCHR);
     // Updating snake body
     for (auto it = (++snake_coords.crbegin()); it != (--snake_coords.crend()); ++it)
-        map.print(it->y, it->x, BODYCHR);
+        print(it->y, it->x, BODYCHR);
     // Put the character of the head
-    map.print(snake_coords.front().y, snake_coords.front().x, HEAD);
+    print(snake_coords.front().y, snake_coords.front().x, HEAD);
 }
 
 // Checking the player's coordinates
-bool Map::is_snake_tail(Coords coords, std::list<Coords> &snake_coords)
+bool Map_window::is_snake_tail(Coords coords, std::list<Coords> &snake_coords)
 {
     for (auto it = (++snake_coords.cbegin()); it != snake_coords.cend(); ++it)
         if (coords == *it)
@@ -138,7 +138,7 @@ bool Map::is_snake_tail(Coords coords, std::list<Coords> &snake_coords)
 }
 
 // Check the coordinates of the fruits
-bool Map::is_fruit(Coords coords)
+bool Map_window::is_fruit(Coords coords)
 {
     for (auto fruit : fruits)
         if (coords == fruit)
@@ -147,7 +147,7 @@ bool Map::is_fruit(Coords coords)
 }
 
 // Check the coordinates of the borders
-bool Map::is_border(Coords coords)
+bool Map_window::is_border(Coords coords)
 {
     for (auto border : borders)
         if (coords == border)
@@ -156,7 +156,7 @@ bool Map::is_border(Coords coords)
 }
 
 // Print the static part of the submenu
-void Map::print_sub_menu_static(const long last_score, const int level)
+void Map_window::print_sub_menu_static(const long last_score, const int level)
 {
     char buff_last_score[15]; // Array for the record
     char buff_level[10];     // Array for the level
@@ -167,7 +167,7 @@ void Map::print_sub_menu_static(const long last_score, const int level)
 }
 
 // Print the dynamic part of the submenu
-void Map::print_sub_menu_active(const long score, time_t &first_time)
+void Map_window::print_sub_menu_active(const long score, time_t &first_time)
 {
     int all_time = time(0) - first_time;    // All the time since the game started
     unsigned int sec = all_time % 60;       // Seconds
@@ -181,19 +181,19 @@ void Map::print_sub_menu_active(const long score, time_t &first_time)
 }
 
 // Get the coordinates of the snake spawn
-Coords Map::get_spawn_snake()
+Coords Map_window::get_spawn_snake()
 { 
     return spawn_snake; 
 }
 
 // Return the map height
-int Map::get_height()
+int Map_window::get_height()
 { 
     return map.get_height(); 
 }
 
 // Return the map width
-int Map::get_width()
+int Map_window::get_width()
 { 
     return map.get_width; 
 }
