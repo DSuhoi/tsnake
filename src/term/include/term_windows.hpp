@@ -18,14 +18,27 @@ const auto SCREEN_HEIGHT = [] {
 } ();
 
 
-class Term_zone
+class Term_interface
+{
+public:
+    Term_interface &operator=(Term_interface const &) = delete;
+
+    virtual void update() const = 0;
+    virtual void clear() const = 0;
+    virtual void print(int, int, chtype) const = 0;
+    virtual void set_colors(chtype) const = 0;
+    virtual int get_width() const = 0;
+    virtual int get_height() const = 0;
+protected:
+    virtual ~Term_interface() = default;
+};
+
+
+class Term_zone : Term_interface
 {
 public:
     // Default constructor
     Term_zone();
-    // Delete copy constructor and operator
-    Term_zone(const Term_zone &) = delete;
-    Term_zone &operator=(Term_zone const &) = delete;
     // Move constructor and operator
     Term_zone(Term_zone &&zone);
     Term_zone &operator=(Term_zone &&zone);
@@ -36,16 +49,16 @@ public:
     // Subwindow constructor
     Term_zone(const Term_zone &zone, int height, int width, int pos_y, int pos_x);
     // Destructor
-    virtual ~Term_zone();
+    ~Term_zone();
 
     // Function for adding a color scheme
-    void set_colors(chtype colors) const;
+    void set_colors(chtype colors) const override;
     // This function is an analog refresh() for zone
-    virtual void update() const;
+    virtual void update() const override;
     // Clear the text in the zone
-    virtual void clear() const;
+    virtual void clear() const override;
     // Print the symbol in the zone
-    virtual void print(int y, int x, chtype ch) const;
+    virtual void print(int y, int x, chtype chr) const override;
     // Print the text in the zone
     virtual void print(int y, int x, std::string_view text) const;
     // Print the label in the zone
@@ -53,9 +66,9 @@ public:
     // This function is an analog box() for zone
     void set_box(chtype border_chr) const;
     // Get the zone width
-    int get_width() const;
+    int get_width() const override;
     // Get the zone height
-    int get_height() const;
+    int get_height() const override;
 private:
     WINDOW *_zone;
 };
