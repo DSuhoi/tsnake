@@ -34,7 +34,7 @@ enum STATUS_GAME {
 class Game
 {
 public:
-    Game() = delete;                 // Constructor
+    Game() = delete;
     static void start();             // Function for initializing components
     static void process();           // Game process (main logic)
     static void end_game();          // End of the game

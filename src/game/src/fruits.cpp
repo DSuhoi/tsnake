@@ -21,7 +21,7 @@ bool Fruits::try_set_fruit(Coords coord, int height, int width, bool (*is_border
 {
     int error_counter = 0;   // Repeat count
     
-    for (auto &&fruit : fruits) {
+    for (auto &&fruit : _fruits_coords) {
         Coords random_coords;
         if (fruit_coords == fruit) {
             do { 
@@ -40,7 +40,7 @@ bool Fruits::try_set_fruit(Coords coord, int height, int width, bool (*is_border
 
 bool Fruits::is_fruit(Coords coord)
 {
-    for (auto const &fruit : fruits)
+    for (auto const &fruit : _fruits_coords)
         if (coords == fruit)
             return true;
     return false;

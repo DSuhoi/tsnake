@@ -34,7 +34,7 @@ protected:
 };
 
 
-class Term_zone : Term_interface
+class Term_zone : private Term_interface
 {
 public:
     // Default constructor
