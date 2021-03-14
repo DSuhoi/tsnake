@@ -5,6 +5,19 @@
 #include <ncurses.h>
 
 
+const auto SCREEN_WIDTH = [] {
+    int width, height;
+    getmaxyx(stdscr, height, width);
+    return width;
+} ();
+
+const auto SCREEN_HEIGHT = [] {
+    int width, height;
+    getmaxyx(stdscr, height, width);
+    return height;
+} ();
+
+
 class Term_zone
 {
 public:

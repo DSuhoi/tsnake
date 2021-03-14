@@ -23,12 +23,12 @@ constexpr const char FILE_NAME_SETTINGS_STR [] = "settings.tsn";  // Path to the
 // Bit field settings of the card
 struct CONFIG
 {   
-    unsigned speed: 4;        // Speed of the player [1..10]
-    unsigned map_size: 2;     // Map size [0..2]
-    unsigned num_fruits: 7;   // Number of fruits [1..99]
-    unsigned border: 1;       // Borders 1/0
-    unsigned teleport: 1;     // Snake teleportation 1/0
-    unsigned clear_score: 1;  // Clearing records 1/0
+    unsigned speed:       4;   // Speed of the player [1..10]
+    unsigned map_size:    2;   // Map size [0..2]
+    unsigned num_fruits:  7;   // Number of fruits [1..99]
+    unsigned border:      1;   // Borders 1/0
+    unsigned teleport:    1;   // Snake teleportation 1/0
+    unsigned clear_score: 1;   // Clearing records 1/0
 };
 
 // File System class

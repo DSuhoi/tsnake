@@ -18,7 +18,7 @@
 #include "map.hpp"
 #include "menu.hpp"
 #include "snake.hpp"
-
+#include "fruits.hpp"
 
 // Game status flag
 enum STATUS_GAME {
@@ -28,6 +28,7 @@ enum STATUS_GAME {
     RETURN_MENU,
     GAME_END
 };
+
 
 // Class of game
 class Game
@@ -39,6 +40,7 @@ public:
     static void end_game();          // End of the game
 private: 
     static Snake *snake;             // Pointer to the snake object
+    static Fruits *_fruits;           // Fruits on the map
     static Map_window *map;
     static time_t game_time;         // Start time of the game
     static long game_score[30];      // Last records

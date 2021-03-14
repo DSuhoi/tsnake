@@ -20,40 +20,30 @@
 #include "term_windows.hpp"
 
 // Map and fruit characters
-const chtype BORDERCHR = '#';
-const chtype FRUITCHR = '$' | COLOR_PAIR(YELLOW);
-const chtype EMPTYCHR = ' ';
+constexpr chtype BORDERCHR = '#';
+constexpr chtype FRUITCHR = '$' | COLOR_PAIR(YELLOW);
+constexpr chtype EMPTYCHR = ' ';
 // Snake characters
-const chtype BODYCHR = 'o' | COLOR_PAIR(GREEN);
-const chtype HEAD = '@' | COLOR_PAIR(GREEN);
-const chtype KILL = 'X' | COLOR_PAIR(RED);
+constexpr chtype BODYCHR = 'o' | COLOR_PAIR(GREEN);
+constexpr chtype HEAD = '@' | COLOR_PAIR(GREEN);
+constexpr chtype KILL = 'X' | COLOR_PAIR(RED);
 
 // Width and height of different maps
-const int SMALL_WIDTH = 37;
-const int SMALL_HEIGHT = 9;
+constexpr int SMALL_WIDTH = 37;
+constexpr int SMALL_HEIGHT = 9;
 
-const int MEDIUM_WIDTH = 55;
-const int MEDIUM_HEIGHT = 14;
+constexpr int MEDIUM_WIDTH = 55;
+constexpr int MEDIUM_HEIGHT = 14;
 
-const int BIG_WIDTH = 77;
-const int BIG_HEIGHT = 20;
+constexpr int BIG_WIDTH = 77;
+constexpr int BIG_HEIGHT = 20;
 
 // Width and height of the map window
-const int WIDTH = 80;
-const int HEIGHT = 22;
+constexpr int WIDTH = 80;
+constexpr int HEIGHT = 22;
 
-const auto SCREEN_WIDTH = [] {
-    int width, height;
-    getmaxyx(stdscr, height, width);
-    return width;
-} ();
 
-const auto SCREEN_HEIGHT = [] {
-    int width, height;
-    getmaxyx(stdscr, height, width);
-    return height;
-} ();
-
+// Class of game map
 class Map_zone : public Term_zone
 {
 public:
@@ -65,13 +55,9 @@ public:
 
     void set_fruit_on_map(Coords fruit_coords, std::list<Coords> &snake_coords);      // Creating fruits on the map
 private:
-    std::optional<std::list<Coords>> borders;        // Pointer to the coordinates of the borders
-    std::list<Coords> fruits;         // Pointer to the coordinates of the fruits
-
-    void border_map();        // Printing borders
 };
 
-// Class of map
+// Class of map window
 class Map_window : public Term_window
 {
 public:
@@ -91,9 +77,12 @@ public:
     bool is_fruit(Coords coords);     // Check the coordinates of the fruits
     bool is_border(Coords coords);    // Check the coordinates of the borders
 private:
-    Map_zone game_map;
-    Term_zone status_zone;
-    Coords spawn_snake;               // Coordinates of the snake spawn
+    Map_zone _game_map;
+    Term_zone _status_zone;
+    Coords _spawn_snake;               // Coordinates of the snake spawn
+
+    std::list<Coords> borders;       // Pointer to the coordinates of the borders
+    std::list<Coords> fruits;        // Pointer to the coordinates of the fruits
 };
 
 #endif

@@ -1,46 +1,24 @@
 #include "map.hpp"
 #include <iterator>
+#include <type_traits>
 
 
-Map_window::Map_window(int select_map_size, int number_fruits) : 
-    Term_window(HEIGHT, WIDTH, (SCREEN_HEIGHT - HEIGHT)/2, (SCREEN_WIDTH - WIDTH)/2) 
-{
-    spawn_snake = {3, 3};
-    select_size_map(select_map_size);
-    init_fruit_coords(number_fruits);
-}
+Map_zone::Map_zone(int height, int width, int pos_y, int pos_x) : Term_zone(height, width, pos_y, pos_x)
+{}
 
-Map_window::~Map_window()
+
+
+/*
+Map_zone::~Map_zone()
 {
     fruits.clear();
     borders.clear(); 
 }
+*/
 
-// Selecting the map size
-void Map_window::select_size_map(int select)
-{
-    Display::update(map);       // Update the map window
-    switch (select) {           // Selecting the map size
-    case 0: 
-        width = SMALL_WIDTH; 
-        height = SMALL_HEIGHT; 
-        break;
-    case 2: 
-        width = BIG_WIDTH; 
-        height = BIG_HEIGHT; 
-        break; 
-    default: 
-        width = MEDIUM_WIDTH; 
-        height = MEDIUM_HEIGHT; 
-        break;
-    };
-    
-    // Print the title
-    print_label(WIDTH - 9, "TSNAKE", BLUE);
-}
 
 // Setting the number of fruits
-void Map_window::init_fruit_coords(int number_fruits)
+void Map_zone::init_fruit_coords(int number_fruits)
 {
     // Checking number of fruits
     if (number_fruits < 1 ||  99 < number_fruits)
@@ -53,7 +31,6 @@ void Map_window::init_fruit_coords(int number_fruits)
             random_coords.y = 1 + std::rand() % (height - 1);
         } while (is_fruit(random_coords) || is_border(random_coords));
         fruits.push_back(random_coords);   // Checking and assigning coordinates
-        map.print(random_coords.y, random_coords.x, FRUITCHR);   // Setting the fruit on the map
     }
 }
 
@@ -79,11 +56,11 @@ void Map_zone::set_fruit_on_map(Coords fruit_coords, std::list<Coords> &snake_co
 {   
     int error_counter = 0;   // Repeat count
     
-    for (auto &fruit : fruits)
+    for (auto &fruit : fruits) {
         Coords random_coords;
         if (fruit_coords == fruit) {
             do { 
-                // If more than 1000 repetitions have passed, we exit the loop
+                // If more than 1000 repetitions have passed, we exit the loop ()
                 if (error_counter++ > 1000) 
                     return; 
                 random_coords.x = 1 + std::rand() % (width - 1);    // Random coordinates
@@ -92,7 +69,6 @@ void Map_zone::set_fruit_on_map(Coords fruit_coords, std::list<Coords> &snake_co
             } while (is_snake_tail(random_coords, snake_coords) || 
                      is_fruit(random_coords) || is_border(random_coords));
             fruit = random_coords; // Assigning the correct coordinates
-            map.print(it->y, it->x, FRUITCHR);   // and fruit output
         } 
     }
 }
@@ -112,8 +88,9 @@ void Map_zone::update_map(std::list<Coords> &snake_coords)
     }
 
     // Updating other borders
-    for (auto it = borders.cbegin(); it != borders.cend(); ++it)
-        print(it->y, it->x, BORDERCHR);
+    if (!bordersis_empty())
+        for (auto it = borders.cbegin(); it != borders.cend(); ++it)
+            print(it->y, it->x, BORDERCHR);
 
     // Updating fruits
     for (auto fruit : fruits)
@@ -126,6 +103,37 @@ void Map_zone::update_map(std::list<Coords> &snake_coords)
         print(it->y, it->x, BODYCHR);
     // Put the character of the head
     print(snake_coords.front().y, snake_coords.front().x, HEAD);
+}
+
+
+
+Map_window::Map_window(int select_map_size, int number_fruits) : 
+    Term_window(HEIGHT, WIDTH, (SCREEN_HEIGHT - HEIGHT)/2, (SCREEN_WIDTH - WIDTH)/2) 
+{
+    _spawn_snake = {3, 3};
+
+    int width_map, height_map;
+    switch (select_map_size) {           // Selecting the map size
+    case 0: 
+        width_map = SMALL_WIDTH; 
+        height_map = SMALL_HEIGHT; 
+        break;
+    case 2: 
+        width_map = BIG_WIDTH; 
+        height_map = BIG_HEIGHT; 
+        break; 
+    default: 
+        width_map = MEDIUM_WIDTH; 
+        height_map = MEDIUM_HEIGHT; 
+        break;
+    };
+    _game_map = Map_zone(height_map, width_map, (HEIGHT - height_map)/2, (WIDTH - width_map)/2); 
+    _game_map.init_fruit_coords(number_fruits);
+
+    // Print the title
+    print_label(WIDTH - 9, "TSNAKE", BLUE);
+    _game_map.update();
+    update();
 }
 
 // Checking the player's coordinates
@@ -183,17 +191,5 @@ void Map_window::print_sub_menu_active(const long score, time_t &first_time)
 // Get the coordinates of the snake spawn
 Coords Map_window::get_spawn_snake()
 { 
-    return spawn_snake; 
-}
-
-// Return the map height
-int Map_window::get_height()
-{ 
-    return map.get_height(); 
-}
-
-// Return the map width
-int Map_window::get_width()
-{ 
-    return map.get_width; 
+    return _spawn_snake; 
 }
