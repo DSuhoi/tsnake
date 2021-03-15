@@ -11,12 +11,13 @@
 #define __PERIPH_HPP__
 
 #include <ncurses.h>
-#include <unistd.h>     // Library for usleep() function
+#include <thread>     // Library for game_delay() function
+#include <chrono>
 #include "menu.hpp"
 
-const int SLEEP_TIME = 10000;   // Minimum delay
-const int CURS_KEY_MIN = 258;   // Number (scan code) of the "down" cursor key"
-const int CURS_KEY_MAX = 261;   // Number (scan code) of the "right" cursor key"
+constexpr auto  SLEEP_TIME = std::chrono::milliseconds(10);   // Minimum delay
+constexpr int CURS_KEY_MIN = 258;   // Number (scan code) of the "down" cursor key"
+constexpr int CURS_KEY_MAX = 261;   // Number (scan code) of the "right" cursor key"
 
 enum CONTROL {
     DOWN = 0, 

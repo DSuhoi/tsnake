@@ -1,10 +1,11 @@
 #include "periph.hpp"
+#include <thread>
 
 
 // Function-manual delay wrapper
 void Periph::game_delay(int delay_time)
 { 
-    usleep(delay_time * SLEEP_TIME); 
+    std::this_thread::sleep_for(delay_time * SLEEP_TIME); 
 }
 
 // Initializing the screen and key processing
@@ -30,7 +31,7 @@ void Periph::erase_periph()
 int Periph::get_button()
 {
     
-    usleep(100000); // Delay for recieve
+    std::this_thread::sleep_for(10 * SLEEP_TIME); // Delay for recieve
     int button = getch();
     flushinp();     // Clearing the keyboard buffer
     int select_button = ERR;
@@ -73,7 +74,7 @@ int Periph::get_button()
 // Processing of game buttons
 int Periph::get_button(int *game_buttons, float pause_delay)
 {
-    usleep(pause_delay * 30000);
+    std::this_thread::sleep_for(pause_delay * 3 * SLEEP_TIME);
     int button = getch();
     flushinp();
     int select_button = ERR;
