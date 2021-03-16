@@ -12,6 +12,7 @@
 #define __SNAKE_HPP__
 
 #include <list>
+#include <boost/uuid/uuid.hpp>
 #include "coords.hpp"
 #include "display.hpp"
 
@@ -24,7 +25,7 @@ class Snake
 {
 public:
     Snake() = default;
-    Snake(Coords spawn_coords);
+    Snake(boost::uuids::uuid uid, Coords spawn_coords);
     ~Snake();
     void move(int const vector);          // Function of snake movement
     std::list<Coords> &get_body_coords(); // Pointer to the coordinates of the snake
@@ -34,6 +35,7 @@ public:
     Coords info_head();                   // Information about the coordinates of the head
     void set_head_coords(int x, int y);   // Setting the coordinates of the snake's head
 private:
+    boost::uuids::uuid _uid;
     std::list<Coords> _body_coords;        // Coordinates of the snake's body
     int _head_vector;                      // Direction of movement of the snake
 };

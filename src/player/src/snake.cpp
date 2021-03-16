@@ -2,8 +2,9 @@
 #include <iterator>
 
 // Constructor
-Snake::Snake(Coords spawn_coords)
+Snake::Snake(boost::uuids::uuid uid, Coords spawn_coords)
 { 
+    _uid = uid;
     // Create the snake (body coordinates)
     // Setting the coordinates of the appearance of the snake
     _body_coords.push_back(spawn_coords);
